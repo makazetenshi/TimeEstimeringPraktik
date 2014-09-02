@@ -1,3 +1,19 @@
+--CREATE DATABASE praktik_estimate
+
+DROP TABLE FormulaParameter
+DROP TABLE Parameter
+DROP TABLE Formula
+DROP TABLE FormulasActive
+DROP TABLE Formulas
+DROP TABLE EstimateActive
+DROP TABLE Estimate
+DROP TABLE DayActive
+DROP TABLE Day
+DROP TABLE Period
+DROP TABLE Person
+
+GO
+
 CREATE TABLE Person
 (
 Id int IDENTITY(1,1) primary key,
@@ -76,3 +92,5 @@ Id int IDENTITY(1,1) primary key,
 Formula int foreign key references Formula(Id),
 Parameter int foreign key references Parameter(Id)
 )
+
+GO
