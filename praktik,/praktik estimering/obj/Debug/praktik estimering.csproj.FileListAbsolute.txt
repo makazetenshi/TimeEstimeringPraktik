@@ -13,3 +13,6 @@ C:\Users\Bruger\Documents\git\praktik,\praktik estimering\obj\Debug\praktik esti
 C:\Users\Bruger\Documents\git\praktik,\praktik estimering\obj\Debug\praktik estimering.csprojResolveAssemblyReference.cache
 C:\Users\Bruger\Documents\git\praktik,\praktik estimering\obj\Debug\Mainwindow.baml
 C:\Users\Bruger\Documents\git\praktik,\praktik estimering\obj\Debug\Mainwindow.g.cs
+C:\Users\Bruger\Documents\git mappe\praktik\praktik,\praktik estimering\bin\Debug\praktik estimering.exe.config
+C:\Users\Bruger\Documents\git mappe\praktik\praktik,\praktik estimering\obj\Debug\praktik estimering.exe
+C:\Users\Bruger\Documents\git mappe\praktik\praktik,\praktik estimering\obj\Debug\praktik estimering.pdb

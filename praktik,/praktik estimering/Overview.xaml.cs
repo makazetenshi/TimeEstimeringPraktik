@@ -24,6 +24,11 @@ namespace praktik_estimering
             InitializeComponent();
         }
 
+        private void overviewLoaded(object sender, RoutedEventArgs e)
+        {
+            datagridOldPeriods = UserService.Instance.getPastPeriods(UserService.Instance.getInitials());
+        }
+
         private void ClickNewPeriod(object sender, RoutedEventArgs e)
         {
 
@@ -42,5 +47,7 @@ namespace praktik_estimering
             main.Show();
             this.Close();
         }
+
+
     }
 }
