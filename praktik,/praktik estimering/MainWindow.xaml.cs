@@ -20,9 +20,27 @@ namespace praktik_estimering
     /// </summary>
     public partial class MainWindow : Window
     {
+        //UserService us = UserService.Instance();
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void LoginClick(object sender, RoutedEventArgs e)
+        {
+            if (UserService.Instance.login(TextboxInitials.Text,TextboxPassword.Text))
+            {
+                Overview wiev = new Overview();
+                wiev.Show();
+                this.Close();
+
+            }
+            else
+            {
+                LabelErrorMessage.Visibility = Visibility.Visible;
+                LabelErrorMessage.Content = "login is not possible";
+            }
+
         }
     }
 }
