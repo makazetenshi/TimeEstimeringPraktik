@@ -37,16 +37,24 @@ namespace praktik_estimering
             {
                 getUserLoginData(initials);
 
+                string pass=null;
+                string init=null;
+
                 foreach (DataRow row in userTabel.Rows)
                 {
-                    string name = row["Name"].ToString();
-                    string pass = row["Pass"].ToString();
-                    string init = row["Init"].ToString();
-
+                    pass = row["Pass"].ToString();
+                    init = row["Init"].ToString();
                 }
 
-                if (initials == init && password == pass) return true;
-                else throw new Exception("Wrong combination of Initials and password");
+                if (initials == init)
+                {
+                    if (password == pass)
+                    {
+                        return true;
+                    }
+                    else throw new Exception("password does not match initials.");
+                }
+                else throw new Exception("initals was not found please try again.");
 
             }
             catch (Exception ex)
@@ -64,6 +72,16 @@ namespace praktik_estimering
             userTabel = new DataTable();
             da.Fill(userTabel);
         }
+
+        public void logUserOut()
+        {
+            userTabel.Clear();
+        }
+
+
+
+
+
 
 
 

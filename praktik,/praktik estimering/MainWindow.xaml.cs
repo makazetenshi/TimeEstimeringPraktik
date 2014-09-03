@@ -28,19 +28,13 @@ namespace praktik_estimering
 
         private void LoginClick(object sender, RoutedEventArgs e)
         {
-            if (UserService.Instance.login(TextboxInitials.Text,TextboxPassword.Text))
+            if (UserService.Instance.login(textboxInitials.Text,passwordbox.Password))
             {
-                Overview wiev = new Overview();
-                wiev.Show();
+                Overview view = new Overview();
+                view.Show();
                 this.Close();
 
             }
-            else
-            {
-                LabelErrorMessage.Visibility = Visibility.Visible;
-                LabelErrorMessage.Content = "login is not possible";
-            }
-
         }
     }
 }

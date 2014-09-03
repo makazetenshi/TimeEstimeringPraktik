@@ -36,7 +36,11 @@ namespace praktik_estimering
 
         private void clickLogout(object sender, RoutedEventArgs e)
         {
+            UserService.Instance.logUserOut();
 
+            MainWindow main = new MainWindow();
+            main.Show();
+            this.Close();
         }
     }
 }
