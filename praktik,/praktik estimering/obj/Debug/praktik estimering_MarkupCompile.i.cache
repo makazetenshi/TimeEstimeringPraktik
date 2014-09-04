@@ -4,12 +4,20 @@
 winexe
 C#
 .cs
+<<<<<<< HEAD
 C:\Users\Jaspur\Documents\Visual Studio 2013\Projects\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\
+=======
+C:\Users\Bruger\Documents\git mappe\praktik\praktik,\praktik estimering\obj\Debug\
+>>>>>>> origin/master
 praktik_estimering
 none
 false
 DEBUG;TRACE
+<<<<<<< HEAD
 C:\Users\Jaspur\Documents\Visual Studio 2013\Projects\TimeEstimeringPraktik\praktik,\praktik estimering\App.xaml
+=======
+C:\Users\Bruger\Documents\git mappe\praktik\praktik,\praktik estimering\App.xaml
+>>>>>>> origin/master
 2413424154
 
 13-2100734897
