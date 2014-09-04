@@ -22,3 +22,6 @@ C:\Users\Bruger\Documents\git mappe\praktik\praktik,\praktik estimering\bin\Debu
 C:\Users\Bruger\Documents\git mappe\praktik\praktik,\praktik estimering\obj\Debug\praktik estimering.exe
 C:\Users\Bruger\Documents\git mappe\praktik\praktik,\praktik estimering\obj\Debug\praktik estimering.pdb
 >>>>>>> origin/master
+C:\Users\Jaspur\Dropbox\Datamatikari\Praktik\TimeEstimeringPraktik\praktik,\praktik estimering\bin\Debug\praktik estimering.exe.config
+C:\Users\Jaspur\Dropbox\Datamatikari\Praktik\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\praktik estimering.exe
+C:\Users\Jaspur\Dropbox\Datamatikari\Praktik\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\praktik estimering.pdb
