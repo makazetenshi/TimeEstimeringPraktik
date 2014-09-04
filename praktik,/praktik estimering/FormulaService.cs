@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -89,6 +90,28 @@ namespace praktik_estimering
             con.Close();
 
             return result;
+        }
+
+        public void StoreProcedureSimple(string name, int number)
+        {
+            double result = 0;
+            using (SqlConnection con = dl.getConnection())
+            using (SqlCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = "getFormulaValue";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue(name, number);
+
+                var returnParameter = cmd.Parameters.Add("@ReturnVal", SqlDbType.Float);
+                returnParameter.Direction = ParameterDirection.ReturnValue;
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+                result = (double)returnParameter.Value;
+
+            }
+
+            Debug.WriteLine(result);
         }
 
 
