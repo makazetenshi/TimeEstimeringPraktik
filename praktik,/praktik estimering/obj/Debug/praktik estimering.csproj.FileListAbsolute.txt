@@ -28,3 +28,18 @@ C:\Users\Bruger\Documents\git mappe\praktik\praktik,\praktik estimering\obj\Debu
 C:\Users\Bruger\Documents\git mappe\praktik\praktik,\praktik estimering\obj\Debug\praktik estimering.csproj.GenerateResource.Cache
 C:\Users\Bruger\Documents\git mappe\praktik\praktik,\praktik estimering\bin\Debug\praktik estimering.exe
 C:\Users\Bruger\Documents\git mappe\praktik\praktik,\praktik estimering\bin\Debug\praktik estimering.pdb
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\bin\Debug\praktik estimering.exe.config
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\praktik estimering.exe
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\praktik estimering.pdb
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\bin\Debug\praktik estimering.exe
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\bin\Debug\praktik estimering.pdb
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\praktik estimering.csprojResolveAssemblyReference.cache
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\Mainwindow.baml
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\Overview.baml
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\Mainwindow.g.cs
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\Overview.g.cs
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\App.g.cs
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\praktik estimering_MarkupCompile.cache
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\praktik estimering.g.resources
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\praktik_estimering.Properties.Resources.resources
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\praktik estimering.csproj.GenerateResource.Cache
