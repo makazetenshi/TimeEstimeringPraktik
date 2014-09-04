@@ -54,7 +54,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DataLink.cs" />
-    <Compile Include="FormulaService.cs" />
     <Compile Include="UserService.cs" />
     <Page Include="Mainwindow.xaml">
       <Generator>MSBuild:Compile</Generator>

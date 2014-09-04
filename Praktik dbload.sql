@@ -1,63 +1,16 @@
 --CREATE DATABASE praktik_estimate
 
-
---DROP TABLE FormulaParameter
---DROP TABLE Parameter
---DROP TABLE Formula
---DROP TABLE FormulasActive
---DROP TABLE Formulas
---DROP TABLE EstimateActive
---DROP TABLE Estimate
---DROP TABLE DayActive
---DROP TABLE Day
---DROP TABLE Period
---DROP TABLE Person
-
-
-IF EXISTS (SELECT * FROM sys.objects
-WHERE object_id = OBJECT_ID(N'praktik_estimate.FormulaParameter') AND TYPE IN (N'U'))
-DROP TABLE praktik_estimate.FormulaParameter
-
-IF EXISTS (SELECT * FROM sys.objects
-WHERE object_id = OBJECT_ID(N'praktik_estimate.Parameter') AND TYPE IN (N'U'))
-DROP TABLE praktik_estimate.Parameter
-
-IF EXISTS (SELECT * FROM sys.objects
-WHERE object_id = OBJECT_ID(N'praktik_estimate.Formula') AND TYPE IN (N'U'))
-DROP TABLE praktik_estimate.Formula
-
-IF EXISTS (SELECT * FROM sys.objects
-WHERE object_id = OBJECT_ID(N'praktik_estimate.FormulasActive') AND TYPE IN (N'U'))
-DROP TABLE praktik_estimate.FormulasActive
-
-IF EXISTS (SELECT * FROM sys.objects
-WHERE object_id = OBJECT_ID(N'praktik_estimate.Formulas') AND TYPE IN (N'U'))
-DROP TABLE praktik_estimate.Formulas
-
-IF EXISTS (SELECT * FROM sys.objects
-WHERE object_id = OBJECT_ID(N'praktik_estimate.EstimateActive') AND TYPE IN (N'U'))
-DROP TABLE praktik_estimate.EstimateActive
-
-IF EXISTS (SELECT * FROM sys.objects
-WHERE object_id = OBJECT_ID(N'praktik_estimate.Estimate') AND TYPE IN (N'U'))
-DROP TABLE praktik_estimate.Estimate
-
-IF EXISTS (SELECT * FROM sys.objects
-WHERE object_id = OBJECT_ID(N'praktik_estimate.DayActive') AND TYPE IN (N'U'))
-DROP TABLE praktik_estimate.DayActive
-
-IF EXISTS (SELECT * FROM sys.objects
-WHERE object_id = OBJECT_ID(N'praktik_estimate.Day') AND TYPE IN (N'U'))
-DROP TABLE praktik_estimate.Day
-
-IF EXISTS (SELECT * FROM sys.objects
-WHERE object_id = OBJECT_ID(N'praktik_estimate.Period') AND TYPE IN (N'U'))
-DROP TABLE praktik_estimate.Period
-
-IF EXISTS (SELECT * FROM sys.objects
-WHERE object_id = OBJECT_ID(N'praktik_estimate.Person') AND TYPE IN (N'U'))
-DROP TABLE praktik_estimate.Person
-
+DROP TABLE FormulaParameter
+DROP TABLE Parameter
+DROP TABLE Education
+DROP TABLE FormulasActive
+DROP TABLE Formula
+DROP TABLE EstimateActive
+DROP TABLE Estimate
+DROP TABLE DayActive
+DROP TABLE DayTable
+DROP TABLE Period
+DROP TABLE Person
 
 
 GO
@@ -74,8 +27,8 @@ CREATE TABLE Period
 (
 Id int IDENTITY(1,1) primary key,
 Person int foreign key references Person(Id),
-StartDate datetime not null,
-EndDate datetime not null
+StartDate date not null,
+EndDate date not null
 )
 
 CREATE TABLE DayTable
@@ -152,11 +105,15 @@ INSERT INTO Education values ('Multimediedesign')
 INSERT INTO Person values('Torben Krøjmand', 'fisk123', 'TK')
 INSERT INTO Person values('Søren Madsen', 'jens', 'SM')
 INSERT INTO Person values('Erik Jacobsen', 'kosteskab', 'EJ')
+INSERT INTO Person values('Tester McTest', 'test1', 'test')
+
 
 INSERT INTO Period values(1, '20140801', '20141231')
 INSERT INTO Period values(2, '20140801', '20141231')
 INSERT INTO Period values(3, '20140801', '20141231')
 INSERT INTO Period values(2, '20140801', '20141231')
+INSERT INTO Period values(4, '20140801', '20141231')
+INSERT INTO Period values(4, '20140101', '20140831')
 
 INSERT INTO DayTable values('Vacation')
 INSERT INTO DayTable values('Holiday')

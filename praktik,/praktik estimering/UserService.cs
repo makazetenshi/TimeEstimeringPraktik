@@ -36,7 +36,7 @@ namespace praktik_estimering
         {
             try
             {
-                string sql = "SELECT init, pass FROM person WHERE init = '" + initials + "'";
+                string sql = "SELECT * FROM person WHERE init = '" + initials + "'";
                 SqlDataAdapter da = new SqlDataAdapter(sql, con);
                 userTabel = new DataTable();
                 da.Fill(userTabel);
@@ -72,24 +72,22 @@ namespace praktik_estimering
             userTabel.Clear();
         }
 
-        public DataTable getPastPeriods(string initialer)
+        public DataTable getPastPeriods()
         {
-            string sql = "SELECT * FROM Period where person = '" + initialer + "'";
+            string sql = "SELECT * FROM Period where person = '" + getuserId() + "'";
             return getDataTable(sql);
         }
 
-        public String getInitials()
+        private String getuserId()
         {
-            string init = null;
+            string id = null;
             foreach (DataRow row in userTabel.Rows)
             {
-                init = row["Init"].ToString();
+                id = row["id"].ToString();
             }
 
-            return init;
+            return id;
         }
-
-
 
 
 
@@ -105,13 +103,13 @@ namespace praktik_estimering
                 da.Fill(dt);
 
             }
-            catch (SqlException ex)
+            catch (SqlException)
             {
                 MessageBox.Show("Error while reading database");
             }
             finally
             {
-                if (con.State == ConnectionState.Open) con.Close;
+                if (con.State == ConnectionState.Open) con.Close();
             }
             return dt;
         }

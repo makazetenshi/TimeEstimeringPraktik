@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,17 +28,41 @@ namespace praktik_estimering
 
         private void overviewLoaded(object sender, RoutedEventArgs e)
         {
-            datagridOldPeriods = UserService.Instance.getPastPeriods(UserService.Instance.getInitials());
+            datagridOldPeriods.ItemsSource = UserService.Instance.getPastPeriods().DefaultView;
+            datagridOldPeriods.Columns[0].Visibility = Visibility.Hidden;
+            datagridOldPeriods.Columns[1].Visibility = Visibility.Hidden;
+          
         }
 
         private void ClickNewPeriod(object sender, RoutedEventArgs e)
         {
-
+            MessageBox.Show("not implemented");
         }
 
         private void clickViewOld(object sender, RoutedEventArgs e)
         {
+            if (datagridOldPeriods.SelectedItem != null)
+            {
+                DataRowView row = datagridOldPeriods.SelectedItem as DataRowView;
+                try
+                {
+                    DataRowView dataRow = (DataRowView)datagridOldPeriods.SelectedItem;
 
+                    string cellvalue = dataRow.Row.ItemArray[0].ToString();
+
+
+                    
+                }
+                catch (NullReferenceException n)
+                {
+                    MessageBox.Show(n.Message.ToString());
+                }
+            }
+            else
+            {
+                MessageBox.Show("choose the periode you want specified");
+            }
+            
         }
 
         private void clickLogout(object sender, RoutedEventArgs e)
@@ -47,6 +73,22 @@ namespace praktik_estimering
             main.Show();
             this.Close();
         }
+
+        private void datagridOldPeriods_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
+        {
+            if (e.PropertyType == typeof(DateTime))
+            {
+                DataGridTextColumn dataGridTextColumn = e.Column as DataGridTextColumn;
+                if (dataGridTextColumn != null)
+                {
+                    dataGridTextColumn.Binding.StringFormat = "{0:d}";
+                }
+            }
+        }
+
+
+
+
 
 
     }
