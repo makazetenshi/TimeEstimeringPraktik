@@ -48,10 +48,14 @@ namespace praktik_estimering
                 {
                     DataRowView dataRow = (DataRowView)datagridOldPeriods.SelectedItem;
 
-                    string cellvalue = dataRow.Row.ItemArray[0].ToString();
-                    MessageBox.Show("inside try, not implemented");
+                    int periodId = (int)dataRow.Row.ItemArray[0];
 
+                    UserService.Instance.SelectedPeriod = periodId;
 
+                    Showroom show = new Showroom();
+                    show.Show();
+                    this.Close();
+                    
                 }
                 catch (NullReferenceException n)
                 {

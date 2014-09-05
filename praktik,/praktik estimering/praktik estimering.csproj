@@ -54,6 +54,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DataLink.cs" />
+    <Compile Include="FormulaService.cs" />
     <Compile Include="Showroom.xaml.cs">
       <DependentUpon>Showroom.xaml</DependentUpon>
     </Compile>

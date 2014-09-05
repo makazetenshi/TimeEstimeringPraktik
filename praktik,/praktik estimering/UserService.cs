@@ -15,9 +15,9 @@ namespace praktik_estimering
         static DataLink dl = new DataLink();
         static SqlConnection con = dl.getConnection();
         DataTable userTabel = null;
- 
-
+        private int selectedPeriod;
         private static UserService instance;
+
         private UserService() { }
 
         public static UserService Instance
@@ -30,6 +30,11 @@ namespace praktik_estimering
                 }
                 return instance;
             }
+        }
+        public int SelectedPeriod
+        {
+            get { return selectedPeriod; }
+            set { selectedPeriod = value; }
         }
 
         public Boolean login(string initials, string password)
@@ -72,27 +77,6 @@ namespace praktik_estimering
             userTabel.Clear();
         }
 
-        public DataTable getPastPeriods()
-        {
-            string sql = "SELECT * FROM Period where person = '" + getuserId() + "'";
-            return getDataTable(sql);
-        }
-
-        private String getuserId()
-        {
-            string id = null;
-            foreach (DataRow row in userTabel.Rows)
-            {
-                id = row["id"].ToString();
-            }
-
-            return id;
-        }
-
-
-
-
-
 
         private static DataTable getDataTable(string sql)
         {
@@ -113,6 +97,60 @@ namespace praktik_estimering
             }
             return dt;
         }
+
+        public DataTable getPastPeriods()
+        {
+            string sql = "SELECT * FROM Period WHERE person = '" + getuserId() + "'";
+            return getDataTable(sql);
+        }
+
+        private String getuserId()
+        {
+            string id = null;
+            foreach (DataRow row in userTabel.Rows)
+            {
+                id = row["id"].ToString();
+            }
+
+            return id;
+        }
+
+        public List<String> getSelectedPeriodData()
+        {
+            List<string> summary = new List<string>();
+            
+            string sqlDay = " SELECT dt.TypeName 'Type', SUM(number)*7.4 'Hours', COUNT(dt.TypeName) 'Entries' " +
+                         "FROM DayActive da, DayTable dt" +
+                         "WHERE da.DayTable = dt.Id AND da.Period =" + selectedPeriod +
+                         "GROUP BY dt.TypeName";
+            string sqlEstimate = "SELECT e.TypeName 'Type', SUM(number) 'Hours', COUNT(e.TypeName) 'Entries'" +
+                                 "from Estimate e, EstimateActive ea" +
+                                 "where ea.Estimate = e.Id and ea.Period = " + selectedPeriod +
+                                 "GROUP BY e.TypeName";
+           
+            DataTable dayTable = getDataTable(sqlDay);
+            DataTable estimateTable = getDataTable(sqlDay);
+
+            string line;
+            summary.Add("Day activities:");
+            foreach (var row in dayTable.Rows)
+            {
+                Debug.WriteLine(row.ToString());
+               // line = row.ToString();
+               // summary.Add(line);
+            }
+            
+            summary.Add("estimate aktivities:");
+            foreach (var row in estimateTable.Rows)
+            {
+                Debug.WriteLine(row.ToString());
+                // line = row.ToString();
+                // summary.Add(line);
+            }
+
+
+            return summary;
+        } 
 
 
 

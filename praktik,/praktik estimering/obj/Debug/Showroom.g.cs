@@ -88,14 +88,6 @@ namespace praktik_estimering {
             case 2:
             this.LabelNormalTid = ((System.Windows.Controls.Label)(target));
             return;
-            case 3:
-            
-            #line 9 "..\..\Showroom.xaml"
-            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.Button_Click);
-            
-            #line default
-            #line hidden
-            return;
             }
             this._contentLoaded = true;
         }
