@@ -118,48 +118,85 @@ namespace praktik_estimering
         public List<String> getSelectedPeriodData()
         {
             List<string> summary = new List<string>();
-            
-            string sqlDay = " SELECT dt.TypeName 'Type', SUM(number)*7.4 'Hours', COUNT(dt.TypeName) 'Entries' " +
-                         "FROM DayActive da, DayTable dt" +
-                         "WHERE da.DayTable = dt.Id AND da.Period =" + selectedPeriod +
-                         "GROUP BY dt.TypeName";
-            string sqlEstimate = "SELECT e.TypeName 'Type', SUM(number) 'Hours', COUNT(e.TypeName) 'Entries'" +
-                                 "from Estimate e, EstimateActive ea" +
-                                 "where ea.Estimate = e.Id and ea.Period = " + selectedPeriod +
-                                 "GROUP BY e.TypeName";
-           
-            DataTable dayTable = getDataTable(sqlDay);
-            DataTable estimateTable = getDataTable(sqlDay);
 
-            string line;
-            summary.Add("Day activities:");
-            foreach (var row in dayTable.Rows)
-            {
-                Debug.WriteLine(row.ToString());
-               // line = row.ToString();
-               // summary.Add(line);
-            }
-            
-            summary.Add("estimate aktivities:");
-            foreach (var row in estimateTable.Rows)
-            {
-                Debug.WriteLine(row.ToString());
-                // line = row.ToString();
-                // summary.Add(line);
-            }
-
+            summary.AddRange(addDayAktivities());
+            summary.AddRange(addEstimateAktivities());
+            summary.AddRange(addFormulaAktivities());
 
             return summary;
-        } 
+        }
+
+        private List<String> addDayAktivities()
+        {
+            List<string> dayList = new List<string>();
+            string sqlDay = "SELECT dt.TypeName 'Type', SUM(da.number)*7.4 'Hours', COUNT(dt.TypeName) 'Entries' " +
+                         "FROM DayActive da, DayTable dt " +
+                         "WHERE da.DayTable = dt.Id AND da.Period = " + selectedPeriod +
+                         "GROUP BY dt.TypeName ";
+
+            DataTable dayTable = getDataTable(sqlDay);
 
 
+            dayList.Add("Day activities: ");
 
+            StringBuilder sb = new StringBuilder();
+            foreach (DataRow row in dayTable.Rows)
+            {
+                sb.AppendLine(string.Join("  -  ", row.ItemArray));
+                dayList.Add(sb.ToString());
+                sb.Clear();
+            }
+            return dayList;
+        }
 
+        private List<string> addEstimateAktivities()
+        {
+            List<string> estimateList = new List<string>();
+
+            string sqlEstimate = "SELECT e.TypeName as 'Type', SUM(number) as 'Hours', COUNT(e.TypeName) as 'Entries' " +
+                                "from Estimate as e, EstimateActive as ea " +
+                                "where ea.estimate = e.id and ea.period = " + selectedPeriod +
+                                "GROUP BY e.TypeName ";
+
+            DataTable estimateTable = getDataTable(sqlEstimate);
+
+            estimateList.Add("Estimate activities: ");
+
+            StringBuilder sb = new StringBuilder();
+            foreach (DataRow row in estimateTable.Rows)
+            {
+                sb.AppendLine(string.Join("  -  ", row.ItemArray));
+                estimateList.Add(sb.ToString());
+                sb.Clear();
+            }
+            return estimateList;
+        }
+
+        private List<string> addFormulaAktivities()
+        {
+            List<string> formulaList = new List<string>();
+
+            string sqlformula = "SELECT f.Name, SUM(fa.Number), COUNT(f.Name) " +
+                                "FROM FormulasActive fa, Period p, Formula f " +
+                                "WHERE fa.Formula = F.Id AND fa.Period = " + selectedPeriod +
+                                "GROUP BY f.Name ";
+
+            DataTable formulaTable = getDataTable(sqlformula);
+
+            formulaList.Add("form activities: ");
+
+            StringBuilder sb = new StringBuilder();
+            foreach (DataRow row in formulaTable.Rows)
+            {
+                sb.AppendLine(string.Join("  -  ", row.ItemArray));
+                formulaList.Add(sb.ToString());
+                sb.Clear();
+            }
+            return formulaList;
+        }
 
 
 
 
     }
-
-
 }

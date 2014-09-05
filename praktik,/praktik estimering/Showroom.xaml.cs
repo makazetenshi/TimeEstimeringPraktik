@@ -27,6 +27,7 @@ namespace praktik_estimering
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             UserService.Instance.getSelectedPeriodData();
+            listAktivies.ItemsSource = UserService.Instance.getSelectedPeriodData();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
