@@ -43,3 +43,5 @@ C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimeri
 C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\praktik estimering.g.resources
 C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\praktik_estimering.Properties.Resources.resources
 C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\praktik estimering.csproj.GenerateResource.Cache
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\Showroom.baml
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\Showroom.g.cs

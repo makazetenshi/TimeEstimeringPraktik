@@ -23,5 +23,17 @@ namespace praktik_estimering
         {
             InitializeComponent();
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            UserService.Instance.getSelectedPeriodData();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Overview view = new Overview();
+            view.Show();
+            this.Close();
+        }
     }
 }
