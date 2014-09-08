@@ -28,6 +28,8 @@ namespace praktik_estimering
         {
             UserService.Instance.getSelectedPeriodData();
             listAktivies.ItemsSource = UserService.Instance.getSelectedPeriodData();
+            labelPrescribedTime.Content = UserService.Instance.getNormTime();
+            lableBrugtTid.Content = UserService.Instance.getUsedTime().ToString();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

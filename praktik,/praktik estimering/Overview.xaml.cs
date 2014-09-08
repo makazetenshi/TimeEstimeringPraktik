@@ -36,7 +36,9 @@ namespace praktik_estimering
 
         private void ClickNewPeriod(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("not implemented");
+            NewPeriod Np = new NewPeriod();
+            Np.Show();
+            
         }
 
         private void clickViewOld(object sender, RoutedEventArgs e)
@@ -54,8 +56,7 @@ namespace praktik_estimering
 
                     Showroom show = new Showroom();
                     show.Show();
-                    this.Close();
-                    
+                    this.Close();   
                 }
                 catch (NullReferenceException n)
                 {

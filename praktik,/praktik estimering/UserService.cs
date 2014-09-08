@@ -14,7 +14,9 @@ namespace praktik_estimering
     {
         static DataLink dl = new DataLink();
         static SqlConnection con = dl.getConnection();
+
         DataTable userTabel = null;
+
         private int selectedPeriod;
         private static UserService instance;
 
@@ -36,7 +38,6 @@ namespace praktik_estimering
             get { return selectedPeriod; }
             set { selectedPeriod = value; }
         }
-
         public Boolean login(string initials, string password)
         {
             try
@@ -71,50 +72,15 @@ namespace praktik_estimering
                 return false;
             }
         }
-
         public void logUserOut()
         {
             userTabel.Clear();
         }
-
-
-        private static DataTable getDataTable(string sql)
-        {
-            DataTable dt = new DataTable();
-            try
-            {
-                SqlDataAdapter da = new SqlDataAdapter(sql, con);
-                da.Fill(dt);
-
-            }
-            catch (SqlException)
-            {
-                MessageBox.Show("Error while reading database");
-            }
-            finally
-            {
-                if (con.State == ConnectionState.Open) con.Close();
-            }
-            return dt;
-        }
-
         public DataTable getPastPeriods()
         {
             string sql = "SELECT * FROM Period WHERE person = '" + getuserId() + "'";
             return getDataTable(sql);
         }
-
-        private String getuserId()
-        {
-            string id = null;
-            foreach (DataRow row in userTabel.Rows)
-            {
-                id = row["id"].ToString();
-            }
-
-            return id;
-        }
-
         public List<String> getSelectedPeriodData()
         {
             List<string> summary = new List<string>();
@@ -125,11 +91,76 @@ namespace praktik_estimering
 
             return summary;
         }
+        public string getNormTime()
+        {
+            double result;
+            using (SqlConnection con = dl.getConnection())
+            using (SqlCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = "getDaysDifference";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("id", getuserId());
 
+                var returnParameter = cmd.Parameters.Add("@ReturnVal", SqlDbType.Int);
+                returnParameter.Direction = ParameterDirection.ReturnValue;
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+                result = (int)returnParameter.Value;
+            }
+
+            return (result * 7.5).ToString();
+        }
+        public int getUsedTime()
+        {
+            string sqlUsedTime = "SELECT SUM(da.Number * 7.4) + SUM(ea.Number) + SUM(fa.Number) 'sum' " +
+                                 "FROM Period p, DayActive da, EstimateActive ea, FormulasActive fa " +
+                                 "WHERE p.Id = da.Period AND p.Id = ea.Period AND p.Id = fa.Period AND p.Id = " + selectedPeriod;
+
+            DataTable timeTable = getDataTable(sqlUsedTime);
+
+            double usedTime = -1;
+            foreach (DataRow row in timeTable.Rows)
+            {
+                usedTime = double.Parse(row["sum"].ToString());
+            }
+            int result = Convert.ToInt32(usedTime);
+            return result;
+        }
+        private static DataTable getDataTable(string sql)
+        {
+            DataTable dt = new DataTable();
+            try
+            {               
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                da.Fill(dt);
+            }
+            catch (Exception e)
+            {
+                // e.Message
+                // "Error while reading database"
+                MessageBox.Show(e.Message);
+            }
+            finally
+            {
+                if (con.State == ConnectionState.Open) con.Close();
+            }
+            return dt;
+        }
+        private String getuserId()
+        {
+            string id = null;
+            foreach (DataRow row in userTabel.Rows)
+            {
+                id = row["id"].ToString();
+            }
+
+            return id;
+        }
         private List<String> addDayAktivities()
         {
             List<string> dayList = new List<string>();
-            string sqlDay = "SELECT dt.TypeName 'Type', SUM(da.number)*7.4 'Hours', COUNT(dt.TypeName) 'Entries' " +
+            string sqlDay = "SELECT dt.TypeName 'Type', SUM(da.number)*7.4 'Hours' " +
                          "FROM DayActive da, DayTable dt " +
                          "WHERE da.DayTable = dt.Id AND da.Period = " + selectedPeriod +
                          "GROUP BY dt.TypeName ";
@@ -148,12 +179,11 @@ namespace praktik_estimering
             }
             return dayList;
         }
-
         private List<string> addEstimateAktivities()
         {
             List<string> estimateList = new List<string>();
 
-            string sqlEstimate = "SELECT e.TypeName as 'Type', SUM(number) as 'Hours', COUNT(e.TypeName) as 'Entries' " +
+            string sqlEstimate = "SELECT e.TypeName as 'Type', SUM(number) as 'Hours' " +
                                 "from Estimate as e, EstimateActive as ea " +
                                 "where ea.estimate = e.id and ea.period = " + selectedPeriod +
                                 "GROUP BY e.TypeName ";
@@ -171,12 +201,11 @@ namespace praktik_estimering
             }
             return estimateList;
         }
-
         private List<string> addFormulaAktivities()
         {
             List<string> formulaList = new List<string>();
 
-            string sqlformula = "SELECT f.Name, SUM(fa.Number), COUNT(f.Name) " +
+            string sqlformula = "SELECT f.Name, SUM(fa.Number) " +
                                 "FROM FormulasActive fa, Period p, Formula f " +
                                 "WHERE fa.Formula = F.Id AND fa.Period = " + selectedPeriod +
                                 "GROUP BY f.Name ";
@@ -194,7 +223,6 @@ namespace praktik_estimering
             }
             return formulaList;
         }
-
 
 
 

@@ -55,6 +55,10 @@
     </ApplicationDefinition>
     <Compile Include="DataLink.cs" />
     <Compile Include="FormulaService.cs" />
+    <Compile Include="NewPeriod.xaml.cs">
+      <DependentUpon>NewPeriod.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PeriodService.cs" />
     <Compile Include="Showroom.xaml.cs">
       <DependentUpon>Showroom.xaml</DependentUpon>
     </Compile>
@@ -71,6 +75,10 @@
       <DependentUpon>Mainwindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NewPeriod.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Overview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
