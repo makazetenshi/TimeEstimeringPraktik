@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
@@ -12,15 +13,19 @@ namespace praktik_estimering
 {
     class UserService
     {
-        static DataLink dl = new DataLink();
-        static SqlConnection con = dl.getConnection();
+        private static SqlConnection con;
 
         DataTable userTabel = null;
 
         private int selectedPeriod;
         private static UserService instance;
 
-        private UserService() { }
+        private UserService()
+        {
+            DataLink dl = new DataLink();
+            con = dl.getConnection();
+            userTabel = new DataTable();
+        }
 
         public static UserService Instance
         {
@@ -43,14 +48,21 @@ namespace praktik_estimering
             try
             {
                 string sql = "SELECT * FROM person WHERE init = '" + initials + "'";
+/*
+
+                SqlCommand command = new SqlCommand(sql, con);
+                command.Parameters.Add("@initials", sqlDbType.NvarCharinitials);
+                command.Parameters.Add("@password", password);
+*/
+
                 SqlDataAdapter da = new SqlDataAdapter(sql, con);
-                userTabel = new DataTable();
-                da.Fill(userTabel);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
 
                 string pass = null;
                 string init = null;
 
-                foreach (DataRow row in userTabel.Rows)
+                foreach (DataRow row in dt.Rows)
                 {
                     pass = row["Pass"].ToString();
                     init = row["Init"].ToString();
@@ -60,6 +72,7 @@ namespace praktik_estimering
                 {
                     if (password == pass)
                     {
+                        userTabel = dt;
                         return true;
                     }
                     else throw new Exception("password does not match initials.");
@@ -91,10 +104,9 @@ namespace praktik_estimering
 
             return summary;
         }
-        public string getNormTime()
+        public int getNormTime()
         {
-            double result;
-            using (SqlConnection con = dl.getConnection())
+            int result;
             using (SqlCommand cmd = con.CreateCommand())
             {
                 cmd.CommandText = "getDaysDifference";
@@ -108,8 +120,12 @@ namespace praktik_estimering
                 cmd.ExecuteNonQuery();
                 result = (int)returnParameter.Value;
             }
+            if (con.State == ConnectionState.Open)
+            {
+                con.Close();
+            }
 
-            return (result * 7.5).ToString();
+            return Convert.ToInt32(result*7.4);
         }
         public int getUsedTime()
         {
@@ -127,19 +143,23 @@ namespace praktik_estimering
             int result = Convert.ToInt32(usedTime);
             return result;
         }
+        public int getNettoTid()
+        {
+            return getUsedTime()-getNormTime();
+        }
         private static DataTable getDataTable(string sql)
         {
             DataTable dt = new DataTable();
             try
-            {               
+            {
                 SqlDataAdapter da = new SqlDataAdapter(sql, con);
                 da.Fill(dt);
             }
-            catch (Exception e)
+            catch (SqlException)
             {
                 // e.Message
                 // "Error while reading database"
-                MessageBox.Show(e.Message);
+                MessageBox.Show("Error while reading database");
             }
             finally
             {
@@ -147,7 +167,7 @@ namespace praktik_estimering
             }
             return dt;
         }
-        private String getuserId()
+        public String getuserId()
         {
             string id = null;
             foreach (DataRow row in userTabel.Rows)

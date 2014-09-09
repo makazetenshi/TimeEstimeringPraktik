@@ -31,14 +31,13 @@ namespace praktik_estimering
             datagridOldPeriods.ItemsSource = UserService.Instance.getPastPeriods().DefaultView;
             datagridOldPeriods.Columns[0].Visibility = Visibility.Hidden;
             datagridOldPeriods.Columns[1].Visibility = Visibility.Hidden;
-          
         }
 
         private void ClickNewPeriod(object sender, RoutedEventArgs e)
         {
             NewPeriod Np = new NewPeriod();
             Np.Show();
-            
+            this.Close();
         }
 
         private void clickViewOld(object sender, RoutedEventArgs e)
@@ -46,28 +45,20 @@ namespace praktik_estimering
             if (datagridOldPeriods.SelectedItem != null)
             {
                 DataRowView row = datagridOldPeriods.SelectedItem as DataRowView;
-                try
-                {
-                    DataRowView dataRow = (DataRowView)datagridOldPeriods.SelectedItem;
 
-                    int periodId = (int)dataRow.Row.ItemArray[0];
-
-                    UserService.Instance.SelectedPeriod = periodId;
-
-                    Showroom show = new Showroom();
-                    show.Show();
-                    this.Close();   
-                }
-                catch (NullReferenceException n)
-                {
-                    MessageBox.Show(n.Message.ToString());
-                }
+                DataRowView dataRow = (DataRowView)datagridOldPeriods.SelectedItem;
+                int periodId = (int)dataRow.Row.ItemArray[0];
+                UserService.Instance.SelectedPeriod = periodId;
+                
+                Showroom show = new Showroom();
+                show.Show();
+                this.Close();
             }
             else
             {
                 MessageBox.Show("choose the periode you want specified");
             }
-            
+
         }
 
         private void clickLogout(object sender, RoutedEventArgs e)

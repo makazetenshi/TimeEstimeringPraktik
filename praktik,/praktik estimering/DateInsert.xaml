@@ -5,8 +5,8 @@
     <Grid>
         <Label Content="Period start date" HorizontalAlignment="Left" Margin="24,10,0,0" VerticalAlignment="Top"/>
         <Label Content="Periode end date" HorizontalAlignment="Left" Margin="164,10,0,0" VerticalAlignment="Top"/>
-        <DatePicker x:Name="DatePickerStart" HorizontalAlignment="Left" Margin="24,41,0,0" VerticalAlignment="Top"/>
-        <DatePicker x:Name="DatePickerEnd" HorizontalAlignment="Left" Margin="164,41,0,0" VerticalAlignment="Top"/>
+        <DatePicker x:Name="DatePickerStart" HorizontalAlignment="Left" Margin="24,41,0,0" VerticalAlignment="Top" FirstDayOfWeek="Monday"/>
+        <DatePicker x:Name="DatePickerEnd" HorizontalAlignment="Left" Margin="164,41,0,0" VerticalAlignment="Top" FirstDayOfWeek="Monday"/>
         <Button x:Name="buttonNext" Content="Next" HorizontalAlignment="Left" Margin="164,238,0,0" VerticalAlignment="Top" Width="75" Click="ButtonNextClick"/>
         <Button x:Name="buttonBack" Content="Back" HorizontalAlignment="Left" Margin="24,238,0,0" VerticalAlignment="Top" Width="75" Click="ButtonBackClick"/>
     </Grid>

@@ -15,24 +15,27 @@ using System.Windows.Shapes;
 namespace praktik_estimering
 {
     /// <summary>
-    /// Interaction logic for NewPeriod.xaml
+    /// Interaction logic for DayAktivities.xaml
     /// </summary>
-    public partial class NewPeriod : Window
+    public partial class DayAktivities : Window
     {
-        public NewPeriod()
+        public DayAktivities()
         {
             InitializeComponent();
         }
 
-        private void ButtonBackClick(object sender, RoutedEventArgs e)
+        private void ButtonAddClicked(object sender, RoutedEventArgs e)
         {
-           this.Close();
-
+            PeriodService.Instance.addToDayList();
         }
 
-        private void ButtonNextClick(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
+            //add daylist to list box
+            listboxActivities.ItemsSource= PeriodService.Instance.
         }
+
+
+
     }
 }

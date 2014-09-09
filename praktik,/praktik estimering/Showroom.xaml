@@ -9,5 +9,7 @@
         <Button Content="Done" HorizontalAlignment="Left" Margin="272,238,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <Label Content="Time spent:" HorizontalAlignment="Left" Margin="207,41,0,0" VerticalAlignment="Top" Width="78"/>
         <Label x:Name="lableBrugtTid" Content="" HorizontalAlignment="Left" Margin="306,41,0,0" VerticalAlignment="Top" Width="41"/>
+        <Label Content="Netto time:" HorizontalAlignment="Left" Margin="207,72,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="LabelNettoTime" Content="" HorizontalAlignment="Left" Margin="306,72,0,0" VerticalAlignment="Top" Width="41"/>
     </Grid>
 </Window>
