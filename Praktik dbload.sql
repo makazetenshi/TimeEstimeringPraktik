@@ -61,7 +61,7 @@ Number float
 CREATE TABLE Formula
 (
 Id int identity(1,1) primary key,
-Name varchar(255) not null,
+Name varchar(255) not null
 )
 
 CREATE TABLE FormulasActive
@@ -69,6 +69,20 @@ CREATE TABLE FormulasActive
 Id int IDENTITY(1,1) primary key,
 Period int foreign key references Period(Id),
 Formula int foreign key references Formula(Id),
+Number float
+)
+
+CREATE TABLE Exam
+(
+id int identity(1,1) primary key,
+name varchar(255) not null
+)
+
+CREATE TABLE ExamActive
+(
+id int identity(1,1) primary key,
+period int foreign key references Period(Id),
+exam int foreign key references Exam(id),
 Number float
 )
 
@@ -84,14 +98,8 @@ Id int identity(1,1) primary key,
 Name varchar(255) not null,
 Education int foreign key references Education(Id),
 Formula int foreign key references Formula(Id),
+examId int foreign key references Exam(id),
 Parameter float not null
-)
-
-CREATE TABLE FormulaParameter
-(
-Id int IDENTITY(1,1) primary key,
-Formula int foreign key references Formula(Id),
-Parameter int foreign key references Parameter(Id)
 )
 
 GO
