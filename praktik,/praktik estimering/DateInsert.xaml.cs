@@ -33,11 +33,14 @@ namespace praktik_estimering
 
         private void ButtonNextClick(object sender, RoutedEventArgs e)
         {
-            PeriodService.Instance.InsertNewPeriod(DatePickerStart.SelectedDate.Value, DatePickerEnd.SelectedDate.Value);
-            
-            DayAktivities da = new DayAktivities();
-            da.Show();
-            this.Close();
+            if (PeriodService.Instance.InsertNewPeriod(DatePickerStart.SelectedDate.Value,
+                DatePickerEnd.SelectedDate.Value))
+            {
+                DayActivity da = new DayActivity();
+                da.Show();
+                this.Close();
+            }
+
         }
 
 

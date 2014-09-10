@@ -54,19 +54,29 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DataLink.cs" />
-    <Compile Include="DayAktivities.xaml.cs">
-      <DependentUpon>DayAktivities.xaml</DependentUpon>
+    <Compile Include="EstimateActivities.xaml.cs">
+      <DependentUpon>EstimateActivities.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FormulaActivities.xaml.cs">
+      <DependentUpon>FormulaActivities.xaml</DependentUpon>
     </Compile>
     <Compile Include="FormulaService.cs" />
     <Compile Include="DateInsert.xaml.cs">
       <DependentUpon>DateInsert.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DayAktivities.xaml.cs">
+      <DependentUpon>DayAktivities.xaml</DependentUpon>
     </Compile>
     <Compile Include="PeriodService.cs" />
     <Compile Include="Showroom.xaml.cs">
       <DependentUpon>Showroom.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserService.cs" />
-    <Page Include="DayAktivities.xaml">
+    <Page Include="EstimateActivities.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FormulaActivities.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -83,6 +93,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="DateInsert.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DayAktivities.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

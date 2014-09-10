@@ -26,7 +26,6 @@ namespace praktik_estimering
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            UserService.Instance.getSelectedPeriodData();
             listAktivies.ItemsSource = UserService.Instance.getSelectedPeriodData();
             labelPrescribedTime.Content = UserService.Instance.getNormTime();
             lableBrugtTid.Content = UserService.Instance.getUsedTime().ToString();

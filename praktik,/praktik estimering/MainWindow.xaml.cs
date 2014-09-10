@@ -37,6 +37,11 @@ namespace praktik_estimering
             }
         }
 
+        private void Grid_TouchEnter(object sender, TouchEventArgs e)
+        {
+            LoginClick(sender, e);
+        }
+
 
     }
 }

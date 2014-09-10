@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,27 +16,46 @@ using System.Windows.Shapes;
 namespace praktik_estimering
 {
     /// <summary>
-    /// Interaction logic for DayAktivities.xaml
+    /// Interaction logic for NewDayActivity.xaml
     /// </summary>
-    public partial class DayAktivities : Window
+    public partial class DayActivity : Window
     {
-        public DayAktivities()
+        public DayActivity()
         {
             InitializeComponent();
         }
 
-        private void ButtonAddClicked(object sender, RoutedEventArgs e)
-        {
-            PeriodService.Instance.addToDayList();
-        }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //add daylist to list box
-            listboxActivities.ItemsSource= PeriodService.Instance.
+            DataGridDayActivity.ItemsSource = PeriodService.Instance.DayactivityList().DefaultView;
+            DataGridDayActivity.Columns[0].Visibility = Visibility.Hidden;
+            DataGridDayActivity.Columns[1].IsReadOnly = true;
+
+            
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
 
+            DataView dv = (DataView) DataGridDayActivity.ItemsSource;
+            DataTable dt = cloneDataTable(dv);
 
+            if (PeriodService.Instance.InsertDayActivities(dt))
+            {
+                Window EstimateActivities = new EstimateActivities();
+                EstimateActivities.Show();
+                this.Close();
+            }
+        }
+
+        private DataTable cloneDataTable(DataView dv)
+        {
+            DataTable dt = dv.Table.Clone();
+            foreach (DataRowView drv in dv)
+            {
+                dt.ImportRow(drv.Row);
+            }
+            return dt;
+        }
     }
 }

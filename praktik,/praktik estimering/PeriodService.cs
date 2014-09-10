@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Xml.XPath;
 using Microsoft.SqlServer.Server;
 
 namespace praktik_estimering
@@ -14,12 +16,10 @@ namespace praktik_estimering
     {
         private static SqlConnection con;
 
-        public static List<string> dayActivities;
-        private static List<string> estimateActivities;
-        private static List<string> formulaActivities;
-
         private static PeriodService instance;
         private static int activeUser;
+
+        public List<string> sqls = new List<string>();
 
         private PeriodService()
         {
@@ -27,9 +27,6 @@ namespace praktik_estimering
             con = dl.getConnection();
             activeUser = int.Parse(UserService.Instance.getuserId());
 
-            dayActivities = new List<string>();
-            estimateActivities = new List<string>();
-            formulaActivities = new List<string>();
         }
         public static PeriodService Instance
         {
@@ -42,24 +39,10 @@ namespace praktik_estimering
                 return instance;
             }
         }
-/*
 
-        public static List<string> DayActivities
+        public bool InsertNewPeriod(DateTime start, DateTime end)
         {
-            get { return dayActivities; }
-        }
-        public static List<string> EstimateActivities
-        {
-            get { return estimateActivities; }
-        }
-        public static List<string> FormulaActivities
-        {
-            get { return formulaActivities; }
-        }
-*/
-
-        public void InsertNewPeriod(DateTime start, DateTime end)
-        {
+            bool result = false;
             try
             {
                 if (start > end) throw new Exception("end date needs to be later than the start date");
@@ -73,36 +56,137 @@ namespace praktik_estimering
                 command.Parameters.Add("@activeUser", SqlDbType.Int).Value = activeUser;
 
                 executeQuery(command);
+                result = true;
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }
+            return result;
         }
 
-        public void addToDayList(int id, string activity, string NumberOfDays)
+        public DataTable DayactivityList()
         {
-            string addition = id + " - " + activity + " - " + NumberOfDays;
-            dayActivities.Add(addition);
+            string sql = "SELECT dt.Id 'Id', dt.TypeName 'Name' " +
+                         "FROM DayTable dt";
+
+            DataTable dt = getDataTable(sql);
+
+            dt.Columns.Add("Days", System.Type.GetType("System.Int32"));
+            foreach (DataRow row in dt.Rows)
+            {
+                row["Days"] = 0;
+            }
+
+            return dt;
         }
-        public void InsertDayActivities(List<string> activityList)
+        public bool InsertDayActivities(DataTable activityTable)
         {
-            MessageBox.Show("not implemented");
+            bool result = false;
+            string sql = "";
+            string id = "";
+            string value = "";
+ 
+            for (int i = 0; i < activityTable.Rows.Count; i++)
+            {
+                id = activityTable.Rows[i].ItemArray[0].ToString();
+                value = activityTable.Rows[i].ItemArray[2].ToString();
+                sql = "INSERT INTO DayActive VALUES ((SELECT MAX(id) FROM Period WHERE Person = " + activeUser + "), " + id + ", " + value + ")";
+                Debug.WriteLine(sql);
+                sqls.Add(sql);
+                result = true;
+            }
+            
+
+            return result;
         }
-        public void InsertestimationActivities(List<string> activityList)
+
+        public DataTable EstimateactivityList()
         {
-            MessageBox.Show("not implemented");
+            string sql = "SELECT dt.Id 'Id', dt.TypeName 'Name' " +
+                         "FROM Estimate dt";
+
+            DataTable dt = getDataTable(sql);
+            
+            dt.Columns.Add("Hours", System.Type.GetType("System.Double"));
+            foreach (DataRow row in dt.Rows)
+            {
+                row["Hours"] = 0;
+            }
+
+            return dt;
+        }
+
+        public bool InsertestimationActivities(DataTable activityTable)
+        {
+            bool result = false;
+            string sql = "";
+            string id = "";
+            string value = "";
+
+            for (int i = 0; i < activityTable.Rows.Count; i++)
+            {
+                id = activityTable.Rows[i].ItemArray[0].ToString();
+                value = activityTable.Rows[i].ItemArray[2].ToString();
+                sql = "INSERT INTO EstimateActive VALUES ((SELECT MAX(id) FROM Period WHERE Person = " + activeUser + "), " + id + ", " + value + ")";
+                Debug.WriteLine(sql);
+                sqls.Add(sql);
+                result = true;
+            }
+
+            return result;
+        }
+
+
+        public DataTable EactivityList()
+        {
+            string sql = "SELECT dt.Id 'Id', dt.TypeName 'Name' " +
+                         "FROM Estimate dt";
+
+            DataTable dt = getDataTable(sql);
+
+            dt.Columns.Add("Hours", System.Type.GetType("System.Double"));
+            foreach (DataRow row in dt.Rows)
+            {
+                row["Hours"] = 0;
+            }
+
+            return dt;
+        }
+
+        public DataTable FormulaList()
+        {
+            string sql = "SELECT f.Id 'Id', f.Name 'Name' " +
+                        "FROM Formula f";
+
+            DataTable dt = getDataTable(sql);
+
+            dt.Columns.Add("parameter1", System.Type.GetType("System.Double"));
+            dt.Columns.Add("parameter2", System.Type.GetType("System.Double"));
+            dt.Columns.Add("parameter3", System.Type.GetType("System.Double"));
+            foreach (DataRow row in dt.Rows)
+            {
+                row["parameter1"] = 0;
+                row["parameter2"] = 0;
+                row["parameter3"] = 0;
+            }
+
+            return dt;
         }
         public void InsertFormulaActivities(List<string> activityList)
         {
-            MessageBox.Show("not implemented");
+            
         }
 
-
-
-
-
-
+        private void InsertList(List<string> list)
+        {
+            SqlCommand cmd;
+            foreach (string s in list)
+            {
+                cmd = new SqlCommand(s, con);
+                executeQuery(cmd);
+            }
+        }
         private void executeQuery(SqlCommand cmd)
         {
             try
@@ -118,6 +202,26 @@ namespace praktik_estimering
             {
                 if (con.State == ConnectionState.Open) con.Close();
             }
+        }
+        private static DataTable getDataTable(string sql)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                da.Fill(dt);
+            }
+            catch (SqlException e)
+            {
+                // e.Message
+                // "Error while reading database"
+                MessageBox.Show(e.Message);
+            }
+            finally
+            {
+                if (con.State == ConnectionState.Open) con.Close();
+            }
+            return dt;
         }
     }
 }

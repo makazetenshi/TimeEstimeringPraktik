@@ -134,7 +134,7 @@ namespace praktik_estimering
                                  "WHERE p.Id = da.Period AND p.Id = ea.Period AND p.Id = fa.Period AND p.Id = " + selectedPeriod;
 
             DataTable timeTable = getDataTable(sqlUsedTime);
-
+            
             double usedTime = -1;
             foreach (DataRow row in timeTable.Rows)
             {

@@ -49,3 +49,7 @@ C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimeri
 C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\DateInsert.g.cs
 C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\DayAktivities.baml
 C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\DayAktivities.g.cs
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\EstimateActivities.baml
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\EstimateActivities.g.cs
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\FormulaActivities.baml
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\FormulaActivities.g.cs
