@@ -2,13 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Xml.XPath;
-using Microsoft.SqlServer.Server;
+
 
 namespace praktik_estimering
 {
@@ -32,7 +27,7 @@ namespace praktik_estimering
         {
             get
             {
-                if (instance == null)
+                if(instance == null)
                 {
                     instance = new PeriodService();
                 }
@@ -72,7 +67,7 @@ namespace praktik_estimering
 
             DataTable dt = getDataTable(sql);
 
-            dt.Columns.Add("Days", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("Days", Type.GetType("System.Int32"));
             foreach (DataRow row in dt.Rows)
             {
                 row["Days"] = 0;
@@ -83,20 +78,20 @@ namespace praktik_estimering
         public bool InsertDayActivities(DataTable activityTable)
         {
             bool result = false;
-            string sql = "";
-            string id = "";
-            string value = "";
- 
+            string sql;
+            string id;
+            string value;
+
             for (int i = 0; i < activityTable.Rows.Count; i++)
             {
                 id = activityTable.Rows[i].ItemArray[0].ToString();
                 value = activityTable.Rows[i].ItemArray[2].ToString();
                 sql = "INSERT INTO DayActive VALUES ((SELECT MAX(id) FROM Period WHERE Person = " + activeUser + "), " + id + ", " + value + ")";
-                Debug.WriteLine(sql);
+
                 sqls.Add(sql);
                 result = true;
             }
-            
+
 
             return result;
         }
@@ -107,8 +102,8 @@ namespace praktik_estimering
                          "FROM Estimate dt";
 
             DataTable dt = getDataTable(sql);
-            
-            dt.Columns.Add("Hours", System.Type.GetType("System.Double"));
+
+            dt.Columns.Add("Hours", Type.GetType("System.Double"));
             foreach (DataRow row in dt.Rows)
             {
                 row["Hours"] = 0;
@@ -120,16 +115,16 @@ namespace praktik_estimering
         public bool InsertestimationActivities(DataTable activityTable)
         {
             bool result = false;
-            string sql = "";
-            string id = "";
-            string value = "";
+            string sql;
+            string id ;
+            string value;
 
             for (int i = 0; i < activityTable.Rows.Count; i++)
             {
                 id = activityTable.Rows[i].ItemArray[0].ToString();
                 value = activityTable.Rows[i].ItemArray[2].ToString();
                 sql = "INSERT INTO EstimateActive VALUES ((SELECT MAX(id) FROM Period WHERE Person = " + activeUser + "), " + id + ", " + value + ")";
-                Debug.WriteLine(sql);
+
                 sqls.Add(sql);
                 result = true;
             }
@@ -145,7 +140,7 @@ namespace praktik_estimering
 
             DataTable dt = getDataTable(sql);
 
-            dt.Columns.Add("Hours", System.Type.GetType("System.Double"));
+            dt.Columns.Add("Hours", Type.GetType("System.Double"));
             foreach (DataRow row in dt.Rows)
             {
                 row["Hours"] = 0;
@@ -161,9 +156,9 @@ namespace praktik_estimering
 
             DataTable dt = getDataTable(sql);
 
-            dt.Columns.Add("parameter1", System.Type.GetType("System.Double"));
-            dt.Columns.Add("parameter2", System.Type.GetType("System.Double"));
-            dt.Columns.Add("parameter3", System.Type.GetType("System.Double"));
+            dt.Columns.Add("parameter1", Type.GetType("System.Double"));
+            dt.Columns.Add("parameter2", Type.GetType("System.Double"));
+            dt.Columns.Add("parameter3", Type.GetType("System.Double"));
             foreach (DataRow row in dt.Rows)
             {
                 row["parameter1"] = 0;
@@ -175,7 +170,7 @@ namespace praktik_estimering
         }
         public void InsertFormulaActivities(List<string> activityList)
         {
-            
+
         }
 
         private void InsertList(List<string> list)
@@ -187,7 +182,7 @@ namespace praktik_estimering
                 executeQuery(cmd);
             }
         }
-        private void executeQuery(SqlCommand cmd)
+        private static void executeQuery(SqlCommand cmd)
         {
             try
             {

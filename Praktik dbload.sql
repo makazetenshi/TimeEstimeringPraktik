@@ -113,7 +113,7 @@ BEGIN TRY
 		INSERT INTO Education values ('Multimediedesign')
 
 		INSERT INTO Person values('Torben Krøjmand', 'fisk123', 'TK')
-		INSERT INTO Person values('Søren Madsen', 'jens', 'SM')
+		INSERT INTO Person values('S?ren Madsen', 'jens', 'SM')
 		INSERT INTO Person values('Erik Jacobsen', 'kosteskab', 'EJ')
 		INSERT INTO Person values('Tester McTest', 'test1', 'test')
 
@@ -150,7 +150,7 @@ BEGIN TRY
 
 		INSERT INTO Formula values('Undervisning')
 		INSERT INTO Formula values('Hovedopgave')
-		INSERT INTO Formula values('Møder og Diverse')
+		INSERT INTO Formula values('M?der og Diverse')
 		INSERT INTO Formula values('OLC')
 		INSERT INTO Formula values('Praktik')
 		INSERT INTO Formula values('2. Semester Project')
