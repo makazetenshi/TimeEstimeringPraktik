@@ -1,6 +1,5 @@
 --CREATE DATABASE praktik_estimate
 
-DROP TABLE FormulaParameter
 DROP TABLE Parameter
 DROP TABLE FormulasActive
 DROP TABLE Formula
@@ -8,6 +7,8 @@ DROP TABLE EstimateActive
 DROP TABLE Estimate
 DROP TABLE DayActive
 DROP TABLE DayTable
+DROP TABLE ExamActive
+DROP TABLE Exam
 DROP TABLE Period
 DROP TABLE Person
 DROP TABLE Education
