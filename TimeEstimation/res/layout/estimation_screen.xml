@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/FrameLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+    <TextView
+        android:id="@+id/totalText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="@string/nodata" />
+    
+
+    <TableLayout
+        android:id="@+id/estimationTable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/totalText"
+        android:layout_marginBottom="30dp" >
+
+        <TableRow android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/holiday"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/holiday" />
+
+            <TextView
+                android:id="@+id/holidayAmount"
+                android:layout_height="wrap_content"
+                android:text="@string/zero" />
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/vacation"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/vacation" />
+
+            <TextView
+                android:id="@+id/vacationAmount"
+                android:layout_height="wrap_content"
+                android:text="@string/zero" />
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/absence"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/absence" />
+
+            <TextView
+                android:id="@+id/absenceAmount"
+                android:layout_height="wrap_content"
+                android:text="@string/zero" />
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/classes"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/classes" />
+
+            <TextView
+                android:id="@+id/classesAmount"
+                android:layout_height="wrap_content"
+                android:text="@string/zero" />
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/exams"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/exams" />
+
+            <TextView
+                android:id="@+id/examsAmount"
+                android:layout_height="wrap_content"
+                android:text="@string/zero" />
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/internship"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/intship" />
+
+            <TextView
+                android:id="@+id/internshipAmount"
+                android:layout_height="wrap_content"
+                android:text="@string/zero" />
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/finals"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/finals" />
+
+            <TextView
+                android:id="@+id/finalsAmount"
+                android:layout_height="wrap_content"
+                android:text="@string/zero" />
+
+            <TextView />
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/olc"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/olc" />
+
+            <TextView
+                android:id="@+id/olcAmount"
+                android:layout_height="wrap_content"
+                android:text="@string/zero" />
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/meetings"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/meetings" />
+
+            <TextView
+                android:id="@+id/meetingsAmount"
+                android:layout_height="wrap_content"
+                android:text="@string/zero" />
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/total"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/total" />
+
+            <TextView
+                android:id="@+id/totalAmount"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/zero" />
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/btnMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/estimationTable"
+        android:layout_alignParentRight="true"
+        android:text="@string/menu" />
+    
+    </RelativeLayout>
+
+    
+    </ScrollView>
+
+</FrameLayout>

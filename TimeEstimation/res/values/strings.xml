@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TimeEstimation</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="usr">Brugernavn:</string>
+    <string name="pass">Password:</string>
+    <string name="login">Log ind</string>
+    <string name="former">Vis Ældre Perioder</string>
+    <string name="newEnt">Ny Periode</string>
+    <string name="eng">Engelsk</string>
+    <string name="hrs">Lektioner</string>
+    <string name="course">Uddannelse</string>
+    <string name="add">Tilføj</string>
+    <string name="done">Tilbage</string>
+    <string name="olc">OLC</string>
+    <string name="intship">Praktik</string>
+    <string name="lek">Antal Lektioner</string>
+    <string name="holiday">Helligdage</string>
+    <string name="vacation">Ferie</string>
+    <string name="absence">Fravær</string>
+    <string name="classes">Undervisning</string>
+    <string name="exams">Eksamen</string>
+    <string name="finals">Hovedopgave</string>
+    <string name="meetings">Møder/Div</string>
+    <string name="total">Sammenlagt</string>
+    <string name="zero">0</string>
+    <string name="menu">Menu</string>
+    <string name="nodata">Ingen data</string>
+    <string name="save">Gem</string>
+    <string name="days">Antal Dage</string>
+    <string name="timeEst">Timebaserede aktiviteter</string>
+   	<string name="students">Antal Studerende</string>
+   	<string name="projects">Antal Projekter</string>
+   	<string name="daysamount">Antal Dage</string>
+   	<string name="fromDateText">Fra Dato</string>
+   	<string name="toDateText">Til Dato</string>
+   	<string name="dateBtn">Sæt Periode</string>
+    
+</resources>

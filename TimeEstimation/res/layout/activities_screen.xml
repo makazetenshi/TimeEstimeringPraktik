@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/GridLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:columnCount="2"
+    android:orientation="horizontal" >
+
+    <Button
+        android:id="@+id/btnClasses"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/classes" />
+
+    <Button
+        android:id="@+id/btnOLC"
+        android:layout_column="0"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/olc" />
+
+    <Button
+        android:id="@+id/btnInternship"
+        android:layout_column="0"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/intship" />
+
+    <Button
+        android:id="@+id/btnFinals"
+        android:layout_column="0"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/finals" />
+
+    <Space
+        android:layout_column="1"
+        android:layout_gravity="fill_vertical"
+        android:layout_row="6" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_column="0"
+        android:layout_gravity="right|top"
+        android:layout_row="5"
+        android:text="@string/save" />
+
+    <Button
+        android:id="@+id/btnExams"
+        android:layout_column="0"
+        android:layout_gravity="left|top"
+        android:layout_row="5"
+        android:text="@string/exams" />
+
+</GridLayout>
