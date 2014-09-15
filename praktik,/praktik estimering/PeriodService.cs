@@ -21,20 +21,18 @@ namespace praktik_estimering
             DataLink dl = new DataLink();
             con = dl.getConnection();
             activeUser = int.Parse(UserService.Instance.getuserId());
-
         }
         public static PeriodService Instance
         {
             get
             {
-                if(instance == null)
+                if (instance == null)
                 {
                     instance = new PeriodService();
                 }
                 return instance;
             }
         }
-
         public bool InsertNewPeriod(DateTime start, DateTime end)
         {
             bool result = false;
@@ -59,7 +57,6 @@ namespace praktik_estimering
             }
             return result;
         }
-
         public DataTable DayactivityList()
         {
             string sql = "SELECT dt.Id 'Id', dt.TypeName 'Name' " +
@@ -72,7 +69,6 @@ namespace praktik_estimering
             {
                 row["Days"] = 0;
             }
-
             return dt;
         }
         public bool InsertDayActivities(DataTable activityTable)
@@ -93,7 +89,6 @@ namespace praktik_estimering
             }
             return result;
         }
-
         public DataTable EstimateactivityList()
         {
             string sql = "SELECT dt.Id 'Id', dt.TypeName 'Name' " +
@@ -108,12 +103,11 @@ namespace praktik_estimering
             }
             return dt;
         }
-
         public bool InsertestimationActivities(DataTable activityTable)
         {
             bool result = false;
             string sql;
-            string id ;
+            string id;
             string value;
 
             for (int i = 0; i < activityTable.Rows.Count; i++)
@@ -127,8 +121,6 @@ namespace praktik_estimering
             }
             return result;
         }
-
-
         public DataTable EactivityList()
         {
             string sql = "SELECT dt.Id 'Id', dt.TypeName 'Name' " +
@@ -141,34 +133,57 @@ namespace praktik_estimering
             {
                 row["Hours"] = 0;
             }
-
             return dt;
         }
-
         public DataTable FormulaList()
         {
             string sql = "SELECT f.Id 'Id', f.Name 'Name' " +
-                        "FROM Formula f";
+                         "FROM Formula f";
 
             DataTable dt = getDataTable(sql);
 
-            dt.Columns.Add("parameter1", Type.GetType("System.Double"));
-            dt.Columns.Add("parameter2", Type.GetType("System.Double"));
-            dt.Columns.Add("parameter3", Type.GetType("System.Double"));
+            dt.Columns.Add("antal", Type.GetType("System.Double"));
+
             foreach (DataRow row in dt.Rows)
             {
                 row["parameter1"] = 0;
-                row["parameter2"] = 0;
-                row["parameter3"] = 0;
             }
-
             return dt;
         }
-        public void InsertFormulaActivities(List<string> activityList)
+        public void InsertFormulaActivities(DataTable activityTable)
         {
+            string sql;
+            string formulaId;
+            double number;
 
+            for (int i = 0; i < activityTable.Rows.Count; i++)
+            {
+                formulaId = activityTable.Rows[i].ItemArray[2].ToString();
+                number = Convert.ToDouble(activityTable.Rows[i].ItemArray[2].ToString());
+                sql = "INSERT INTO FormulasActive VALUES ((SELECT MAX(id) FROM Period WHERE Person = " + activeUser + "), " + formulaId + ", " + number + ")";
+
+                sqls.Add(sql);
+            }
         }
+        public DataTable getExamns()
+        {
+            string sql = "SELECT e.name " +
+                         "FROM Exam e";
 
+            DataTable dt = getDataTable(sql);
+
+            dt.Columns.Add("students", Type.GetType("System.Double"));
+            dt.Columns.Add("projekts", Type.GetType("System.Double"));
+            dt.Columns.Add("days", Type.GetType("System.Double"));
+
+            foreach (DataRow row in dt.Rows)
+            {
+                row["students"] = 0;
+                row["projekts"] = 0;
+                row["days"] = 0;
+            }
+            return dt;
+        }
         private void InsertList(List<string> list)
         {
             SqlCommand cmd;
@@ -206,7 +221,7 @@ namespace praktik_estimering
             {
                 // e.Message
                 // "Error while reading database"
-                MessageBox.Show(e.Message);
+                MessageBox.Show("Error while reading database");
             }
             finally
             {

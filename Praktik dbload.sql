@@ -22,7 +22,6 @@ Name varchar(30) not null,
 Pass varchar(10) not null,
 Init varchar(4) not null unique,
 )
-
 CREATE TABLE Period
 (
 Id int IDENTITY(1,1) primary key,
@@ -30,13 +29,11 @@ Person int foreign key references Person(Id),
 StartDate date not null,
 EndDate date not null
 )
-
 CREATE TABLE DayTable
 (
 Id int IDENTITY(1,1) primary key,
 TypeName varchar(25) not null
 )
-
 CREATE TABLE DayActive
 (
 Id int IDENTITY(1,1) primary key,
@@ -44,13 +41,11 @@ Period int foreign key references Period(Id),
 DayTable int foreign key references DayTable(Id),
 Number float,
 )
-
 CREATE TABLE Estimate
 (
 Id int IDENTITY(1,1) primary key,
 TypeName varchar(25) not null
 )
-
 CREATE TABLE EstimateActive
 (
 Id int IDENTITY(1,1) primary key,
@@ -58,13 +53,11 @@ Period int foreign key references Period(Id),
 Estimate int foreign key references Estimate(Id),
 Number float
 )
-
 CREATE TABLE Formula
 (
 Id int identity(1,1) primary key,
 Name varchar(255) not null
 )
-
 CREATE TABLE FormulasActive
 (
 Id int IDENTITY(1,1) primary key,
@@ -72,13 +65,11 @@ Period int foreign key references Period(Id),
 Formula int foreign key references Formula(Id),
 Number float
 )
-
 CREATE TABLE Exam
 (
 id int identity(1,1) primary key,
 name varchar(255) not null
 )
-
 CREATE TABLE ExamActive
 (
 id int identity(1,1) primary key,
@@ -86,13 +77,11 @@ period int foreign key references Period(Id),
 exam int foreign key references Exam(id),
 Number float
 )
-
 CREATE TABLE Education
 (
 Id int IDENTITY(1,1) primary key,
 Name varchar(25)
 )
-
 CREATE TABLE Parameter
 (
 Id int identity(1,1) primary key,
@@ -102,7 +91,6 @@ Formula int foreign key references Formula(Id),
 examId int foreign key references Exam(id),
 Parameter float not null
 )
-
 GO
 
 BEGIN TRY
