@@ -91,8 +91,6 @@ namespace praktik_estimering
                 sqls.Add(sql);
                 result = true;
             }
-
-
             return result;
         }
 
@@ -108,7 +106,6 @@ namespace praktik_estimering
             {
                 row["Hours"] = 0;
             }
-
             return dt;
         }
 
@@ -128,7 +125,6 @@ namespace praktik_estimering
                 sqls.Add(sql);
                 result = true;
             }
-
             return result;
         }
 
