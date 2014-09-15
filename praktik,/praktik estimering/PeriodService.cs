@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows;
+using System.Windows.Input;
 
 
 namespace praktik_estimering
@@ -13,6 +14,7 @@ namespace praktik_estimering
 
         private static PeriodService instance;
         private static int activeUser;
+        private static int activePeriod;
 
         public List<string> sqls = new List<string>();
 
@@ -47,8 +49,12 @@ namespace praktik_estimering
                 command.Parameters.Add("@start", SqlDbType.Date).Value = start.ToShortDateString();
                 command.Parameters.Add("@end", SqlDbType.Date).Value = end.ToShortDateString();
                 command.Parameters.Add("@activeUser", SqlDbType.Int).Value = activeUser;
-
                 executeQuery(command);
+                
+                sql = "SELECT MAX(Id) 'id' FROM Period WHERE Person = " + activeUser;
+                DataTable dt = getDataTable(sql);
+                
+                activePeriod = Convert.ToInt32(dt.Rows[0].ToString()); 
                 result = true;
             }
             catch (Exception e)
@@ -82,7 +88,7 @@ namespace praktik_estimering
             {
                 id = activityTable.Rows[i].ItemArray[0].ToString();
                 value = activityTable.Rows[i].ItemArray[2].ToString();
-                sql = "INSERT INTO DayActive VALUES ((SELECT MAX(id) FROM Period WHERE Person = " + activeUser + "), " + id + ", " + value + ")";
+                sql = "INSERT INTO DayActive VALUES (" + activePeriod + ", " + id + ", " + value + ")";
 
                 sqls.Add(sql);
                 result = true;
@@ -114,7 +120,7 @@ namespace praktik_estimering
             {
                 id = activityTable.Rows[i].ItemArray[0].ToString();
                 value = activityTable.Rows[i].ItemArray[2].ToString();
-                sql = "INSERT INTO EstimateActive VALUES ((SELECT MAX(id) FROM Period WHERE Person = " + activeUser + "), " + id + ", " + value + ")";
+                sql = "INSERT INTO EstimateActive VALUES (" + activePeriod + ", " + id + ", " + value + ")";
 
                 sqls.Add(sql);
                 result = true;
@@ -146,12 +152,13 @@ namespace praktik_estimering
 
             foreach (DataRow row in dt.Rows)
             {
-                row["parameter1"] = 0;
+                row["antal"] = 0;
             }
             return dt;
         }
-        public void InsertFormulaActivities(DataTable activityTable)
+        public bool InsertFormulaActivities(DataTable activityTable)
         {
+            
             string sql;
             string formulaId;
             double number;
@@ -160,14 +167,15 @@ namespace praktik_estimering
             {
                 formulaId = activityTable.Rows[i].ItemArray[2].ToString();
                 number = Convert.ToDouble(activityTable.Rows[i].ItemArray[2].ToString());
-                sql = "INSERT INTO FormulasActive VALUES ((SELECT MAX(id) FROM Period WHERE Person = " + activeUser + "), " + formulaId + ", " + number + ")";
+                sql = "INSERT INTO FormulasActive VALUES ( " + activePeriod + ", " + formulaId + ", " + number + ")";
 
                 sqls.Add(sql);
             }
+            return true;
         }
         public DataTable getExamns()
         {
-            string sql = "SELECT e.name " +
+            string sql = "SELECT e.Id 'Id', e.name 'name'" +
                          "FROM Exam e";
 
             DataTable dt = getDataTable(sql);

@@ -57,6 +57,9 @@
     <Compile Include="EstimateActivities.xaml.cs">
       <DependentUpon>EstimateActivities.xaml</DependentUpon>
     </Compile>
+    <Compile Include="exam.xaml.cs">
+      <DependentUpon>exam.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FormulaActivities.xaml.cs">
       <DependentUpon>FormulaActivities.xaml</DependentUpon>
     </Compile>
@@ -73,6 +76,10 @@
     </Compile>
     <Compile Include="UserService.cs" />
     <Page Include="EstimateActivities.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="exam.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

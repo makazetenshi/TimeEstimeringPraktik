@@ -16,30 +16,28 @@ using System.Windows.Shapes;
 namespace praktik_estimering
 {
     /// <summary>
-    /// Interaction logic for FormulaActivities.xaml
+    /// Interaction logic for exam.xaml
     /// </summary>
-    public partial class FormulaActivities : Window
+    public partial class exam : Window
     {
-        public FormulaActivities()
+        public exam()
         {
             InitializeComponent();
         }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            DataGridFormula.ItemsSource = PeriodService.Instance.FormulaList().DefaultView;
-            DataGridFormula.Columns[0].Visibility = Visibility.Hidden;
-
+            datagridExam.ItemsSource = PeriodService.Instance.FormulaList().DefaultView;
+            datagridExam.Columns[0].Visibility = Visibility.Hidden;
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            DataView dv = (DataView)DataGridFormula.ItemsSource;
+            DataView dv = (DataView)datagridExam.ItemsSource;
             DataTable dt = cloneTable(dv);
 
             if (PeriodService.Instance.InsertFormulaActivities(dt))
             {
-                exam ex = new exam();
-                ex.Show();
+                Showroom sr = new Showroom();
+                sr.Show();
                 Close();
             }
         }
@@ -52,6 +50,5 @@ namespace praktik_estimering
             }
             return dt;
         }
-
     }
 }
