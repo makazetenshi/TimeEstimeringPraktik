@@ -29,9 +29,9 @@ public class Dao {
 		try {
 			Class.forName("net.sourceforge.jtds.jdbc.Driver");
 			
-			String connection = "gim.dk";
+			String connection = "10.10.138.187";
 			String port = "1433";
-			String dbName = "master";
+			String dbName = "praktik_estimate";
 			
 			connect = DriverManager.getConnection("jdbc:jtds:sqlserver://" + connection + ":" + port + ";databaseName=" + dbName + ";user=test;password=1234");
 			
