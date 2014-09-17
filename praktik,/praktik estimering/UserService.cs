@@ -105,74 +105,74 @@ namespace praktik_estimering
 
             return summary;
         }
-        public int getNormTime()
+        public double getNormTime()
         {
-            int result;
+            double result;
             using (SqlCommand cmd = con.CreateCommand())
             {
                 cmd.CommandText = "getDaysDifference";
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("id", SelectedPeriod);
 
-                var returnParameter = cmd.Parameters.Add("@ReturnVal", SqlDbType.Int);
+                var returnParameter = cmd.Parameters.Add("@ReturnVal", SqlDbType.Float);
                 returnParameter.Direction = ParameterDirection.ReturnValue;
 
                 con.Open();
                 cmd.ExecuteNonQuery();
-                result = (int)returnParameter.Value;
+                result = (double)returnParameter.Value;
             }
             if (con.State == ConnectionState.Open)
             {
                 con.Close();
             }
 
-            return Convert.ToInt32(result);
+            return Convert.ToDouble(result);
         }
-        public int getUsedTime()
+        public double getUsedTime()
         {
-            int result;
+            double result;
             using (SqlCommand cmd = con.CreateCommand())
             {
-                cmd.CommandText = "getTotalTime";
+                cmd.CommandText = "getTotalTimeUsed";
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("id", SelectedPeriod);
 
-                var returnParameter = cmd.Parameters.Add("@ReturnVal", SqlDbType.Int);
+                var returnParameter = cmd.Parameters.Add("@ReturnVal", SqlDbType.Float);
                 returnParameter.Direction = ParameterDirection.ReturnValue;
 
                 con.Open();
                 cmd.ExecuteNonQuery();
-                result = (int)returnParameter.Value;
+                result = (double)returnParameter.Value;
             }
             if (con.State == ConnectionState.Open)
             {
                 con.Close();
             }
 
-            return Convert.ToInt32(result);
+            return Convert.ToDouble(result);
         }
-        public int getNettoTid()
+        public double getNettoTid()
         {
-            int result;
+            double result;
             using (SqlCommand cmd = con.CreateCommand())
             {
-                cmd.CommandText = "getNettoTid";
+                cmd.CommandText = "getNettoTime";
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("id", SelectedPeriod);
 
-                var returnParameter = cmd.Parameters.Add("@ReturnVal", SqlDbType.Int);
+                var returnParameter = cmd.Parameters.Add("@ReturnVal", SqlDbType.Float);
                 returnParameter.Direction = ParameterDirection.ReturnValue;
 
                 con.Open();
                 cmd.ExecuteNonQuery();
-                result = (int)returnParameter.Value;
+                result = (double)returnParameter.Value;
             }
             if (con.State == ConnectionState.Open)
             {
                 con.Close();
             }
 
-            return Convert.ToInt32(result);
+            return Convert.ToDouble(result);
         }
         private static DataTable getDataTable(string sql)
         {
@@ -251,7 +251,7 @@ namespace praktik_estimering
             List<string> formulaList = new List<string>();
 
             string sqlformula = "SELECT fp.formulaActivity 'Activity', fp.variable*fa.formulamultiplier 'Hours' " +
-                                "FROM formulaActivities fa, formulaPeriode fp  " +
+                                "FROM formulaActivities fa, formulaPeriod fp  " +
                                 "WHERE fa.activity = fp.formulaActivity AND fp.period = " + SelectedPeriod;
 
             DataTable formulaTable = getDataTable(sqlformula);

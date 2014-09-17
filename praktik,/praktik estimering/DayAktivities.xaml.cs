@@ -28,10 +28,7 @@ namespace praktik_estimering
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             DataGridDayActivity.ItemsSource = PeriodService.Instance.DayactivityList().DefaultView;
-            DataGridDayActivity.Columns[0].Visibility = Visibility.Hidden;
-            DataGridDayActivity.Columns[1].IsReadOnly = true;
-
-            
+            DataGridDayActivity.Columns[0].IsReadOnly = true;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

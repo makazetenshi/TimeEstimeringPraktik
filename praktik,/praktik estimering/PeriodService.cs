@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Windows;
 using System.Windows.Input;
 
@@ -13,7 +15,7 @@ namespace praktik_estimering
         private static SqlConnection con;
 
         private static PeriodService instance;
-        private static int activeUser;
+        private static string activeUser;
         private static int activePeriod;
 
         public List<string> sqls = new List<string>();
@@ -22,7 +24,7 @@ namespace praktik_estimering
         {
             DataLink dl = new DataLink();
             con = dl.getConnection();
-            activeUser = int.Parse(UserService.Instance.getuserId());
+            activeUser = UserService.Instance.getuserId();
         }
         public static PeriodService Instance
         {
@@ -43,18 +45,23 @@ namespace praktik_estimering
                 if (start > end) throw new Exception("end date needs to be later than the start date");
                 if (start.Equals(null) || end.Equals(null)) throw new Exception("you need to choose both a start and end date");
 
-                string sql = "INSERT INTO Period(Person, StartDate, EndDate) " +
-                             "values(@activeUser, @start, @end) ";
+                string sql = "INSERT INTO period(person, startdate, enddate) " +
+                    "VALUES(@activeUser, @start, @end)";
+
                 SqlCommand command = new SqlCommand(sql, con);
                 command.Parameters.Add("@start", SqlDbType.Date).Value = start.ToShortDateString();
                 command.Parameters.Add("@end", SqlDbType.Date).Value = end.ToShortDateString();
-                command.Parameters.Add("@activeUser", SqlDbType.Int).Value = activeUser;
+                command.Parameters.Add("@activeUser", SqlDbType.VarChar).Value = activeUser;
                 executeQuery(command);
-                
-                sql = "SELECT MAX(Id) 'id' FROM Period WHERE Person = " + activeUser;
+
+                sql = "SELECT MAX(periodId) 'id' FROM period WHERE person = '" + activeUser + "' ";
                 DataTable dt = getDataTable(sql);
-                
-                activePeriod = Convert.ToInt32(dt.Rows[0].ToString()); 
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    activePeriod = Convert.ToInt32(row[0].ToString());
+                }
+                UserService.Instance.SelectedPeriod = activePeriod;
                 result = true;
             }
             catch (Exception e)
@@ -65,12 +72,10 @@ namespace praktik_estimering
         }
         public DataTable DayactivityList()
         {
-            string sql = "SELECT dt.Id 'Id', dt.TypeName 'Name' " +
-                         "FROM DayTable dt";
-
+            string sql = "SELECT activity 'Activity' FROM dayActivities ";
             DataTable dt = getDataTable(sql);
 
-            dt.Columns.Add("Days", Type.GetType("System.Int32"));
+            dt.Columns.Add("Days", typeof(Int32));
             foreach (DataRow row in dt.Rows)
             {
                 row["Days"] = 0;
@@ -79,30 +84,27 @@ namespace praktik_estimering
         }
         public bool InsertDayActivities(DataTable activityTable)
         {
-            bool result = false;
             string sql;
-            string id;
+            string activity;
             string value;
 
-            for (int i = 0; i < activityTable.Rows.Count; i++)
+            foreach (DataRow row in activityTable.Rows)
             {
-                id = activityTable.Rows[i].ItemArray[0].ToString();
-                value = activityTable.Rows[i].ItemArray[2].ToString();
-                sql = "INSERT INTO DayActive VALUES (" + activePeriod + ", " + id + ", " + value + ")";
+                activity = row.ItemArray[0].ToString();
+                value = row.ItemArray[1].ToString();
 
+                sql = "INSERT INTO dayPeriod VALUES (" + activePeriod + ", '" + activity + "', " + value + ")";
                 sqls.Add(sql);
-                result = true;
             }
-            return result;
+            return true;
         }
         public DataTable EstimateactivityList()
         {
-            string sql = "SELECT dt.Id 'Id', dt.TypeName 'Name' " +
-                         "FROM Estimate dt";
-
+            string sql = "SELECT activity 'Activity' FROM estimateActivities";
+                         
             DataTable dt = getDataTable(sql);
 
-            dt.Columns.Add("Hours", Type.GetType("System.Double"));
+            dt.Columns.Add("Hours", typeof(Double));
             foreach (DataRow row in dt.Rows)
             {
                 row["Hours"] = 0;
@@ -111,44 +113,27 @@ namespace praktik_estimering
         }
         public bool InsertestimationActivities(DataTable activityTable)
         {
-            bool result = false;
             string sql;
-            string id;
+            string activity;
             string value;
 
-            for (int i = 0; i < activityTable.Rows.Count; i++)
+            foreach (DataRow row in activityTable.Rows)
             {
-                id = activityTable.Rows[i].ItemArray[0].ToString();
-                value = activityTable.Rows[i].ItemArray[2].ToString();
-                sql = "INSERT INTO EstimateActive VALUES (" + activePeriod + ", " + id + ", " + value + ")";
-
+                activity =row.ItemArray[0].ToString();
+                value = row.ItemArray[1].ToString();
+                sql = "INSERT INTO estimatePeriod VALUES (" + activePeriod + ", '" + activity + "', " + value + ")";
+                		
                 sqls.Add(sql);
-                result = true;
             }
-            return result;
-        }
-        public DataTable EactivityList()
-        {
-            string sql = "SELECT dt.Id 'Id', dt.TypeName 'Name' " +
-                         "FROM Estimate dt";
-
-            DataTable dt = getDataTable(sql);
-
-            dt.Columns.Add("Hours", Type.GetType("System.Double"));
-            foreach (DataRow row in dt.Rows)
-            {
-                row["Hours"] = 0;
-            }
-            return dt;
+            return true;
         }
         public DataTable FormulaList()
         {
-            string sql = "SELECT f.Id 'Id', f.Name 'Name' " +
-                         "FROM Formula f";
+            string sql = "SELECT fa.activity 'Activity' FROM formulaActivities fa";
 
             DataTable dt = getDataTable(sql);
 
-            dt.Columns.Add("antal", Type.GetType("System.Double"));
+            dt.Columns.Add("antal", typeof(Double));
 
             foreach (DataRow row in dt.Rows)
             {
@@ -158,32 +143,29 @@ namespace praktik_estimering
         }
         public bool InsertFormulaActivities(DataTable activityTable)
         {
-            
             string sql;
-            string formulaId;
-            double number;
+            string activity;
+            double value;
 
-            for (int i = 0; i < activityTable.Rows.Count; i++)
+            foreach (DataRow row in activityTable.Rows)
             {
-                formulaId = activityTable.Rows[i].ItemArray[2].ToString();
-                number = Convert.ToDouble(activityTable.Rows[i].ItemArray[2].ToString());
-                sql = "INSERT INTO FormulasActive VALUES ( " + activePeriod + ", " + formulaId + ", " + number + ")";
+                activity = row.ItemArray[0].ToString();
+                value = Convert.ToDouble(row.ItemArray[1].ToString());
+                sql = "INSERT INTO formulaPeriod VALUES ( " + activePeriod + ", '" + activity + "', " + value + ")";
 
                 sqls.Add(sql);
             }
             return true;
         }
-        public DataTable getExamns()
+        public DataTable ExamnsList()
         {
-            string sql = "SELECT e.Id 'Id', e.name 'name'" +
-                         "FROM Exam e";
+            string sql = "SELECT name 'Activity' FROM examActivities";
 
             DataTable dt = getDataTable(sql);
 
-            dt.Columns.Add("students", Type.GetType("System.Double"));
-            dt.Columns.Add("projekts", Type.GetType("System.Double"));
-            dt.Columns.Add("days", Type.GetType("System.Double"));
-
+            dt.Columns.Add("students", typeof(Double));
+            dt.Columns.Add("projekts", typeof(Double));
+            dt.Columns.Add("days", typeof(Double));
             foreach (DataRow row in dt.Rows)
             {
                 row["students"] = 0;
@@ -192,11 +174,43 @@ namespace praktik_estimering
             }
             return dt;
         }
+        public bool InsertExamnActivities(DataTable activityTable)
+        {
+            string sql;
+            string activity;
+            double students;
+            double projekt;
+            double days;
+
+            foreach (DataRow row in activityTable.Rows)
+            {
+                activity = row.ItemArray[0].ToString();
+                students = Convert.ToDouble(row.ItemArray[1].ToString());
+                projekt = Convert.ToDouble(row.ItemArray[2].ToString());
+                days = Convert.ToDouble(row.ItemArray[3].ToString());
+
+                sql = "INSERT INTO examPeriod VALUES ( " + activePeriod + ", '" + activity + "', " + students + ", " + projekt + ", " + days + ")";
+
+                sqls.Add(sql);
+            }
+            InsertList(sqls);
+            updatePeriod();
+            return true;
+        }
+        private void updatePeriod()
+        {
+            string sql = "UPDATE period " +
+                         "SET nettoHours= dbo.getNettoTime(" + activePeriod + ") " +
+                         "WHERE periodId=" + activePeriod;
+            SqlCommand com = new SqlCommand(sql,con);
+            executeQuery(com);
+        }
         private void InsertList(List<string> list)
         {
             SqlCommand cmd;
             foreach (string s in list)
             {
+                Debug.WriteLine(s);
                 cmd = new SqlCommand(s, con);
                 executeQuery(cmd);
             }

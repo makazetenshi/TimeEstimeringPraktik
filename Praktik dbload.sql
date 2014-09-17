@@ -1,15 +1,15 @@
 --USE DATABASE praktik_estimate
 
 DROP TABLE dayPeriod
-DROP TABLE estimatePeriod
-DROP TABLE formulaPeriode
-DROP TABLE examPeriod
-DROP TABLE meetingVariable
-DROP TABLE meeting
 DROP TABLE dayActivities
+DROP TABLE estimatePeriod
 DROP TABLE estimateActivities
+DROP TABLE formulaPeriod
 DROP TABLE formulaActivities
+DROP TABLE examPeriod
 DROP TABLE examActivities
+DROP TABLE meeting
+DROP TABLE meetingVariable
 DROP TABLE period
 DROP TABLE person
 
@@ -73,7 +73,7 @@ estimateActivity VARCHAR(50) FOREIGN KEY REFERENCES estimateActivities(activity)
 hoursUsed FLOAT  NOT NULL,
 PRIMARY KEY (period, estimateActivity) 
 )
-CREATE TABLE formulaPeriode
+CREATE TABLE formulaPeriod
 (
 period INT FOREIGN KEY REFERENCES period(periodid) NOT NULL,
 formulaActivity VARCHAR(50) FOREIGN KEY REFERENCES formulaActivities(activity) NOT NULL,
@@ -89,7 +89,8 @@ projekts FLOAT NOT NULL,
 daysUsed FLOAT NOT NULL,
 PRIMARY KEY (period, examActivity) 
 )
-
+GO
+DROP TRIGGER meetingCalculater
 GO
 CREATE TRIGGER meetingCalculater 
 ON period 
@@ -114,8 +115,8 @@ SET @workdays = (Select
 SET  @estimatedHours = @workdays * (SELECT value FROM meetingVariable WHERE name = 'workHours') * (SELECT value/100 FROM meetingVariable WHERE name = 'percentage')
 
 INSERT INTO meeting VALUES(@period, @estimatedHours)
-
 END
+
 GO
 BEGIN TRY
     BEGIN TRANSACTION
@@ -168,12 +169,12 @@ BEGIN TRY
 		INSERT INTO estimatePeriod VALUES(2,'Booklisting',8)
 		INSERT INTO estimatePeriod VALUES(2,'Office',16)
 		
-		INSERT INTO formulaPeriode VALUES(1,'Classes, Datamatiker',25)
-		INSERT INTO formulaPeriode VALUES(1,'Classes, Datamatiker, English',4)
-		INSERT INTO formulaPeriode VALUES(1,'Olc',0)
-		INSERT INTO formulaPeriode VALUES(2,'Classes, Datamatiker',25)
-		INSERT INTO formulaPeriode VALUES(2,'Classes, Datamatiker, English',4)
-		INSERT INTO formulaPeriode VALUES(2,'Olc',3)
+		INSERT INTO formulaPeriod VALUES(1,'Classes, Datamatiker',25)
+		INSERT INTO formulaPeriod VALUES(1,'Classes, Datamatiker, English',4)
+		INSERT INTO formulaPeriod VALUES(1,'Olc',0)
+		INSERT INTO formulaPeriod VALUES(2,'Classes, Datamatiker',25)
+		INSERT INTO formulaPeriod VALUES(2,'Classes, Datamatiker, English',4)
+		INSERT INTO formulaPeriod VALUES(2,'Olc',3)
 				
 		INSERT INTO examperiod VALUES(1,'2. Semester Datamatiker',25,6,3)
 		INSERT INTO examperiod VALUES(1,'3. Semester Datamatiker',16,4,0)
@@ -188,9 +189,7 @@ END CATCH
 GO
 DROP FUNCTION getDaysDifference
 GO
-CREATE FUNCTION getDaysDifference
-(@id int)
-
+CREATE FUNCTION getDaysDifference(@id int)
 RETURNS FLOAT
 AS
 BEGIN
@@ -213,9 +212,7 @@ GO
 DROP FUNCTION getTotalTimeUsed
 GO
 CREATE FUNCTION getTotalTimeUsed(@id int)
-
 RETURNS FLOAT
-
 AS
 BEGIN
 
@@ -243,7 +240,7 @@ SET @estimate =  (SELECT Sum(ep.hoursUsed)
 				 WHERE ep.period = @id)
 
 SET @formula =  (SELECT Sum(fp.variable*fa.formulamultiplier)
-				 FROM formulaActivities fa, formulaPeriode fp 
+				 FROM formulaActivities fa, formulaPeriod fp 
 				 WHERE fa.activity = fp.formulaActivity AND fp.period = @id)
 
 SET @exam = (Select Sum((ep.students*ea.studentsmultiplier) + (ep.projekts*ea.projectsmultiplier) + (ep.daysUsed*ea.daysmultiplier))
@@ -255,14 +252,11 @@ SET @return = Round(Sum(@days + @estimate + @formula + @exam + @meeting), 2)
 RETURN @return
 END
 
-
 GO
 DROP FUNCTION getNettoTime
 GO
 CREATE FUNCTION getNettoTime(@id int)
-
 RETURNS FLOAT
-
 AS
 BEGIN
 
@@ -275,3 +269,4 @@ SET @Return = Sum(dbo.getTotalTimeUsed(@id) - dbo.getDaysDifference(@id))
 
 RETURN @Return
 END
+

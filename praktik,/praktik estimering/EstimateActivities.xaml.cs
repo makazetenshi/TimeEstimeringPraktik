@@ -29,10 +29,7 @@ namespace praktik_estimering
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             DataGridEstimateActivity.ItemsSource = PeriodService.Instance.EstimateactivityList().DefaultView;
-            DataGridEstimateActivity.Columns[0].Visibility = Visibility.Hidden;
-            DataGridEstimateActivity.Columns[1].IsReadOnly = true;
-
-
+            DataGridEstimateActivity.Columns[0].IsReadOnly = true;
         }
 
         private DataTable cloneTable(DataView dv)
@@ -49,6 +46,8 @@ namespace praktik_estimering
         {
             DataView dv = (DataView)DataGridEstimateActivity.ItemsSource;
             DataTable dt = cloneTable(dv);
+
+            
 
             if (PeriodService.Instance.InsertestimationActivities(dt))
             {

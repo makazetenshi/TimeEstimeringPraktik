@@ -28,8 +28,7 @@ namespace praktik_estimering
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             DataGridFormula.ItemsSource = PeriodService.Instance.FormulaList().DefaultView;
-            DataGridFormula.Columns[0].Visibility = Visibility.Hidden;
-
+            DataGridFormula.Columns[0].IsReadOnly = true;
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
