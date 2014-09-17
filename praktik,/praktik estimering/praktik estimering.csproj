@@ -74,10 +74,6 @@
     <Compile Include="Showroom.xaml.cs">
       <DependentUpon>Showroom.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UpdateScreen.xaml.cs">
-      <DependentUpon>UpdateScreen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UpdateService.cs" />
     <Compile Include="UserService.cs" />
     <Page Include="EstimateActivities.xaml">
       <SubType>Designer</SubType>
@@ -116,10 +112,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Showroom.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UpdateScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

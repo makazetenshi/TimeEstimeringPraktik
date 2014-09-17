@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
@@ -16,6 +15,7 @@ namespace praktik_estimering
         private static PeriodService instance;
         private static int activeUser;
         private static int activePeriod;
+
         public List<string> sqls = new List<string>();
 
         private PeriodService()
@@ -50,17 +50,11 @@ namespace praktik_estimering
                 command.Parameters.Add("@end", SqlDbType.Date).Value = end.ToShortDateString();
                 command.Parameters.Add("@activeUser", SqlDbType.Int).Value = activeUser;
                 executeQuery(command);
-
+                
                 sql = "SELECT MAX(Id) 'id' FROM Period WHERE Person = " + activeUser;
                 DataTable dt = getDataTable(sql);
-                string ap = "";
-                foreach (DataRow row in dt.Rows)
-                {
-                    ap = row["id"].ToString();
-                    
-                }
-                activePeriod = Convert.ToInt32(ap);
-                UserService.Instance.SelectedPeriod = activePeriod;
+                
+                activePeriod = Convert.ToInt32(dt.Rows[0].ToString()); 
                 result = true;
             }
             catch (Exception e)
@@ -164,7 +158,7 @@ namespace praktik_estimering
         }
         public bool InsertFormulaActivities(DataTable activityTable)
         {
-
+            
             string sql;
             string formulaId;
             double number;
@@ -198,25 +192,13 @@ namespace praktik_estimering
             }
             return dt;
         }
-        public void InsertList()
+        private void InsertList(List<string> list)
         {
-            try
+            SqlCommand cmd;
+            foreach (string s in list)
             {
-                SqlCommand cmd;
-                con.Open();
-                foreach (string s in sqls)
-                {
-                    cmd = new SqlCommand(s, con);
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                if (con.State == ConnectionState.Open) con.Close();
+                cmd = new SqlCommand(s, con);
+                executeQuery(cmd);
             }
         }
         private static void executeQuery(SqlCommand cmd)
