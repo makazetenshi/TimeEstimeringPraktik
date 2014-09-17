@@ -1,8 +1,16 @@
 package dao;
 
+
+import java.util.Date;
+
+import service.Service;
+
+import com.example.timeestimation.Period;
+
 import android.content.Context;
+import android.database.Cursor;
+import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class MySQLiteHelper extends SQLiteOpenHelper  {
@@ -24,6 +32,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 	public final static String COLUMN_PERIODID = "_id";
 	public final static String COLUMN_STARTDATE = "startdate";
 	public final static String COLUMN_ENDDATE = "enddate";
+	public final static String COLUMN_INITIALS = "initials";
 	
 	public final static String COLUMN_PERIOD = "period";
 	public final static String COLUMN_ESTACTIVITY = "estactivity";
@@ -50,7 +59,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 	public final static String COLUMN_IMPVARIABLE = "impvariable";
 	
 	public final static String CREATE_TABLE_PERIOD = "CREATE TABLE " + TABLE_PERIOD + "(" + COLUMN_PERIODID + " integer primary key autoincrement, "
-			+ COLUMN_STARTDATE + " date," + COLUMN_ENDDATE + "date);";
+			+ COLUMN_STARTDATE + " date," + COLUMN_ENDDATE + "date, " + COLUMN_INITIALS + "varchar(5));";
 	
 	public final static String CREATE_TABLE_MEETING = "CREATE TABLE " + TABLE_MEETING + "(" + COLUMN_PERIOD + " integer primary key, " + COLUMN_HOURS + 
 			" int, FOREIGN KEY(" + COLUMN_PERIOD + ") REFERENCES " + TABLE_PERIOD + "(" + COLUMN_PERIODID + "));";
@@ -81,24 +90,74 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 	public final static String CREATE_TABLE_FORMULA = "CREATE TABLE" + TABLE_FORMULA + "(" + COLUMN_NAME + " varchar(30), " + COLUMN_MULTIPLIER 
 			+ " double, " + COLUMN_IMPVARIABLE  + " varchar(20));";
 	
-	public MySQLiteHelper(Context context, String name, CursorFactory factory,
-			int version) {
-		super(context, name, factory, version);
+	public MySQLiteHelper(Context context) {
+		super(context, DBNAME, null, DBVERSION);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// TODO Auto-generated method stub
-		
+		db.execSQL(CREATE_TABLE_PERIOD);
+		db.execSQL(CREATE_TABLE_MEETING);
+		db.execSQL(CREATE_TABLE_ESTIMATEPERIOD);
+		db.execSQL(CREATE_TABLE_EXAM);
+		db.execSQL(CREATE_TABLE_FORMULAPERIOD);
+		db.execSQL(CREATE_TABLE_FORMULA);
+		db.execSQL(CREATE_TABLE_ESTIMATEPERIOD);
+		db.execSQL(CREATE_TABLE_ESTIMATEACTIVITY);
+		db.execSQL(CREATE_TABLE_DAYPERIOD);
+		db.execSQL(CREATE_TABLE_DAYACTIVITIES);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_DAYACTIVITY);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_DAYPERIOD);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_ESTIMATEACTIVITY);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_ESTIMATEPERIOD);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXAM);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXAMPERIOD);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULA);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULAPERIOD);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_MEETING);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_PERIOD);
 		
+		onCreate(db);
+	}
+	
+	public PeriodCursor queryPeriods(){
+		Cursor wrapped = getReadableDatabase().query(TABLE_PERIOD, null, null, null, null, null, null);
+		return new PeriodCursor(wrapped);
+	}
+	
+	public PeriodCursor queryPeriod(String init){
+		String[] args = {init};
+		Cursor wrapped = getReadableDatabase().query(TABLE_PERIOD, null, COLUMN_INITIALS + " = ?", args, null, null, null);
+		return new PeriodCursor(wrapped);
 	}
 
+	public static class PeriodCursor extends CursorWrapper{
+
+		public PeriodCursor(Cursor cursor) {
+			super(cursor);
+			// TODO Auto-generated constructor stub
+		}
+		
+		public Period getPeriod(){
+			if(isBeforeFirst()||isAfterLast()){
+				return null;
+			}
+			Service service = Service.getInstance();
+			Period period = new Period();
+			period.setId(getLong(getColumnIndex(COLUMN_PERIODID)));
+			period.setStartDate(new Date(getLong(getColumnIndex(COLUMN_STARTDATE))));
+			period.setEndDate(new Date(getLong(getColumnIndex(COLUMN_ENDDATE))));
+			period.setLoggedIn(service.getLoggedInUser().getInitials());
+			
+			return period;
+		}
+		
+	}
 	
 	
 }
