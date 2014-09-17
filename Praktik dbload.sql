@@ -1,207 +1,277 @@
---CREATE DATABASE praktik_estimate
+--USE DATABASE praktik_estimate
 
-DROP TABLE Parameter
-DROP TABLE FormulasActive
-DROP TABLE Formula
-DROP TABLE EstimateActive
-DROP TABLE Estimate
-DROP TABLE DayActive
-DROP TABLE DayTable
-DROP TABLE ExamActive
-DROP TABLE Exam
-DROP TABLE Period
-DROP TABLE Person
-DROP TABLE Education
+DROP TABLE dayPeriod
+DROP TABLE estimatePeriod
+DROP TABLE formulaPeriode
+DROP TABLE examPeriod
+DROP TABLE meetingVariable
+DROP TABLE meeting
+DROP TABLE dayActivities
+DROP TABLE estimateActivities
+DROP TABLE formulaActivities
+DROP TABLE examActivities
+DROP TABLE period
+DROP TABLE person
 
 GO
+CREATE TABLE person
+(
+initials VARCHAR(4) PRIMARY KEY,
+password VARCHAR(15) NOT NULL,
+firstname VARCHAR(15),
+lastname VARCHAR(15)
+)
+CREATE TABLE period
+(
+periodId INT IDENTITY(1,1) PRIMARY KEY,
+person VARCHAR(4) FOREIGN KEY REFERENCES person(initials) NOT NULL,
+startdate DATE NOT NULL,
+enddate DATE NOT NULL,
+nettoHours FLOAT
+)
+CREATE TABLE meeting
+(
+period INT PRIMARY KEY FOREIGN KEY REFERENCES period(periodId),
+estimatedHours FLOAT NOT NULL
+)
+CREATE TABLE meetingVariable
+(
+name VARCHAR(15) PRIMARY KEY,
+value FLOAT
+)
+CREATE TABLE dayActivities
+(
+activity VARCHAR(50) PRIMARY KEY
+)
+CREATE TABLE estimateActivities
+(
+activity VARCHAR(50) PRIMARY KEY
+)
+CREATE TABLE formulaActivities
+(
+activity VARCHAR(50) PRIMARY KEY,
+formulamultiplier FLOAT NOT NULL,
+)
+CREATE TABLE examActivities
+(
+name VARCHAR(50) PRIMARY KEY,
+studentsmultiplier FLOAT NOT NULL,
+projectsmultiplier FLOAT NOT NULL,
+daysmultiplier FLOAT NOT NULL
+)
+CREATE TABLE dayPeriod
+(
+period INT FOREIGN KEY REFERENCES period(periodid) NOT NULL,
+dayActivity VARCHAR(50) FOREIGN KEY REFERENCES dayActivities(activity) NOT NULL,
+daysUsed INT  NOT NULL,
+PRIMARY KEY (period, dayActivity) 
+)
+CREATE TABLE estimatePeriod
+(
+period INT FOREIGN KEY REFERENCES period(periodid) NOT NULL,
+estimateActivity VARCHAR(50) FOREIGN KEY REFERENCES estimateActivities(activity) NOT NULL,
+hoursUsed FLOAT  NOT NULL,
+PRIMARY KEY (period, estimateActivity) 
+)
+CREATE TABLE formulaPeriode
+(
+period INT FOREIGN KEY REFERENCES period(periodid) NOT NULL,
+formulaActivity VARCHAR(50) FOREIGN KEY REFERENCES formulaActivities(activity) NOT NULL,
+variable FLOAT NOT NULL,
+PRIMARY KEY (period, formulaActivity) 
+)
+CREATE TABLE examPeriod
+(
+period INT FOREIGN KEY REFERENCES period(periodid) NOT NULL,
+examActivity VARCHAR(50) FOREIGN KEY REFERENCES examActivities(name) NOT NULL,
+students FLOAT NOT NULL,
+projekts FLOAT NOT NULL,
+daysUsed FLOAT NOT NULL,
+PRIMARY KEY (period, examActivity) 
+)
 
-CREATE TABLE Person
-(
-Id int IDENTITY(1,1) primary key,
-Name varchar(30) not null,
-Pass varchar(10) not null,
-Init varchar(4) not null unique,
-)
-CREATE TABLE Period
-(
-Id int IDENTITY(1,1) primary key,
-Person int foreign key references Person(Id),
-StartDate date not null,
-EndDate date not null
-)
-CREATE TABLE DayTable
-(
-Id int IDENTITY(1,1) primary key,
-TypeName varchar(25) not null
-)
-CREATE TABLE DayActive
-(
-Id int IDENTITY(1,1) primary key,
-Period int foreign key references Period(Id),
-DayTable int foreign key references DayTable(Id),
-Number float,
-)
-CREATE TABLE Estimate
-(
-Id int IDENTITY(1,1) primary key,
-TypeName varchar(25) not null
-)
-CREATE TABLE EstimateActive
-(
-Id int IDENTITY(1,1) primary key,
-Period int foreign key references Period(Id),
-Estimate int foreign key references Estimate(Id),
-Number float
-)
-CREATE TABLE Formula
-(
-Id int identity(1,1) primary key,
-Name varchar(255) not null
-)
-CREATE TABLE FormulasActive
-(
-Id int IDENTITY(1,1) primary key,
-Period int foreign key references Period(Id),
-Formula int foreign key references Formula(Id),
-Number float
-)
-CREATE TABLE Exam
-(
-id int identity(1,1) primary key,
-name varchar(255) not null
-)
-CREATE TABLE ExamActive
-(
-id int identity(1,1) primary key,
-period int foreign key references Period(Id),
-exam int foreign key references Exam(id),
-Number float
-)
-CREATE TABLE Education
-(
-Id int IDENTITY(1,1) primary key,
-Name varchar(25)
-)
-CREATE TABLE Parameter
-(
-Id int identity(1,1) primary key,
-Name varchar(255) not null,
-Education int foreign key references Education(Id),
-Formula int foreign key references Formula(Id),
-examId int foreign key references Exam(id),
-Parameter float not null
-)
 GO
+CREATE TRIGGER meetingCalculater 
+ON period 
+AFTER INSERT
+AS
+BEGIN
+DECLARE @workdays INT
+DECLARE @period INT
+DECLARE @estimatedHours FLOAT
+DECLARE @start VARCHAR(50)
+DECLARE @end VARCHAR(50)
 
+SET @start = (SELECT startDate FROM inserted)
+SET @end = (SELECT endDate FROM inserted)
+SET @period = (SELECT periodId FROM inserted)
+SET @workdays = (Select
+   (DATEDIFF(dd, @start, @end) + 1)
+  -(DATEDIFF(wk, @start, @end) * 2)
+  -(CASE WHEN DATENAME(dw, @start) = 'Sunday' THEN 1 ELSE 0 END)
+  -(CASE WHEN DATENAME(dw, @end) = 'Saturday' THEN 1 ELSE 0 END))
+  -- Vi antager at en arbejds dag er 7.4
+SET  @estimatedHours = @workdays * (SELECT value FROM meetingVariable WHERE name = 'workHours') * (SELECT value/100 FROM meetingVariable WHERE name = 'percentage')
+
+INSERT INTO meeting VALUES(@period, @estimatedHours)
+
+END
+GO
 BEGIN TRY
     BEGIN TRANSACTION
-		INSERT INTO Education values ('Datamatiker')
-		INSERT INTO Education values ('IT Teknolog')
-		INSERT INTO Education values ('Webudvikling')
-		INSERT INTO Education values ('Multimediedesign')
+		INSERT INTO meetingVariable VALUES ('percentage',9)
+		INSERT INTO meetingVariable VALUES ('workHours',7.4)
 
-		INSERT INTO Person values('Torben Krøjmand', 'fisk123', 'TK')
-		INSERT INTO Person values('S?ren Madsen', 'jens', 'SM')
-		INSERT INTO Person values('Erik Jacobsen', 'kosteskab', 'EJ')
-		INSERT INTO Person values('Tester McTest', 'test1', 'test')
-
-		INSERT INTO Period values(1, '20140801', '20141231')
-		INSERT INTO Period values(2, '20140801', '20141231')
-		INSERT INTO Period values(3, '20140801', '20141231')
-		INSERT INTO Period values(2, '20140801', '20141231')
-		INSERT INTO Period values(4, '20140801', '20141231')
-		INSERT INTO Period values(4, '20140101', '20140831')
-
-		INSERT INTO DayTable values('Vacation')
-		INSERT INTO DayTable values('Holiday')
-		INSERT INTO DayTable values('Illness')
-		INSERT INTO DayTable values('Absent')
-
-		INSERT INTO Estimate values('Booklist')
-		INSERT INTO Estimate values('Other Estimates')
-
-		INSERT INTO DayActive values(1, 1, 20)
-		INSERT INTO DayActive values(1, 1, 6)
-		INSERT INTO DayActive values(1, 1, 3)
-		INSERT INTO DayActive values(5, 2, 15)
-		INSERT INTO DayActive values(5, 1, 3)
-		INSERT INTO DayActive values(5, 3, 2)
-		INSERT INTO DayActive values(5, 4, 1)
-		INSERT INTO DayActive values(6, 1, 30)
-		INSERT INTO DayActive values(6, 4, 8)
-
-		INSERT INTO EstimateActive values(1, 1, 9.2)
-		INSERT INTO EstimateActive values(2, 1, 8)
-		INSERT INTO EstimateActive values(5, 1, 14)
-		INSERT INTO EstimateActive values(5, 2, 4)
-		INSERT INTO EstimateActive values(6, 1, 11)
-
-		INSERT INTO Formula values('Undervisning')
-		INSERT INTO Formula values('Hovedopgave')
-		INSERT INTO Formula values('M?der og Diverse')
-		INSERT INTO Formula values('OLC')
-		INSERT INTO Formula values('Praktik')
-		INSERT INTO Formula values('2. Semester Project')
-		INSERT INTO Formula values('SUM Project')
-		INSERT INTO Formula values('Specialisering')
-		INSERT INTO Formula values('3. Semester Project')
-
-		INSERT INTO Parameter values('uv', 1, 1, 2.5)
-		INSERT INTO Parameter values('hop', 1, 2, 3.1)
-		INSERT INTO Parameter values('div', 1, 3,  0.9)
-		INSERT INTO Parameter values('olc', 1, 4,  1.33)
-		INSERT INTO Parameter values('praktik', 1, 5, 0.8)
-		INSERT INTO Parameter values('studerende', 1, 6, 0.66)
-		INSERT INTO Parameter values('projekter', 1, 6, 4)
-		INSERT INTO Parameter values('dage', 1, 6, 1.33)
-		INSERT INTO Parameter values('projekter', 1, 7, 6.2)
-		INSERT INTO Parameter values('dage', 1, 7, 1.89)
-		INSERT INTO Parameter values('studerende', 1, 8, 5.3)
-		INSERT INTO Parameter values('studerende', 1, 9, 0.66)
-		INSERT INTO Parameter values('dage', 1, 9, 2.5)
-		INSERT INTO Parameter values('studerende', 2, 6, 0.75)
-		INSERT INTO Parameter values('projekter', 2, 6, 4.2)
-		INSERT INTO Parameter values('dage', 2, 6, 1.1)
-		INSERT INTO Parameter values('projekter', 2, 7, 4.2)
-		INSERT INTO Parameter values('dage', 2, 7, 1.77)
-		INSERT INTO Parameter values('studerende', 2, 8, 3)
-		INSERT INTO Parameter values('studerende', 2, 9, 0.5)
-		INSERT INTO Parameter values('dage', 2, 9, 2.87)
-
-		INSERT INTO FormulaParameter values(1,  1)
-		INSERT INTO FormulaParameter values(2,  2)
-		INSERT INTO FormulaParameter values(3,  3)
-		INSERT INTO FormulaParameter values(4,  4)
-		INSERT INTO FormulaParameter values(5,  5)
-		INSERT INTO FormulaParameter values(6,  6)
-		INSERT INTO FormulaParameter values(6,  7)
-		INSERT INTO FormulaParameter values(6,  8)
-		INSERT INTO FormulaParameter values(7,  9)
-		INSERT INTO FormulaParameter values(7, 10)
-		INSERT INTO FormulaParameter values(8, 11)
-		INSERT INTO FormulaParameter values(9, 12)
-		INSERT INTO FormulaParameter values(9, 13)
-		INSERT INTO FormulaParameter values(6, 14)
-		INSERT INTO FormulaParameter values(6, 15)
-		INSERT INTO FormulaParameter values(6, 16)
-		INSERT INTO FormulaParameter values(7, 17)
-		INSERT INTO FormulaParameter values(7, 18)
-		INSERT INTO FormulaParameter values(8, 19)
-		INSERT INTO FormulaParameter values(9, 20)
-		INSERT INTO FormulaParameter values(9, 21)
-
-		INSERT INTO FormulasActive values (5, 1, 213.33)
-		INSERT INTO FormulasActive values (5, 3, 13.2)
-		INSERT INTO FormulasActive values (5, 4, 55.1)
-		INSERT INTO FormulasActive values (5, 5, 32.45)
-		INSERT INTO FormulasActive values (5, 6, 42.61)
-		INSERT INTO FormulasActive values (5, 8, 22.93)
-		INSERT INTO FormulasActive values (6, 1, 172)
-		INSERT INTO FormulasActive values (6, 2, 64.76)
-		INSERT INTO FormulasActive values (6, 3, 8.4)
-		INSERT INTO FormulasActive values (6, 9, 100)
+    	INSERT INTO person VALUES('test', 'test1', 'Tester', 'McTest')
+		INSERT INTO person VALUES('TK', 'fisk1', 'Torben', 'Krøjmand')
+		INSERT INTO person VALUES('SM', 'fisk2', 'Søren', 'Madsen')
+		INSERT INTO person VALUES('KR', 'fisk3', 'Karsten', 'Rasmussen')
+		
+		INSERT INTO period VALUES('test','20140801','20140901', 355.8)
+		INSERT INTO period VALUES('test','20140901','20141001', null)
+		INSERT INTO period VALUES('TK','20140101','20140731', null)
+		INSERT INTO period VALUES('SM','20140101','20140731', null)
+		INSERT INTO period VALUES('SM','20140801','20141231', null)
+		INSERT INTO period VALUES('KR','20140801','20141231', null)
+		
+		INSERT INTO dayActivities VALUES('Illness')
+		INSERT INTO dayActivities VALUES('Vacation')
+		INSERT INTO dayActivities VALUES('Holiday')
+		INSERT INTO dayActivities VALUES('Absent')
+		
+		INSERT INTO estimateActivities VALUES('Booklisting')
+		INSERT INTO estimateActivities VALUES('Office')
+		
+		INSERT INTO formulaActivities VALUES('Classes, Datamatiker', 3)
+		INSERT INTO formulaActivities VALUES('Classes, Datamatiker, English', 5)
+		INSERT INTO formulaActivities VALUES('Classes, Multimediedesign', 2.3)
+		INSERT INTO formulaActivities VALUES('Classes, Multimediedesign, English', 3.3)
+		INSERT INTO formulaActivities VALUES('Olc', 0.4)
+		INSERT INTO formulaActivities VALUES('HOP', 2.63)
+		INSERT INTO formulaActivities VALUES('Praktik', 1.98)
+		INSERT INTO formulaActivities VALUES('HOP, English', 3.54)
+		INSERT INTO formulaActivities VALUES('Olc, English', 0.5)
+		INSERT INTO formulaActivities VALUES('Praktik, English', 2.87)
+		
+		INSERT INTO examActivities VALUES('2. Semester Datamatiker', 0.66, 4,1.33)
+		INSERT INTO examActivities VALUES('3. Semester Datamatiker', 0.66, 0,2.5)		
+		
+		INSERT INTO dayPeriod VALUES(1,'Illness',3)
+		INSERT INTO dayPeriod VALUES(1,'Vacation',3)
+		INSERT INTO dayPeriod VALUES(1,'Holiday',3)
+		INSERT INTO dayPeriod VALUES(2,'Illness',0)
+		INSERT INTO dayPeriod VALUES(2,'Vacation',0)
+		INSERT INTO dayPeriod VALUES(2,'Holiday',0)
+		
+		INSERT INTO estimatePeriod VALUES(1,'Booklisting',3)
+		INSERT INTO estimatePeriod VALUES(1,'Office',5)
+		INSERT INTO estimatePeriod VALUES(2,'Booklisting',8)
+		INSERT INTO estimatePeriod VALUES(2,'Office',16)
+		
+		INSERT INTO formulaPeriode VALUES(1,'Classes, Datamatiker',25)
+		INSERT INTO formulaPeriode VALUES(1,'Classes, Datamatiker, English',4)
+		INSERT INTO formulaPeriode VALUES(1,'Olc',0)
+		INSERT INTO formulaPeriode VALUES(2,'Classes, Datamatiker',25)
+		INSERT INTO formulaPeriode VALUES(2,'Classes, Datamatiker, English',4)
+		INSERT INTO formulaPeriode VALUES(2,'Olc',3)
+				
+		INSERT INTO examperiod VALUES(1,'2. Semester Datamatiker',25,6,3)
+		INSERT INTO examperiod VALUES(1,'3. Semester Datamatiker',16,4,0)
+		INSERT INTO examperiod VALUES(2,'2. Semester Datamatiker',0,0,0)
+		INSERT INTO examperiod VALUES(2,'3. Semester Datamatiker',0,0,0)
     COMMIT
 END TRY
 BEGIN CATCH
  ROLLBACK
 END CATCH
+
+GO
+DROP FUNCTION getDaysDifference
+GO
+CREATE FUNCTION getDaysDifference
+(@id int)
+
+RETURNS FLOAT
+AS
+BEGIN
+
+DECLARE @workdays FLOAT
+DECLARE @start VARCHAR(24)
+DECLARE @end VARCHAR(24)
+
+SET @start = CONVERT(NVARCHAR(24), (SELECT startdate FROM period WHERE periodId = @Id), 121)
+SET @end = CONVERT(NVARCHAR(24), (SELECT enddate FROM period WHERE periodId = @Id), 121)
+SET @workdays = (SELECT
+   (DATEDIFF(dd, @start, @end) + 1)
+  -(DATEDIFF(wk, @start, @end) * 2)
+  -(CASE WHEN DATENAME(dw, @start) = 'Sunday' THEN 1 ELSE 0 END)
+  -(CASE WHEN DATENAME(dw, @end) = 'Saturday' THEN 1 ELSE 0 END))
+RETURN @workdays * (SELECT value FROM meetingVariable WHERE name ='workHours')
+END
+
+GO
+DROP FUNCTION getTotalTimeUsed
+GO
+CREATE FUNCTION getTotalTimeUsed(@id int)
+
+RETURNS FLOAT
+
+AS
+BEGIN
+
+DECLARE @days FLOAT
+DECLARE @meeting FLOAT
+DECLARE @estimate FLOAT
+DECLARE @formula FLOAT
+DECLARE @exam FLOAT
+DECLARE @return FLOAT
+
+DECLARE @temp FLOAT
+
+SET @temp = (SELECT mv.value FROM meetingVariable mv WHERE mv.name = 'workHours')
+
+SET @days = (SELECT Sum(dp.daysUsed * @temp)
+			FROM dayPeriod dp
+			WHERE dp.period = @id)
+
+SET @meeting = (SELECT estimatedHours 
+				FROM meeting 
+				WHERE period = @id)
+
+SET @estimate =  (SELECT Sum(ep.hoursUsed)
+				 FROM estimatePeriod ep
+				 WHERE ep.period = @id)
+
+SET @formula =  (SELECT Sum(fp.variable*fa.formulamultiplier)
+				 FROM formulaActivities fa, formulaPeriode fp 
+				 WHERE fa.activity = fp.formulaActivity AND fp.period = @id)
+
+SET @exam = (Select Sum((ep.students*ea.studentsmultiplier) + (ep.projekts*ea.projectsmultiplier) + (ep.daysUsed*ea.daysmultiplier))
+			FROM examperiod ep, examActivities ea 
+			WHERE ep.examActivity = ea.name AND  ep.period = @id)
+
+SET @return = Round(Sum(@days + @estimate + @formula + @exam + @meeting), 2)
+
+RETURN @return
+END
+
+
+GO
+DROP FUNCTION getNettoTime
+GO
+CREATE FUNCTION getNettoTime(@id int)
+
+RETURNS FLOAT
+
+AS
+BEGIN
+
+DECLARE @Return FLOAT
+DECLARE @days FLOAT
+
+SET @days = dbo.getDaysDifference(@id)
+
+SET @Return = Sum(dbo.getTotalTimeUsed(@id) - dbo.getDaysDifference(@id))
+
+RETURN @Return
+END
