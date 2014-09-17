@@ -29,11 +29,11 @@ public class Dao {
 		try {
 			Class.forName("net.sourceforge.jtds.jdbc.Driver");
 			
-			String connection = "10.10.138.187";
+			String connection = "10.10.137.145";
 			String port = "1433";
 			String dbName = "praktik_estimate";
 			
-			connect = DriverManager.getConnection("jdbc:jtds:sqlserver://" + connection + ":" + port + ";databaseName=" + dbName + ";user=test;password=1234");
+			connect = DriverManager.getConnection("jdbc:jtds:sqlserver://" + connection + ":" + port + "/" + dbName + ";instance=SQLEXPRESS;user=test;password=1234");
 			
 			preparedStatement = connect.prepareStatement("SELECT * FROM person WHERE init=? AND pass=?");
 			preparedStatement.setString(1, initials);
