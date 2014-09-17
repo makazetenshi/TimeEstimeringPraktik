@@ -26,11 +26,13 @@ namespace praktik_estimering
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            datagridExam.ItemsSource = PeriodService.Instance.FormulaList().DefaultView;
+            datagridExam.ItemsSource = PeriodService.Instance.getExamns().DefaultView;
             datagridExam.Columns[0].Visibility = Visibility.Hidden;
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            PeriodService.Instance.InsertList();
+
             DataView dv = (DataView)datagridExam.ItemsSource;
             DataTable dt = cloneTable(dv);
 

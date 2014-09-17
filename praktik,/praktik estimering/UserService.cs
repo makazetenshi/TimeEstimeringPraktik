@@ -47,13 +47,7 @@ namespace praktik_estimering
         {
             try
             {
-                string sql = "SELECT * FROM person WHERE init = '" + initials + "'";
-/*
-
-                SqlCommand command = new SqlCommand(sql, con);
-                command.Parameters.Add("@initials", sqlDbType.NvarCharinitials);
-                command.Parameters.Add("@password", password);
-*/
+                string sql = "SELECT * FROM person WHERE initials = '" + initials + "'";
 
                 SqlDataAdapter da = new SqlDataAdapter(sql, con);
                 DataTable dt = new DataTable();
@@ -64,8 +58,8 @@ namespace praktik_estimering
 
                 foreach (DataRow row in dt.Rows)
                 {
-                    pass = row["Pass"].ToString();
-                    init = row["Init"].ToString();
+                    pass = row["password"].ToString();
+                    init = row["initials"].ToString();
                 }
 
                 if (initials == init)
@@ -75,13 +69,13 @@ namespace praktik_estimering
                         userTabel = dt;
                         return true;
                     }
-                    else throw new Exception("password does not match initials.");
+                     throw new Exception("password does not match initials.");
                 }
-                else throw new Exception("initals was not found please try again.");
+                 throw new Exception("initals was not found please try again.");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message.ToString());
+                MessageBox.Show(ex.Message);
                 return false;
             }
         }
@@ -98,9 +92,16 @@ namespace praktik_estimering
         {
             List<string> summary = new List<string>();
 
+            Debug.WriteLine("period id: " + selectedPeriod);
+
             summary.AddRange(addDayAktivities());
             summary.AddRange(addEstimateAktivities());
             summary.AddRange(addFormulaAktivities());
+
+            foreach (string s in summary)
+            {
+                Debug.WriteLine(s);
+            }
 
             return summary;
         }
@@ -172,7 +173,7 @@ namespace praktik_estimering
             string id = null;
             foreach (DataRow row in userTabel.Rows)
             {
-                id = row["id"].ToString();
+                id = row["initials"].ToString();
             }
 
             return id;
