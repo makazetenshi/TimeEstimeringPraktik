@@ -26,7 +26,6 @@ namespace praktik_estimering
             con = dl.getConnection();
             userTabel = new DataTable();
         }
-
         public static UserService Instance
         {
             get
@@ -47,13 +46,7 @@ namespace praktik_estimering
         {
             try
             {
-                string sql = "SELECT * FROM person WHERE init = '" + initials + "'";
-/*
-
-                SqlCommand command = new SqlCommand(sql, con);
-                command.Parameters.Add("@initials", sqlDbType.NvarCharinitials);
-                command.Parameters.Add("@password", password);
-*/
+                string sql = "SELECT * FROM person WHERE initials = '" + initials + "'";
 
                 SqlDataAdapter da = new SqlDataAdapter(sql, con);
                 DataTable dt = new DataTable();
@@ -64,8 +57,8 @@ namespace praktik_estimering
 
                 foreach (DataRow row in dt.Rows)
                 {
-                    pass = row["Pass"].ToString();
-                    init = row["Init"].ToString();
+                    pass = row["password"].ToString();
+                    init = row["initials"].ToString();
                 }
 
                 if (initials == init)
@@ -75,13 +68,13 @@ namespace praktik_estimering
                         userTabel = dt;
                         return true;
                     }
-                    else throw new Exception("password does not match initials.");
+                    throw new Exception("password does not match initials.");
                 }
-                else throw new Exception("initals was not found please try again.");
+                throw new Exception("initals was not found please try again.");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message.ToString());
+                MessageBox.Show(ex.Message);
                 return false;
             }
         }
@@ -98,9 +91,17 @@ namespace praktik_estimering
         {
             List<string> summary = new List<string>();
 
+            Debug.WriteLine("period id: " + SelectedPeriod);
+
             summary.AddRange(addDayAktivities());
             summary.AddRange(addEstimateAktivities());
             summary.AddRange(addFormulaAktivities());
+            summary.AddRange(addExamAktivities());
+
+            foreach (string s in summary)
+            {
+                Debug.WriteLine(s);
+            }
 
             return summary;
         }
@@ -111,7 +112,7 @@ namespace praktik_estimering
             {
                 cmd.CommandText = "getDaysDifference";
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("id", getuserId());
+                cmd.Parameters.AddWithValue("id", SelectedPeriod);
 
                 var returnParameter = cmd.Parameters.Add("@ReturnVal", SqlDbType.Int);
                 returnParameter.Direction = ParameterDirection.ReturnValue;
@@ -125,27 +126,53 @@ namespace praktik_estimering
                 con.Close();
             }
 
-            return Convert.ToInt32(result*7.4);
+            return Convert.ToInt32(result);
         }
         public int getUsedTime()
         {
-            string sqlUsedTime = "SELECT SUM(da.Number * 7.4) + SUM(ea.Number) + SUM(fa.Number) 'sum' " +
-                                 "FROM Period p, DayActive da, EstimateActive ea, FormulasActive fa " +
-                                 "WHERE p.Id = da.Period AND p.Id = ea.Period AND p.Id = fa.Period AND p.Id = " + selectedPeriod;
-
-            DataTable timeTable = getDataTable(sqlUsedTime);
-            
-            double usedTime = -1;
-            foreach (DataRow row in timeTable.Rows)
+            int result;
+            using (SqlCommand cmd = con.CreateCommand())
             {
-                usedTime = double.Parse(row["sum"].ToString());
+                cmd.CommandText = "getTotalTime";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("id", SelectedPeriod);
+
+                var returnParameter = cmd.Parameters.Add("@ReturnVal", SqlDbType.Int);
+                returnParameter.Direction = ParameterDirection.ReturnValue;
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+                result = (int)returnParameter.Value;
             }
-            int result = Convert.ToInt32(usedTime);
-            return result;
+            if (con.State == ConnectionState.Open)
+            {
+                con.Close();
+            }
+
+            return Convert.ToInt32(result);
         }
         public int getNettoTid()
         {
-            return getUsedTime()-getNormTime();
+            int result;
+            using (SqlCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = "getNettoTid";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("id", SelectedPeriod);
+
+                var returnParameter = cmd.Parameters.Add("@ReturnVal", SqlDbType.Int);
+                returnParameter.Direction = ParameterDirection.ReturnValue;
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+                result = (int)returnParameter.Value;
+            }
+            if (con.State == ConnectionState.Open)
+            {
+                con.Close();
+            }
+
+            return Convert.ToInt32(result);
         }
         private static DataTable getDataTable(string sql)
         {
@@ -172,7 +199,7 @@ namespace praktik_estimering
             string id = null;
             foreach (DataRow row in userTabel.Rows)
             {
-                id = row["id"].ToString();
+                id = row["initials"].ToString();
             }
 
             return id;
@@ -180,10 +207,9 @@ namespace praktik_estimering
         private List<String> addDayAktivities()
         {
             List<string> dayList = new List<string>();
-            string sqlDay = "SELECT dt.TypeName 'Type', SUM(da.number)*7.4 'Hours' " +
-                         "FROM DayActive da, DayTable dt " +
-                         "WHERE da.DayTable = dt.Id AND da.Period = " + selectedPeriod +
-                         "GROUP BY dt.TypeName ";
+            string sqlDay = "SELECT dp.dayActivity, dp.daysUsed * (SELECT mv.value FROM meetingVariable mv WHERE mv.name = 'workHours') 'Hours' "+
+                            "FROM dayPeriod dp " +
+                            "WHERE dp.period = " + SelectedPeriod;
 
             DataTable dayTable = getDataTable(sqlDay);
 
@@ -203,10 +229,9 @@ namespace praktik_estimering
         {
             List<string> estimateList = new List<string>();
 
-            string sqlEstimate = "SELECT e.TypeName as 'Type', SUM(number) as 'Hours' " +
-                                "from Estimate as e, EstimateActive as ea " +
-                                "where ea.estimate = e.id and ea.period = " + selectedPeriod +
-                                "GROUP BY e.TypeName ";
+            string sqlEstimate = "SELECT ep.estimateActivity 'Activity', ep.hoursUsed 'Hours' " +
+                                 "FROM estimatePeriod ep " +
+                                 "WHERE ep.period = " + SelectedPeriod;
 
             DataTable estimateTable = getDataTable(sqlEstimate);
 
@@ -225,14 +250,13 @@ namespace praktik_estimering
         {
             List<string> formulaList = new List<string>();
 
-            string sqlformula = "SELECT f.Name, SUM(fa.Number) " +
-                                "FROM FormulasActive fa, Period p, Formula f " +
-                                "WHERE fa.Formula = F.Id AND fa.Period = " + selectedPeriod +
-                                "GROUP BY f.Name ";
+            string sqlformula = "SELECT fp.formulaActivity 'Activity', fp.variable*fa.formulamultiplier 'Hours' " +
+                                "FROM formulaActivities fa, formulaPeriode fp  " +
+                                "WHERE fa.activity = fp.formulaActivity AND fp.period = " + SelectedPeriod;
 
             DataTable formulaTable = getDataTable(sqlformula);
 
-            formulaList.Add("form activities: ");
+            formulaList.Add("Form activities: ");
 
             StringBuilder sb = new StringBuilder();
             foreach (DataRow row in formulaTable.Rows)
@@ -243,8 +267,26 @@ namespace praktik_estimering
             }
             return formulaList;
         }
+        private List<string> addExamAktivities()
+        {
+            List<string> formulaList = new List<string>();
 
+            string sqlformula = "SELECT ep.examActivity 'Aktivity', (ep.students*ea.studentsmultiplier + ep.projekts*ea.projectsmultiplier + ep.daysUsed*ea.daysmultiplier) 'Hours' " +
+                                "FROM examperiod ep, examActivities ea " +
+                                "WHERE ep.examActivity = ea.name AND  ep.period = " + SelectedPeriod;
 
+            DataTable examTable = getDataTable(sqlformula);
 
+            formulaList.Add("Exam activities: ");
+
+            StringBuilder sb = new StringBuilder();
+            foreach (DataRow row in examTable.Rows)
+            {
+                sb.AppendLine(string.Join("  -  ", row.ItemArray));
+                formulaList.Add(sb.ToString());
+                sb.Clear();
+            }
+            return formulaList;
+        }
     }
 }
