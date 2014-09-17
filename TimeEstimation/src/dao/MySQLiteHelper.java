@@ -147,12 +147,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 			if(isBeforeFirst()||isAfterLast()){
 				return null;
 			}
-			Service service = Service.getInstance();
+			//Service service = Service.getInstance();
 			Period period = new Period();
 			period.setId(getLong(getColumnIndex(COLUMN_PERIODID)));
 			period.setStartDate(new Date(getLong(getColumnIndex(COLUMN_STARTDATE))));
 			period.setEndDate(new Date(getLong(getColumnIndex(COLUMN_ENDDATE))));
-			period.setLoggedIn(service.getLoggedInUser().getInitials());
+			//period.setLoggedIn(service.getLoggedInUser().getInitials());
 			
 			return period;
 		}

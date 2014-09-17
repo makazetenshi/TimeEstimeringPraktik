@@ -7,7 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import android.content.Context;
+
 import com.example.timeestimation.User;
+
+import dao.MySQLiteHelper.PeriodCursor;
 
 public class Dao {
 
@@ -16,11 +20,13 @@ public class Dao {
 	private PreparedStatement preparedStatement = null;
 	private ResultSet resultSet = null;
 	private Connection connect;
+	private MySQLiteHelper dbHelper;
 	
-	public Dao() {
+	public Dao(Context context) {
 		this.loggedIn = null;
 		this.loggedInUsers = new ArrayList<User>();
 		this.connect = null;
+		dbHelper = new MySQLiteHelper(context);
 	}
 	
 	public boolean logIn(String initials, String password) throws SQLException{
@@ -87,6 +93,10 @@ private void writeUser(ResultSet resultSet) throws SQLException{
 	
 	public ArrayList<User> getLoggedInUsers(){
 		return loggedInUsers;
+	}
+	
+	public PeriodCursor getPeriod(String init){
+		return dbHelper.queryPeriod(init);
 	}
 	
 }
