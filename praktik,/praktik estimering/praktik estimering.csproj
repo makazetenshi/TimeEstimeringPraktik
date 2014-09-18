@@ -63,7 +63,6 @@
     <Compile Include="FormulaActivities.xaml.cs">
       <DependentUpon>FormulaActivities.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FormulaService.cs" />
     <Compile Include="DateInsert.xaml.cs">
       <DependentUpon>DateInsert.xaml</DependentUpon>
     </Compile>
@@ -74,6 +73,10 @@
     <Compile Include="Showroom.xaml.cs">
       <DependentUpon>Showroom.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UpdatePeriod.xaml.cs">
+      <DependentUpon>UpdatePeriod.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UpdateService.cs" />
     <Compile Include="UserService.cs" />
     <Page Include="EstimateActivities.xaml">
       <SubType>Designer</SubType>
@@ -112,6 +115,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Showroom.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UpdatePeriod.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

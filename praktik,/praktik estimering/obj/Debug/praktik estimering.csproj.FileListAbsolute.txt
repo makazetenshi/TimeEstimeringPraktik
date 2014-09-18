@@ -55,3 +55,5 @@ C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimeri
 C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\FormulaActivities.g.cs
 C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\exam.baml
 C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\exam.g.cs
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\UpdatePeriod.baml
+C:\Users\Bruger\Documents\GitHub\TimeEstimeringPraktik\praktik,\praktik estimering\obj\Debug\UpdatePeriod.g.cs

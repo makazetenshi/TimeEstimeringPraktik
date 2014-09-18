@@ -67,7 +67,7 @@ namespace praktik_estimering
 
             MainWindow main = new MainWindow();
             main.Show();
-            this.Close();
+            Close();
         }
 
         private void datagridOldPeriods_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
@@ -80,6 +80,13 @@ namespace praktik_estimering
                     dataGridTextColumn.Binding.StringFormat = "{0:d}";
                 }
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Window up = new UpdatePeriod();
+            up.Show();
+            Close();
         }
 
 
