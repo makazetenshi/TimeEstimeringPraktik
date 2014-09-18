@@ -5,7 +5,7 @@ import java.util.Date;
 public class Period {
 	
 	private Date startDate, endDate;
-	private String loggedIn;
+	private String loggedIn, initials;
 	private long id;
 	
 	public Period() {
@@ -13,7 +13,20 @@ public class Period {
 		this.endDate = null;
 		this.loggedIn = "";
 		this.id = 0;
+		this.initials = "";
 	}
+	
+	
+	public String getInitials() {
+		return initials;
+	}
+
+
+	public void setInitials(String initials) {
+		this.initials = initials;
+	}
+
+
 
 	public Date getStartDate() {
 		return startDate;

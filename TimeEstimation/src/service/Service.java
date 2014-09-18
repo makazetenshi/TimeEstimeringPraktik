@@ -17,7 +17,7 @@ public class Service {
 	
 	protected Service(Context context) {
 		this.context = context;
-		dao = new Dao(context);
+		dao = Dao.getInstance(context);
 	}
 	
 	public static Service getInstance(Context context){
@@ -25,6 +25,10 @@ public class Service {
 			instance = new Service(context);
 		}
 		return instance;
+	}
+	
+	public void testData(){
+		dao.testData();
 	}
 	
 	public void setUser(User user){

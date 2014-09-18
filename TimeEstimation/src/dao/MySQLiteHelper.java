@@ -12,11 +12,12 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class MySQLiteHelper extends SQLiteOpenHelper  {
 	
 	public final static String DBNAME = "praktik_estimate.db";
-	public final static int DBVERSION = 1;
+	public final static int DBVERSION = 3;
 	
 	public final static String TABLE_PERIOD = "period";
 	public final static String TABLE_MEETING = "meeting";
@@ -58,36 +59,36 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 	public final static String COLUMN_MULTIPLIER = "multiplier";
 	public final static String COLUMN_IMPVARIABLE = "impvariable";
 	
-	public final static String CREATE_TABLE_PERIOD = "CREATE TABLE " + TABLE_PERIOD + "(" + COLUMN_PERIODID + " integer primary key autoincrement, "
-			+ COLUMN_STARTDATE + " date," + COLUMN_ENDDATE + "date, " + COLUMN_INITIALS + "varchar(5));";
+	public final static String CREATE_TABLE_PERIOD = "CREATE TABLE IF NOT EXISTS " + TABLE_PERIOD + "(" + COLUMN_PERIODID + " integer primary key autoincrement, "
+			+ COLUMN_STARTDATE + " date, " + COLUMN_ENDDATE + " date, " + COLUMN_INITIALS + " varchar(5));";
 	
-	public final static String CREATE_TABLE_MEETING = "CREATE TABLE " + TABLE_MEETING + "(" + COLUMN_PERIOD + " integer primary key, " + COLUMN_HOURS + 
+	public final static String CREATE_TABLE_MEETING = "CREATE TABLE IF NOT EXISTS " + TABLE_MEETING + "(" + COLUMN_PERIOD + " integer primary key, " + COLUMN_HOURS + 
 			" int, FOREIGN KEY(" + COLUMN_PERIOD + ") REFERENCES " + TABLE_PERIOD + "(" + COLUMN_PERIODID + "));";
 	
-	public final static String CREATE_TABLE_EXAMPERIOD = "CREATE TABLE " + TABLE_EXAMPERIOD + "(" + COLUMN_PERIOD + " integer, " + COLUMN_EXAM +
+	public final static String CREATE_TABLE_EXAMPERIOD = "CREATE TABLE IF NOT EXISTS " + TABLE_EXAMPERIOD + "(" + COLUMN_PERIOD + " integer, " + COLUMN_EXAM +
 			COLUMN_STUDENTS + " integer, " + COLUMN_PROJECTS + " integer, " + COLUMN_DAYS + " integer, FOREIGN KEY(" + COLUMN_PERIOD + ") REFERENCES "
 			+ TABLE_PERIOD + "(" + COLUMN_PERIODID + "), FOREIGN KEY(" + COLUMN_EXAM + ") REFERENCES " + TABLE_EXAM + "(" + COLUMN_NAME + "));";
 	
-	public final static String CREATE_TABLE_EXAM = "CREATE TABLE " + TABLE_EXAM + "(" + COLUMN_NAME + " varchar(20) primary key, " + COLUMN_M1 + 
+	public final static String CREATE_TABLE_EXAM = "CREATE TABLE IF NOT EXISTS " + TABLE_EXAM + "(" + COLUMN_NAME + " varchar(20) primary key, " + COLUMN_M1 + 
 			" double, " + COLUMN_M2 + " double, " + COLUMN_M3 + " double);";
 	
-	public final static String CREATE_TABLE_ESTIMATEPERIOD = "CREATE TABLE " + TABLE_ESTIMATEPERIOD + "(" + COLUMN_PERIOD + " integer, " + 
+	public final static String CREATE_TABLE_ESTIMATEPERIOD = "CREATE TABLE IF NOT EXISTS " + TABLE_ESTIMATEPERIOD + "(" + COLUMN_PERIOD + " integer, " + 
 			COLUMN_ESTACTIVITY + " varchar(20), " + COLUMN_HOURS + " double, FOREIGN KEY(" + COLUMN_PERIOD + ") REFERENCES " + TABLE_PERIOD
 			+ "(" + COLUMN_PERIODID + "), FOREIGN KEY(" + COLUMN_ESTACTIVITY + ") REFERENCES " + TABLE_ESTIMATEACTIVITY + "(" + COLUMN_ACTIVITY + "));";
 
-	public final static String CREATE_TABLE_ESTIMATEACTIVITY = "CREATE TABLE" + TABLE_ESTIMATEACTIVITY + "(" + COLUMN_ACTIVITY + " varchar(20) primary key);";
+	public final static String CREATE_TABLE_ESTIMATEACTIVITY = "CREATE TABLE IF NOT EXISTS " + TABLE_ESTIMATEACTIVITY + "(" + COLUMN_ACTIVITY + " varchar(20) primary key);";
 	
-	public final static String CREATE_TABLE_DAYPERIOD = "CREATE TABLE" + TABLE_DAYPERIOD + "(" + COLUMN_PERIOD + " integer, " + COLUMN_DAYACTIVITY 
+	public final static String CREATE_TABLE_DAYPERIOD = "CREATE TABLE IF NOT EXISTS " + TABLE_DAYPERIOD + "(" + COLUMN_PERIOD + " integer, " + COLUMN_DAYACTIVITY 
 			+ " varchar(20), " + COLUMN_DAYS + " integer, FOREIGN KEY(" + COLUMN_PERIOD + ") REFERENCES " + TABLE_PERIOD + "(" + COLUMN_PERIODID + "),"
 					+ " FOREIGN KEY(" + COLUMN_DAYACTIVITY + ") REFERENCES " + TABLE_DAYACTIVITY + "(" + COLUMN_ACTIVITY + "));";
 	
-	public final static String CREATE_TABLE_DAYACTIVITIES = "CREATE TABLE " + TABLE_DAYACTIVITY + "(" + COLUMN_ACTIVITY + " varchar(20));";
+	public final static String CREATE_TABLE_DAYACTIVITIES = "CREATE TABLE IF NOT EXISTS " + TABLE_DAYACTIVITY + "(" + COLUMN_ACTIVITY + " varchar(20));";
 	
-	public final static String CREATE_TABLE_FORMULAPERIOD = "CREATE TABLE " + TABLE_FORMULAPERIOD + "(" + COLUMN_PERIOD + " integer, " + 
+	public final static String CREATE_TABLE_FORMULAPERIOD = "CREATE TABLE IF NOT EXISTS " + TABLE_FORMULAPERIOD + "(" + COLUMN_PERIOD + " integer, " + 
 	COLUMN_FORMULA + " varchar(30), " + COLUMN_VARIABLE + " double, FOREIGN KEY(" + COLUMN_PERIOD + ") REFERENCES " + TABLE_PERIOD + "(" +
 			COLUMN_PERIODID + "), FOREIGN KEY (" + COLUMN_FORMULA + ") REFERENCES " + TABLE_FORMULA + "(" + COLUMN_NAME + "));";
 	
-	public final static String CREATE_TABLE_FORMULA = "CREATE TABLE" + TABLE_FORMULA + "(" + COLUMN_NAME + " varchar(30), " + COLUMN_MULTIPLIER 
+	public final static String CREATE_TABLE_FORMULA = "CREATE TABLE IF NOT EXISTS " + TABLE_FORMULA + "(" + COLUMN_NAME + " varchar(30), " + COLUMN_MULTIPLIER 
 			+ " double, " + COLUMN_IMPVARIABLE  + " varchar(20));";
 	
 	public MySQLiteHelper(Context context) {
@@ -131,6 +132,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 	}
 	
 	public PeriodCursor queryPeriod(String init){
+		Log.d("Cursor", "Query Initiated");
 		String[] args = {init};
 		Cursor wrapped = getReadableDatabase().query(TABLE_PERIOD, null, COLUMN_INITIALS + " = ?", args, null, null, null);
 		return new PeriodCursor(wrapped);

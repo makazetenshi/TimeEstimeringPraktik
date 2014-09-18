@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ public class PeriodListFragment extends ListFragment implements LoaderCallbacks<
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
+		getLoaderManager().initLoader(0, null, this);
 	}
 	
 	@Override
@@ -38,6 +40,7 @@ public class PeriodListFragment extends ListFragment implements LoaderCallbacks<
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		// TODO Auto-generated method stub
+		Log.d("Cursor", "Cursor Created");
 		return new PeriodListCursorLoader(getActivity());
 	}
 
@@ -45,11 +48,13 @@ public class PeriodListFragment extends ListFragment implements LoaderCallbacks<
 	public void onLoadFinished(Loader<Cursor> loadxer, Cursor cursor) {
 		PeriodCursorAdapter adapter = new PeriodCursorAdapter(getActivity(), (PeriodCursor)cursor);
 		setListAdapter(adapter);
+		Log.d("Cursor", "Cursor Finished Load");
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
 		setListAdapter(null);
+		Log.d("Cursor", "Cursor Reset");
 	}
 	
 	private static class PeriodListCursorLoader extends SQLiteCursorLoader{
@@ -72,10 +77,12 @@ public class PeriodListFragment extends ListFragment implements LoaderCallbacks<
 		public PeriodCursorAdapter(Context context, PeriodCursor c) {
 			super(context,c,0);
 			mPeriodCursor = c;
+			Log.d("Cursor", "PeriodCursorAdapter");
 		}
 
 		@Override
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
+			Log.d("Cursor", "Layoutinflater");
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			return inflater.inflate(android.R.layout.simple_list_item_1, parent,false);
 		}
@@ -83,6 +90,7 @@ public class PeriodListFragment extends ListFragment implements LoaderCallbacks<
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
 			Period period = mPeriodCursor.getPeriod();
+			Log.d("Cursor", "periode for: " + period.getInitials());
 			
 			TextView text = (TextView) view;
 			text.setText("Start: " + period.getStartDate() + " End: " + period.getEndDate() + " Estimate: " + " User: " + 

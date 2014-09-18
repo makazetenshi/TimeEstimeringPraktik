@@ -36,6 +36,10 @@ public class LoginFragment extends Fragment{
 			@Override
 			public void onClick(View v) { 
 				//new LoginTask().execute(etName.getText().toString(), etPass.getText().toString());
+				
+				service.setUser(new User("TST", "1"));
+				service.testData();
+				
 				FragmentTransaction ft = getFragmentManager().beginTransaction();
 				ft.replace(R.id.container, new MenuFragment());
 				ft.addToBackStack(null);

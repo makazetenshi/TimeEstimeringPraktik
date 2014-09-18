@@ -6,9 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
+import com.example.timeestimation.Period;
 import com.example.timeestimation.User;
 
 import dao.MySQLiteHelper.PeriodCursor;
@@ -20,13 +25,50 @@ public class Dao {
 	private PreparedStatement preparedStatement = null;
 	private ResultSet resultSet = null;
 	private Connection connect;
+	private SQLiteDatabase database;
 	private MySQLiteHelper dbHelper;
+	private String[] testData = {MySQLiteHelper.COLUMN_INITIALS};
+	private static Dao instance = null;
 	
-	public Dao(Context context) {
+	protected Dao(Context context) {
 		this.loggedIn = null;
 		this.loggedInUsers = new ArrayList<User>();
 		this.connect = null;
 		dbHelper = new MySQLiteHelper(context);
+	}
+	
+	public static Dao getInstance(Context context){
+		if(instance == null){
+			instance = new Dao(context);
+		}
+		return instance;
+	}
+	
+	public void testData(){
+		Period p = new Period();
+		open();
+		Cursor cursor = database.query(MySQLiteHelper.TABLE_PERIOD, 
+				testData, MySQLiteHelper.COLUMN_INITIALS + " = '" + loggedIn.getInitials() + "'", null, null, null, null);
+		cursor.moveToFirst();
+		cursor.close();
+		if(cursor.getCount() > 0){
+		p = cursorToPeriod(cursor);
+		}
+		if(p.getInitials() != null){
+			ContentValues values = new ContentValues();
+			values.put(MySQLiteHelper.COLUMN_STARTDATE, System.currentTimeMillis());
+			values.put(MySQLiteHelper.COLUMN_ENDDATE, 1419405715);
+			values.put(MySQLiteHelper.COLUMN_INITIALS, loggedIn.getInitials());
+		}
+		close();
+	}
+	
+	public void open(){
+		database = dbHelper.getWritableDatabase();
+	}
+	
+	public void close(){
+		dbHelper.close();
 	}
 	
 	public boolean logIn(String initials, String password) throws SQLException{
@@ -97,6 +139,15 @@ private void writeUser(ResultSet resultSet) throws SQLException{
 	
 	public PeriodCursor getPeriod(String init){
 		return dbHelper.queryPeriod(init);
+	}
+	
+	public Period cursorToPeriod(Cursor cursor){
+		Period period = new Period();
+		period.setId(cursor.getInt(0));
+		period.setStartDate(new Date(cursor.getLong(1)*1000));
+		period.setEndDate(new Date(cursor.getLong(2)*1000));
+		period.setInitials(cursor.getString(3));
+		return period;
 	}
 	
 }
