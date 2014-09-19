@@ -17,7 +17,7 @@ import android.util.Log;
 public class MySQLiteHelper extends SQLiteOpenHelper  {
 	
 	public final static String DBNAME = "praktik_estimate.db";
-	public final static int DBVERSION = 3;
+	public final static int DBVERSION = 4;
 	
 	public final static String TABLE_PERIOD = "period";
 	public final static String TABLE_MEETING = "meeting";

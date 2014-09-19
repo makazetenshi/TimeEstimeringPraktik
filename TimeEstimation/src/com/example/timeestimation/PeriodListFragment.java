@@ -24,6 +24,7 @@ public class PeriodListFragment extends ListFragment implements LoaderCallbacks<
 		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
 		getLoaderManager().initLoader(0, null, this);
+		
 	}
 	
 	@Override
@@ -45,10 +46,11 @@ public class PeriodListFragment extends ListFragment implements LoaderCallbacks<
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> loadxer, Cursor cursor) {
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		PeriodCursorAdapter adapter = new PeriodCursorAdapter(getActivity(), (PeriodCursor)cursor);
 		setListAdapter(adapter);
 		Log.d("Cursor", "Cursor Finished Load");
+		Log.d("Cursor","Rows: " + cursor.getCount());
 	}
 
 	@Override

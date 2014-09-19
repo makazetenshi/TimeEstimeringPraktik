@@ -48,7 +48,7 @@ public class Service {
 	}
 	
 	public PeriodCursor getPeriods(){
-		return dao.getPeriod(getLoggedInUser().getInitials());
+		return dao.getPeriod();
 	}
 
 }

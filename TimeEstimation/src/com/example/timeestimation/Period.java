@@ -11,9 +11,9 @@ public class Period {
 	public Period() {
 		this.startDate = null;
 		this.endDate = null;
-		this.loggedIn = "";
+		this.loggedIn = null;
 		this.id = 0;
-		this.initials = "";
+		this.initials = null;
 	}
 	
 	
