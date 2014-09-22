@@ -90,7 +90,7 @@ daysUsed FLOAT NOT NULL,
 PRIMARY KEY (period, examActivity) 
 )
 GO
-DROP TRIGGER meetingCalculater
+--DROP TRIGGER meetingCalculater
 GO
 CREATE TRIGGER meetingCalculater 
 ON period 
@@ -122,8 +122,8 @@ BEGIN TRY
     BEGIN TRANSACTION
 		INSERT INTO meetingVariable VALUES ('percentage',9)
 		INSERT INTO meetingVariable VALUES ('workHours',7.4)
-
-    	INSERT INTO person VALUES('test', 'test1', 'Tester', 'McTest')
+		
+    	INSERT INTO person VALUES('test', 't', 'Tester', 'McTest')
 		INSERT INTO person VALUES('TK', 'fisk1', 'Torben', 'Krøjmand')
 		INSERT INTO person VALUES('SM', 'fisk2', 'Søren', 'Madsen')
 		INSERT INTO person VALUES('KR', 'fisk3', 'Karsten', 'Rasmussen')
@@ -175,7 +175,7 @@ BEGIN TRY
 		INSERT INTO formulaPeriod VALUES(2,'Classes, Datamatiker',25)
 		INSERT INTO formulaPeriod VALUES(2,'Classes, Datamatiker, English',4)
 		INSERT INTO formulaPeriod VALUES(2,'Olc',3)
-				
+		
 		INSERT INTO examperiod VALUES(1,'2. Semester Datamatiker',25,6,3)
 		INSERT INTO examperiod VALUES(1,'3. Semester Datamatiker',16,4,0)
 		INSERT INTO examperiod VALUES(2,'2. Semester Datamatiker',0,0,0)
@@ -207,8 +207,8 @@ SET @workdays = (SELECT
   -(CASE WHEN DATENAME(dw, @end) = 'Saturday' THEN 1 ELSE 0 END))
 RETURN @workdays * (SELECT value FROM meetingVariable WHERE name ='workHours')
 END
-
 GO
+
 DROP FUNCTION getTotalTimeUsed
 GO
 CREATE FUNCTION getTotalTimeUsed(@id int)
@@ -251,8 +251,8 @@ SET @return = Round(Sum(@days + @estimate + @formula + @exam + @meeting), 2)
 
 RETURN @return
 END
-
 GO
+
 DROP FUNCTION getNettoTime
 GO
 CREATE FUNCTION getNettoTime(@id int)

@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Serialization.Formatters;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace praktik_estimering
 {
@@ -18,8 +11,8 @@ namespace praktik_estimering
         private int selectedPeriod;
         private static UpdateService instance;
         private static SqlConnection con;
-        private DataSet allTables;
 
+        public DataSet allTables;
         public DataTable Day { get; private set; }
         public DataTable Esti { get; private set; }
         public DataTable Form { get; private set; }
@@ -42,7 +35,6 @@ namespace praktik_estimering
                 return instance;
             }
         }
-
         public DataTable getPeriods()
         {
             string sql = "SELECT periodId 'Id', startdate 'start', enddate 'end' " +
@@ -69,10 +61,10 @@ namespace praktik_estimering
         {
             allTables.Clear();
 
-            string sql = "SELECT * FROM dayPeriod WHERE period = " + selectedValue + ";" +
-                         "SELECT * FROM estimatePeriod WHERE period = " + selectedValue + ";" +
-                         "SELECT * FROM formulaPeriod WHERE period = " + selectedValue + ";" +
-                         "SELECT * FROM examPeriod WHERE period = " + selectedValue + ";";
+            string sql = "SELECT * FROM dayPeriod WHERE period = "      + selectedValue + ";"+
+                         "SELECT * FROM estimatePeriod WHERE period = " + selectedValue + ";"+
+                         "SELECT * FROM formulaPeriod WHERE period = "  + selectedValue + ";"+
+                         "SELECT * FROM examPeriod WHERE period = "     + selectedValue + ";";
 
             SqlDataAdapter da = new SqlDataAdapter(sql, con);
             da.TableMappings.Add("day", "dayPeriod");
@@ -86,13 +78,32 @@ namespace praktik_estimering
             Esti = allTables.Tables[1];
             Form = allTables.Tables[2];
             Exam = allTables.Tables[3];
+        }
+        public void updatePeriods()
+        {
+         
+            MessageBox.Show("not implemented");
+            using (IDbTransaction tran = con.BeginTransaction())
+            {
+                try
+                {
+                    
+
+                    tran.Commit();
+                }
+                catch (Exception e)
+                {
+                    tran.Rollback();
+                    MessageBox.Show("something went wrong with the new data, please check your data and try again");
+                }
+                finally
+                {
+                    if (con.State == ConnectionState.Open) con.Close();
+                }
+            }
 
         }
-
-
-
-
-
+        
         private static DataTable getDataTable(string sql)
         {
             DataTable dt = new DataTable();

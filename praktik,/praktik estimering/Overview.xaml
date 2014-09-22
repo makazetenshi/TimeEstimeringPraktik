@@ -11,12 +11,11 @@
             <RowDefinition Height="19*"/>
             <RowDefinition Height="116*"/>
         </Grid.RowDefinitions>
+        <Label Content="Old periods" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="28" Width="79"/>
+        <DataGrid x:Name="datagridOldPeriods" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Height="212" Width="177" AutoGeneratingColumn="datagridOldPeriods_AutoGeneratingColumn" IsReadOnly="True"/>
         <Button x:Name="buttonNewPeriod" Content="New period" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Height="22" Click="ClickNewPeriod"/>
         <Button x:Name="buttonViewOld" Content="view old" Grid.Column="1" HorizontalAlignment="Left" Margin="10,37,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Height="22" Click="clickViewOld"/>
-        <Label Content="Old periods" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="28" Width="79"/>
+        <Button x:Name="buttonChanges" Content="changes" Grid.Column="1" HorizontalAlignment="Left" Margin="10,64,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="buttonChangesClicked"/>
         <Button x:Name="buttonLogout" Content="Logout" Grid.Column="1" HorizontalAlignment="Left" Margin="10,200,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="clickLogout"/>
-        <DataGrid x:Name="datagridOldPeriods" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Height="212" Width="177" AutoGeneratingColumn="datagridOldPeriods_AutoGeneratingColumn" IsReadOnly="True"/>
-        <Button Content="changes" Grid.Column="1" HorizontalAlignment="Left" Margin="10,64,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-
     </Grid>
 </Window>
