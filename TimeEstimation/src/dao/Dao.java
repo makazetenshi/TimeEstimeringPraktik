@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.timeestimation.FormulaActivity;
 import com.example.timeestimation.Period;
 import com.example.timeestimation.User;
 
@@ -23,6 +24,7 @@ public class Dao {
 
 	private User loggedIn;
 	private ArrayList<User> loggedInUsers;
+	private ArrayList<FormulaActivity> formulaActivities;
 	private PreparedStatement preparedStatement = null;
 	private ResultSet resultSet = null;
 	private Connection connect;
@@ -30,12 +32,15 @@ public class Dao {
 	private MySQLiteHelper dbHelper;
 	private String[] testData = { MySQLiteHelper.COLUMN_INITIALS };
 	private static Dao instance = null;
+	private Period currentPeriod;
 
 	protected Dao(Context context) {
 		this.loggedIn = null;
 		this.loggedInUsers = new ArrayList<User>();
 		this.connect = null;
 		dbHelper = new MySQLiteHelper(context);
+		currentPeriod =  new Period();
+		this.formulaActivities = new ArrayList<FormulaActivity>();
 	}
 
 	public static Dao getInstance(Context context) {
@@ -160,6 +165,26 @@ public class Dao {
 		period.setEndDate(new Date(cursor.getLong(2) * 1000));
 		period.setInitials(cursor.getString(3));
 		return period;
+	}
+	
+	public void setStartTime(Date startDate){
+		currentPeriod.setStartDate(startDate);
+	}
+	
+	public void setEndTime(Date endDate){
+		
+	}
+	
+	public Period getCurrentPeriod(){
+		return currentPeriod;
+	}
+	
+	public void addFormulaActivity(FormulaActivity fa){
+		formulaActivities.add(fa);
+	}
+	
+	public ArrayList<FormulaActivity> getFormulaActivities(){
+		return formulaActivities;
 	}
 
 }

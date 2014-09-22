@@ -1,9 +1,11 @@
 package service;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 import android.content.Context;
 
+import com.example.timeestimation.Period;
 import com.example.timeestimation.User;
 
 import dao.Dao;
@@ -49,6 +51,18 @@ public class Service {
 	
 	public PeriodCursor getPeriods(){
 		return dao.getPeriod();
+	}
+	
+	public Period getCurrentPeriod(){
+		return dao.getCurrentPeriod();
+	}
+	
+	public void setStartTime(Date startDate){
+		dao.setStartTime(startDate);
+	}
+	
+	public void setEndTime(Date endDate){
+		dao.setEndTime(endDate);
 	}
 
 }

@@ -3,6 +3,7 @@
 
 <string-array name="Uddannelser">
     <item name="Datamatiker">DMU</item>
+    <item name="IT-Teknolog">ITT</item>
 </string-array>
     
     

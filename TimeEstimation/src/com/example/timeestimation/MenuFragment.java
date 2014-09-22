@@ -1,5 +1,7 @@
 package com.example.timeestimation;
 
+import service.Service;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -14,6 +16,8 @@ public class MenuFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.menu_screen, container, false);
+		
+		Service service = Service.getInstance(getActivity());
 		
 		Button btnShow = (Button)view.findViewById(R.id.btnShow);
 		Button btnNew = (Button)view.findViewById(R.id.btnNew);
@@ -33,10 +37,8 @@ public class MenuFragment extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				ft.replace(R.id.container, new ActivitiesFragment());
-				ft.addToBackStack(null);
-				ft.commit();
+				DialogFragment newFragment = new PeriodFragment();
+				newFragment.show(getFragmentManager(), "datePicker");
 			}
 		});
 		
