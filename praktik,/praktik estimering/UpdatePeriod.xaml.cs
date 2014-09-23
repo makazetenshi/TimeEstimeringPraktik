@@ -21,6 +21,9 @@ namespace praktik_estimering
             comboboxPeriod.SelectedIndex = 0;
 
             DatagridDay.ItemsSource = UpdateService.Instance.Day.DefaultView;
+            DatagridEstimate.ItemsSource = UpdateService.Instance.Esti.DefaultView;
+            DatagridFormula.ItemsSource = UpdateService.Instance.Form.DefaultView;
+            DatagridExamn.ItemsSource = UpdateService.Instance.Exam.DefaultView;
 
             DatagridDay.Columns[0].Visibility = Visibility.Hidden;
             DatagridDay.Columns[1].IsReadOnly = true;
@@ -38,7 +41,7 @@ namespace praktik_estimering
         }
         private void ButtonUpdateClicked(object sender, RoutedEventArgs e)
         {
-            UpdateService.Instance.updatePeriods();
+            UpdateService.Instance.updatePeriod();
         }
         private void comboboxPeriod_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -46,30 +49,23 @@ namespace praktik_estimering
         }
         private void dayGotFocus(object sender, RoutedEventArgs e)
         {
-            DatagridDay.ItemsSource = UpdateService.Instance.Day.DefaultView;
-
             DatagridDay.Columns[0].Visibility = Visibility.Hidden;
             DatagridDay.Columns[1].IsReadOnly = true;
         }
         private void estimateGotFocus(object sender, RoutedEventArgs e)
         {
-            DatagridEstimate.ItemsSource = UpdateService.Instance.Esti.DefaultView;
-
             DatagridEstimate.Columns[0].Visibility = Visibility.Hidden;
             DatagridEstimate.Columns[1].IsReadOnly = true;
         }
         private void PrakticalGotFocus(object sender, RoutedEventArgs e)
         {
-            DatagridFormula.ItemsSource = UpdateService.Instance.Form.DefaultView;
-
-            
-            //DatagridFormula.Columns[0].Visibility = Visibility.Hidden;
+            DatagridFormula.Columns[0].Visibility = Visibility.Hidden;
+            DatagridFormula.Columns[1].IsReadOnly = true;
         }
         private void examGotFocus(object sender, RoutedEventArgs e)
         {
-            DatagridExamn.ItemsSource = UpdateService.Instance.Exam.DefaultView;
-
-            //DatagridExamn.Columns[0].Visibility = Visibility.Hidden;
+            DatagridExamn.Columns[0].Visibility = Visibility.Hidden;
+            DatagridExamn.Columns[1].IsReadOnly = true;
         }
 
 

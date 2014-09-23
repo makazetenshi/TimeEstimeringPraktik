@@ -18,11 +18,14 @@ namespace praktik_estimering
         public DataTable Form { get; private set; }
         public DataTable Exam { get; private set; }
 
+        private SqlDataAdapter dataAdapterAllTables;
+
         private UpdateService()
         {
             DataLink dl = new DataLink();
             con = dl.getConnection();
             allTables = new DataSet();
+            dataAdapterAllTables = new SqlDataAdapter();
         }
         public static UpdateService Instance
         {
@@ -61,49 +64,110 @@ namespace praktik_estimering
         {
             allTables.Clear();
 
-            string sql = "SELECT * FROM dayPeriod WHERE period = "      + selectedValue + ";"+
-                         "SELECT * FROM estimatePeriod WHERE period = " + selectedValue + ";"+
-                         "SELECT * FROM formulaPeriod WHERE period = "  + selectedValue + ";"+
-                         "SELECT * FROM examPeriod WHERE period = "     + selectedValue + ";";
+            string sql = "SELECT * FROM dayPeriod WHERE period = " + selectedValue + ";" +
+                         "SELECT * FROM estimatePeriod WHERE period = " + selectedValue + ";" +
+                         "SELECT * FROM formulaPeriod WHERE period = " + selectedValue + ";" +
+                         "SELECT * FROM examPeriod WHERE period = " + selectedValue + ";";
 
-            SqlDataAdapter da = new SqlDataAdapter(sql, con);
-            da.TableMappings.Add("day", "dayPeriod");
-            da.TableMappings.Add("estimate", "estimatePeriod");
-            da.TableMappings.Add("formula", "formulaPeriod");
-            da.TableMappings.Add("exam", "examPeriod");
+            SqlDataAdapter dataAdapterallTables = new SqlDataAdapter(sql, con);
+            dataAdapterallTables.TableMappings.Add("day", "dayPeriod");
+            dataAdapterallTables.TableMappings.Add("estimate", "estimatePeriod");
+            dataAdapterallTables.TableMappings.Add("formula", "formulaPeriod");
+            dataAdapterallTables.TableMappings.Add("exam", "examPeriod");
 
-            da.Fill(allTables);
+            dataAdapterallTables.Fill(allTables);
 
             Day = allTables.Tables[0];
             Esti = allTables.Tables[1];
             Form = allTables.Tables[2];
             Exam = allTables.Tables[3];
         }
-        public void updatePeriods()
+        public void updatePeriod()
         {
-         
-            MessageBox.Show("not implemented");
-            using (IDbTransaction tran = con.BeginTransaction())
+            con.Open();
+            SqlTransaction tran = con.BeginTransaction(IsolationLevel.Serializable);
+            try
             {
-                try
-                {
-                    
+                SqlCommand dayComand = updateDay();
+                SqlCommand EstimateComand = updateEstimate();
+                SqlCommand FormulaComand = updateFormula();
+                SqlCommand ExamComand = updateExam();
 
-                    tran.Commit();
-                }
-                catch (Exception e)
-                {
-                    tran.Rollback();
-                    MessageBox.Show("something went wrong with the new data, please check your data and try again");
-                }
-                finally
-                {
-                    if (con.State == ConnectionState.Open) con.Close();
-                }
+                dayComand.Transaction = tran;
+                EstimateComand.Transaction = tran;
+                FormulaComand.Transaction = tran;
+                ExamComand.Transaction = tran;
+
+                dayComand.ExecuteNonQuery();
+                EstimateComand.ExecuteNonQuery();
+                FormulaComand.ExecuteNonQuery();
+                ExamComand.ExecuteNonQuery();
+
+                tran.Commit();
             }
-
+            catch (Exception e)
+            {
+                tran.Rollback();
+                MessageBox.Show(e.Message);
+                // MessageBox.Show("something went wrong with the new data, please check your data and try again");
+            }
+            finally
+            {
+                if (con.State == ConnectionState.Open) con.Close();
+            }
         }
-        
+        /*
+         * kig på parameter typerne de skal lige passes til.
+         */
+        private SqlCommand updateDay()
+        {
+            dataAdapterAllTables.UpdateCommand =
+                new SqlCommand(
+                    "UPDATE dayPeriod SET daysUsed= @daysUsed WHERE period = @period AND dayActivity = @dayActivity", con);
+            dataAdapterAllTables.UpdateCommand.Parameters.Add("@daysUsed", "daysUsed");
+            dataAdapterAllTables.UpdateCommand.Parameters.Add("@period",SqlDbType.Int, "period");
+            dataAdapterAllTables.UpdateCommand.Parameters.Add("@dayActivity", "dayActivity");
+
+            return dataAdapterAllTables.UpdateCommand;
+        }
+        private SqlCommand updateEstimate()
+        {
+            dataAdapterAllTables.UpdateCommand =
+                new SqlCommand(
+                    "UPDATE estimatePeriod SET hoursUsed = @hoursUsed WHERE period = @period AND estimateActivity = @estimateActivity",
+                    con);
+            dataAdapterAllTables.UpdateCommand.Parameters.Add("@hoursUsed", "hoursUsed");
+            dataAdapterAllTables.UpdateCommand.Parameters.Add("@estimateActivity", "estimateActivity");
+            dataAdapterAllTables.UpdateCommand.Parameters.Add("@period", "period");
+
+            return dataAdapterAllTables.UpdateCommand;
+        }
+        private SqlCommand updateFormula()
+        {
+            dataAdapterAllTables.UpdateCommand =
+                new SqlCommand(
+                    "UPDATE formulaPeriod SET variable = @variable WHERE period = @period AND formulaActivity = @formulaActivity",
+                    con);
+            dataAdapterAllTables.UpdateCommand.Parameters.Add("@variable", "variable");
+            dataAdapterAllTables.UpdateCommand.Parameters.Add("@period", "period");
+            dataAdapterAllTables.UpdateCommand.Parameters.Add("@formulaActivity", "formulaActivity");
+
+            return dataAdapterAllTables.UpdateCommand;
+        }
+        private SqlCommand updateExam()
+        {
+            dataAdapterAllTables.UpdateCommand =
+                new SqlCommand(
+                    "UPDATE examPeriod SET students = @students, projekts = @projekts, daysUsed =@daysUsed WHERE period =  @period AND examActivity = @examActivity",
+                    con);
+            dataAdapterAllTables.UpdateCommand.Parameters.Add("@students", "students");
+            dataAdapterAllTables.UpdateCommand.Parameters.Add("@projekts", "projekts");
+            dataAdapterAllTables.UpdateCommand.Parameters.Add("@daysUsed", "daysUsed");
+            dataAdapterAllTables.UpdateCommand.Parameters.Add("@period", "period");
+            dataAdapterAllTables.UpdateCommand.Parameters.Add("@examActivity", "examActivity");
+
+            return dataAdapterAllTables.UpdateCommand;
+        }
         private static DataTable getDataTable(string sql)
         {
             DataTable dt = new DataTable();
@@ -124,6 +188,5 @@ namespace praktik_estimering
             }
             return dt;
         }
-
     }
 }

@@ -29,7 +29,7 @@
         </TabControl>
         
         <Button Content="Done" HorizontalAlignment="Left" Margin="307,10,0,0" VerticalAlignment="Top" Width="75" Click="ButtonDoneClicked"/>
-        <Button Content="Update" HorizontalAlignment="Left" Margin="211,10,0,0" VerticalAlignment="Top" Width="75" Click="ButtonUpdateClicked"/>
+        <Button Content="Save" HorizontalAlignment="Left" Margin="211,10,0,0" VerticalAlignment="Top" Width="75" Click="ButtonUpdateClicked"/>
 
     </Grid>
 </Window>
