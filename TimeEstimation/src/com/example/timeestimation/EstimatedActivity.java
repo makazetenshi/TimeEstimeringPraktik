@@ -5,9 +5,9 @@ public class EstimatedActivity {
 	private double time;
 	private String type;
 	
-	public EstimatedActivity(String type, double time) {
-		this.type = type;
-		this.time = time;
+	public EstimatedActivity() {
+		this.type = null;
+		this.time = 0;
 	}
 
 	public double getTime() {

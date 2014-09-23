@@ -14,6 +14,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.timeestimation.DayActivity;
+import com.example.timeestimation.EstimatedActivity;
 import com.example.timeestimation.Exam;
 import com.example.timeestimation.FormulaActivity;
 import com.example.timeestimation.Period;
@@ -24,8 +26,10 @@ import dao.MySQLiteHelper.PeriodCursor;
 public class Dao {
 
 	private User loggedIn;
+	private EstimatedActivity estimated;
 	private ArrayList<User> loggedInUsers;
 	private ArrayList<FormulaActivity> formulaActivities;
+	private ArrayList<DayActivity> dayActivities;
 	private ArrayList<Exam> exams;
 	private PreparedStatement preparedStatement = null;
 	private ResultSet resultSet = null;
@@ -44,6 +48,8 @@ public class Dao {
 		currentPeriod =  new Period();
 		this.formulaActivities = new ArrayList<FormulaActivity>();
 		this.exams = new ArrayList<Exam>();
+		this.dayActivities = new ArrayList<DayActivity>();
+		this.estimated = new EstimatedActivity();
 	}
 
 	public static Dao getInstance(Context context) {
@@ -196,6 +202,18 @@ public class Dao {
 	
 	public ArrayList<Exam> getExams(){
 		return exams;
+	}
+	
+	public void addDayActivity(DayActivity da){
+		dayActivities.add(da);
+	}
+	
+	public ArrayList<DayActivity> getDayActivities(){
+		return dayActivities;
+	}
+	
+	public EstimatedActivity getEstimatedActivity(){
+		return estimated;
 	}
 
 }

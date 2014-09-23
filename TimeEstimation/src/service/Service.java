@@ -6,6 +6,8 @@ import java.util.Date;
 
 import android.content.Context;
 
+import com.example.timeestimation.DayActivity;
+import com.example.timeestimation.EstimatedActivity;
 import com.example.timeestimation.Exam;
 import com.example.timeestimation.FormulaActivity;
 import com.example.timeestimation.Period;
@@ -82,6 +84,18 @@ public class Service {
 	
 	public ArrayList<Exam> getExams(){
 		return dao.getExams();
+	}
+	
+	public void addDayActivity(DayActivity da){
+		dao.addDayActivity(da);
+	}
+	
+	public ArrayList<DayActivity> getDayActivities(){
+		return dao.getDayActivities();
+	}
+	
+	public EstimatedActivity getEstimated(){
+		return dao.getEstimatedActivity();
 	}
 
 }

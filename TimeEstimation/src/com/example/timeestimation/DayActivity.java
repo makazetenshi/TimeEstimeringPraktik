@@ -2,19 +2,19 @@ package com.example.timeestimation;
 
 public class DayActivity {
 	
-	private int days;
+	private double days;
 	private String type;
 	
-	public DayActivity(String type, int days) {
+	public DayActivity(String type, double days) {
 		this.type = type;
 		this.days = days;
 	}
 
-	public int getDays() {
+	public double getDays() {
 		return days;
 	}
 
-	public void setDays(int days) {
+	public void setDays(double days) {
 		this.days = days;
 	}
 
