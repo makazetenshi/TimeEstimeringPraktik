@@ -1,10 +1,13 @@
 package service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import android.content.Context;
 
+import com.example.timeestimation.Exam;
+import com.example.timeestimation.FormulaActivity;
 import com.example.timeestimation.Period;
 import com.example.timeestimation.User;
 
@@ -63,6 +66,22 @@ public class Service {
 	
 	public void setEndTime(Date endDate){
 		dao.setEndTime(endDate);
+	}
+	
+	public void addFormulaActivity(FormulaActivity fa){
+		dao.addFormulaActivity(fa);
+	}
+	
+	public ArrayList<FormulaActivity> getFormulaActivities(){
+		return dao.getFormulaActivities();
+	}
+	
+	public void addExam(Exam exam){
+		dao.addExam(exam);
+	}
+	
+	public ArrayList<Exam> getExams(){
+		return dao.getExams();
 	}
 
 }

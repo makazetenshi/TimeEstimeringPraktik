@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<string-array name="Uddannelser">
-    <item name="Datamatiker">DMU</item>
-    <item name="IT-Teknolog">ITT</item>
-</string-array>
-    
-    
+    <string-array name="Uddannelser">
+        <item name="Datamatiker">DMU</item>
+        <item name="IT-Teknolog">ITT</item>
+    </string-array>
+    <string-array name="Eksamener">
+        <item name="EX2">2. Semester</item>
+        <item name="EX3">3. Semester</item>
+    </string-array>
+
 </resources>
