@@ -18,8 +18,8 @@ CREATE TABLE person
 (
 initials VARCHAR(4) PRIMARY KEY,
 password VARCHAR(15) NOT NULL,
-firstname VARCHAR(15),
-lastname VARCHAR(15)
+firstname VARCHAR(15) NOT NULL,
+lastname VARCHAR(15) NOT NULL
 )
 CREATE TABLE period
 (
@@ -269,4 +269,3 @@ SET @Return = Sum(dbo.getTotalTimeUsed(@id) - dbo.getDaysDifference(@id))
 RETURN @Return
 END
 GO
-

@@ -1,0 +1,146 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace praktik_estimering
+{
+    class AdminService
+    {
+        private static AdminService instance;
+        private static SqlConnection con;
+
+        public DataTable users { get; set; }
+        public DataTable day { get; set; }
+        public DataTable estimate { get; set; }
+        public DataTable formula { get; set; }
+        public DataTable exam { get; set; }
+        public DataTable period { get; set; }
+        public DataTable other { get; set; }
+
+        private SqlDataAdapter dataAdapterUsers;
+        private SqlDataAdapter dataAdapterDays;
+        private SqlDataAdapter dataAdapterEstimate;
+        private SqlDataAdapter dataAdapterFormula;
+        private SqlDataAdapter dataAdapterExam;
+        private SqlDataAdapter dataAdapterPeriod;
+        private SqlDataAdapter dataAdapterOther;
+
+        public AdminService()
+        {
+            DataLink dl = new DataLink();
+            con = dl.getConnection();
+            day = new DataTable();
+            estimate = new DataTable();
+            formula = new DataTable();
+            exam = new DataTable();
+            period = new DataTable();
+            other = new DataTable();
+            users = new DataTable();
+        }
+
+        public static AdminService Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new AdminService();
+                }
+                return instance;
+            }
+        }
+
+        private void getUsers()
+        {
+            
+            string sql = "SELECT * FROM person";
+            SqlCommand selectcommand = new SqlCommand(sql, con);
+            dataAdapterUsers.SelectCommand = selectcommand;
+
+            SqlCommand updatecommand = new SqlCommand(
+                    "UPDATE person "+
+                    "SET password =@password, firstname = @firstname, lastname = @lastname "+
+                    "WHERE init = @init", con);
+           
+            updatecommand.Parameters.Add("@init", SqlDbType.VarChar, 4, "init");
+            updatecommand.Parameters.Add("@password",SqlDbType.VarChar, 15,  "password");
+            updatecommand.Parameters.Add("@firstname", SqlDbType.VarChar, 15, "firstname");
+            updatecommand.Parameters.Add("@lastname", SqlDbType.VarChar, 15, "lastname");
+
+            dataAdapterUsers.UpdateCommand = updatecommand;
+
+            SqlCommand deletecommand = new SqlCommand(
+                    "DELETE FROM person " +
+                    "WHERE init = @init", con);
+            deletecommand.Parameters.Add("@init", SqlDbType.VarChar, 4, "init");
+
+            dataAdapterUsers.DeleteCommand = deletecommand;
+
+            SqlCommand insertcommand = new SqlCommand(
+                    "INSERT INTO person " +
+                    "VALUES(@init, @password, @firstname, @lastname)", con);
+            insertcommand.Parameters.Add("@init", SqlDbType.VarChar, 4, "init");
+            updatecommand.Parameters.Add("@password", SqlDbType.VarChar, 15, "password");
+            updatecommand.Parameters.Add("@firstname", SqlDbType.VarChar, 15, "firstname");
+            updatecommand.Parameters.Add("@lastname", SqlDbType.VarChar, 15, "lastname");
+
+            dataAdapterUsers.DeleteCommand = deletecommand;
+
+            dataAdapterUsers.Fill(users);
+        }
+        private void getDays()
+        {
+            string sql = "SELECT * FROM dayActivities";
+            dataAdapterDays = new SqlDataAdapter(sql, con);
+            dataAdapterDays.Fill(day);
+        }
+        private void getEstimate()
+        {
+            string sql = "SELECT * FROM estimateActivities";
+            dataAdapterEstimate = new SqlDataAdapter(sql, con);
+            dataAdapterEstimate.Fill(estimate);
+        }
+        private void getFormula()
+        {
+            string sql = "SELECT * FROM formulaActivities";
+            dataAdapterFormula = new SqlDataAdapter(sql, con);
+            dataAdapterFormula.Fill(formula);
+        }
+        private void getExam()
+        {
+            string sql = "SELECT * FROM examActivities";
+            dataAdapterExam = new SqlDataAdapter(sql, con);
+            dataAdapterExam.Fill(exam);
+        }
+        private void getPeriod()
+        {
+            string sql = "SELECT * FROM period";
+            dataAdapterPeriod = new SqlDataAdapter(sql, con);
+            dataAdapterPeriod.Fill(period);
+        }
+        private void getOther()
+        {
+            string sql = "SELECT * FROM meetingVariable";
+            dataAdapterOther = new SqlDataAdapter(sql, con);
+            dataAdapterOther.Fill(other);
+        }
+
+        public void getAllTables()
+        {
+            getDays();
+            getEstimate();
+            getExam();
+            getFormula();
+            getUsers();
+            getPeriod();
+            getOther();
+        }
+    }
+}
+
