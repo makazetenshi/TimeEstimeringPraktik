@@ -4,15 +4,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import model.DayActivity;
+import model.EstimatedActivity;
+import model.Estimation;
+import model.Exam;
+import model.FormulaActivity;
+import model.Period;
+import model.User;
 import android.content.Context;
-
-import com.example.timeestimation.DayActivity;
-import com.example.timeestimation.EstimatedActivity;
-import com.example.timeestimation.Exam;
-import com.example.timeestimation.FormulaActivity;
-import com.example.timeestimation.Period;
-import com.example.timeestimation.User;
-
 import dao.Dao;
 import dao.MySQLiteHelper.PeriodCursor;
 
@@ -97,5 +96,29 @@ public class Service {
 	public EstimatedActivity getEstimated(){
 		return dao.getEstimatedActivity();
 	}
+	
+	public void addEstimation(Estimation estimation){
+		dao.addEstimation(estimation);
+	}
+	
+	public ArrayList<Estimation> getEstimations(){
+		return dao.getEstimations();
+	}
+	
+	public Estimation getEstimation(long id){
+		return dao.cursorToEstimation(dao.getEst(id+""));
+	}
+	
+	public double getConstant(String type, String education){
+		return dao.cursorToConstant(dao.getConstant(type, education));
+	}
 
+	public double getMeetings(){
+		return dao.getMeetings();
+	}
+	
+	public void setMeetings(double meetings){
+		dao.setMeetings(meetings);
+	}
+	
 }

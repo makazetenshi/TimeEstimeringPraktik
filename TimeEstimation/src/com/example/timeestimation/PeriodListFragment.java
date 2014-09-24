@@ -1,5 +1,6 @@
 package com.example.timeestimation;
 
+import model.Period;
 import service.Service;
 import dao.MySQLiteHelper.PeriodCursor;
 import android.app.FragmentTransaction;

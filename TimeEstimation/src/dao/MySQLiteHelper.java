@@ -3,10 +3,9 @@ package dao;
 
 import java.util.Date;
 
+import model.Estimation;
+import model.Period;
 import service.Service;
-
-import com.example.timeestimation.Period;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorWrapper;
@@ -29,6 +28,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 	public final static String TABLE_ESTIMATEACTIVITY = "estimateactivity";
 	public final static String TABLE_FORMULAPERIOD = "formulaperiod";
 	public final static String TABLE_FORMULA = "formula";
+	public final static String TABLE_ESTIMATION = "estimation";
+	public final static String TABLE_CONSTANTS = "constants";
 	
 	public final static String COLUMN_PERIODID = "_id";
 	public final static String COLUMN_STARTDATE = "startdate";
@@ -58,6 +59,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 	
 	public final static String COLUMN_MULTIPLIER = "multiplier";
 	public final static String COLUMN_IMPVARIABLE = "impvariable";
+	
+	public final static String COLUMN_TYPE = "type";
+	public final static String COLUMN_EDU = "edu";
+	public final static String COLUMN_EST = "estimation";
+	
+	public final static String COLUMN_CONSTANT = "constant";
 	
 	public final static String CREATE_TABLE_PERIOD = "CREATE TABLE IF NOT EXISTS " + TABLE_PERIOD + "(" + COLUMN_PERIODID + " integer primary key autoincrement, "
 			+ COLUMN_STARTDATE + " date, " + COLUMN_ENDDATE + " date, " + COLUMN_INITIALS + " varchar(5));";
@@ -91,6 +98,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 	public final static String CREATE_TABLE_FORMULA = "CREATE TABLE IF NOT EXISTS " + TABLE_FORMULA + "(" + COLUMN_NAME + " varchar(30), " + COLUMN_MULTIPLIER 
 			+ " double, " + COLUMN_IMPVARIABLE  + " varchar(20));";
 	
+	public final static String CREATE_TABLE_ESTIMATION = "CREATE TABLE IF NOT EXISTS " + TABLE_ESTIMATION + "(" + COLUMN_PERIODID + " INTEGER, " +
+	COLUMN_TYPE + " varchar(20), " +  COLUMN_EDU + " varchar(20), " + COLUMN_EST + " decimal, PRIMARY KEY (" + COLUMN_PERIODID + "));";
+	
+	public final static String CREATE_TABLE_CONSTANT = "CREATE TABLE IF NOT EXISTS " + TABLE_CONSTANTS + "(" + COLUMN_EDU + " varchar(20), " +
+	COLUMN_TYPE + " varchar(20), " + COLUMN_CONSTANT + " decimal, PRIMARY KEY (" + COLUMN_EDU + ", " + COLUMN_TYPE + "));";
+	
 	public MySQLiteHelper(Context context) {
 		super(context, DBNAME, null, DBVERSION);
 		// TODO Auto-generated constructor stub
@@ -99,15 +112,17 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(CREATE_TABLE_PERIOD);
-		db.execSQL(CREATE_TABLE_MEETING);
-		db.execSQL(CREATE_TABLE_ESTIMATEPERIOD);
-		db.execSQL(CREATE_TABLE_EXAM);
-		db.execSQL(CREATE_TABLE_FORMULAPERIOD);
-		db.execSQL(CREATE_TABLE_FORMULA);
-		db.execSQL(CREATE_TABLE_ESTIMATEPERIOD);
-		db.execSQL(CREATE_TABLE_ESTIMATEACTIVITY);
-		db.execSQL(CREATE_TABLE_DAYPERIOD);
-		db.execSQL(CREATE_TABLE_DAYACTIVITIES);
+		db.execSQL(CREATE_TABLE_ESTIMATION);
+		db.execSQL(CREATE_TABLE_CONSTANT);
+		//db.execSQL(CREATE_TABLE_MEETING);
+		//db.execSQL(CREATE_TABLE_ESTIMATEPERIOD);
+//		db.execSQL(CREATE_TABLE_EXAM);
+//		db.execSQL(CREATE_TABLE_FORMULAPERIOD);
+//		db.execSQL(CREATE_TABLE_FORMULA);
+//		db.execSQL(CREATE_TABLE_ESTIMATEPERIOD);
+//		db.execSQL(CREATE_TABLE_ESTIMATEACTIVITY);
+//		db.execSQL(CREATE_TABLE_DAYPERIOD);
+//		db.execSQL(CREATE_TABLE_DAYACTIVITIES);
 	}
 
 	@Override
@@ -122,7 +137,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULAPERIOD);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_MEETING);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_PERIOD);
-		
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONSTANTS);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_ESTIMATION);
 		onCreate(db);
 	}
 	
@@ -137,6 +153,27 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 		Cursor wrapped = getReadableDatabase().query(TABLE_PERIOD, null, COLUMN_INITIALS + " = ?", args, null, null, null);
 		return new PeriodCursor(wrapped);
 	}
+	
+	public EstimationCursor queryEstimations(){
+		Cursor wrapped = getReadableDatabase().query(TABLE_ESTIMATION, null, null, null, null, null, null);
+		return new EstimationCursor(wrapped);
+	}
+	
+	public EstimationCursor queryEstimation(String id){
+		String[] args = {id};
+		Cursor wrapped = getReadableDatabase().query(TABLE_ESTIMATION, null, COLUMN_PERIODID + " = ?", args, null, null, null);
+		return new EstimationCursor(wrapped);
+	}
+	
+	public Cursor queryConstant(String type, String education){
+		String[] args = {education, type};
+		final String sql = "SELECT " + COLUMN_CONSTANT + " FROM " + TABLE_CONSTANTS + " WHERE " + 
+		COLUMN_EDU + " = ?" + " AND " + COLUMN_EDU + " = ?";
+		//Cursor cursor = getReadableDatabase().query(TABLE_CONSTANTS, null, COLUMN_EDU + " = ? AND " + COLUMN_TYPE + " = ?", args, null, null, null);
+		Cursor cursor = getReadableDatabase().rawQuery(sql, args);
+		return cursor;
+	}
+	
 
 	public static class PeriodCursor extends CursorWrapper{
 
@@ -161,5 +198,24 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 		
 	}
 	
+	public static class EstimationCursor extends CursorWrapper{
+		
+		public EstimationCursor(Cursor cursor) {
+			super(cursor);
+		}
+		
+		public Estimation getEstimation(){
+			if(isBeforeFirst()||isAfterLast()){
+				return null;
+			}
+			Estimation estimation = new Estimation(null, null, 0);
+			estimation.setEducation(getString(getColumnIndex(COLUMN_EDU)));
+			estimation.setType(getString(getColumnIndex(COLUMN_TYPE)));
+			estimation.setTime(getDouble(getColumnIndex(COLUMN_EST)));
+			
+			return estimation;
+		}
+		
+	}
 	
 }
