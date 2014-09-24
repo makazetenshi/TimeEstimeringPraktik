@@ -270,4 +270,3 @@ RETURN @Return
 END
 GO
 
-select * from period
