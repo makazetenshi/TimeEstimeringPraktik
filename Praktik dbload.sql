@@ -31,7 +31,7 @@ nettoHours FLOAT
 )
 CREATE TABLE meeting
 (
-period INT PRIMARY KEY FOREIGN KEY REFERENCES period(periodId),
+period INT PRIMARY KEY FOREIGN KEY REFERENCES period(periodId) ON DELETE CASCADE,
 estimatedHours FLOAT NOT NULL
 )
 CREATE TABLE meetingVariable
@@ -61,32 +61,32 @@ daysmultiplier FLOAT NOT NULL
 )
 CREATE TABLE dayPeriod
 (
-period INT FOREIGN KEY REFERENCES period(periodid) NOT NULL,
-dayActivity VARCHAR(50) FOREIGN KEY REFERENCES dayActivities(activity) NOT NULL,
+period INT FOREIGN KEY REFERENCES period(periodid) ON DELETE CASCADE NOT NULL,
+dayActivity VARCHAR(50) FOREIGN KEY REFERENCES dayActivities(activity) ON DELETE CASCADE NOT NULL,
 daysUsed INT  NOT NULL,
 PRIMARY KEY (period, dayActivity) 
 )
 CREATE TABLE estimatePeriod
 (
-period INT FOREIGN KEY REFERENCES period(periodid) NOT NULL,
-estimateActivity VARCHAR(50) FOREIGN KEY REFERENCES estimateActivities(activity) NOT NULL,
+period INT FOREIGN KEY REFERENCES period(periodid) ON DELETE CASCADE NOT NULL,
+estimateActivity VARCHAR(50) FOREIGN KEY REFERENCES estimateActivities(activity) ON DELETE CASCADE NOT NULL,
 hoursUsed FLOAT  NOT NULL,
 PRIMARY KEY (period, estimateActivity) 
 )
 CREATE TABLE formulaPeriod
 (
-period INT FOREIGN KEY REFERENCES period(periodid) NOT NULL,
-formulaActivity VARCHAR(50) FOREIGN KEY REFERENCES formulaActivities(activity) NOT NULL,
-variable FLOAT NOT NULL,
+period INT FOREIGN KEY REFERENCES period(periodid) ON DELETE CASCADE NOT NULL,
+formulaActivity VARCHAR(50) FOREIGN KEY REFERENCES formulaActivities(activity) ON DELETE CASCADE NOT NULL,
+variable INT NOT NULL,
 PRIMARY KEY (period, formulaActivity) 
 )
 CREATE TABLE examPeriod
 (
-period INT FOREIGN KEY REFERENCES period(periodid) NOT NULL,
-examActivity VARCHAR(50) FOREIGN KEY REFERENCES examActivities(name) NOT NULL,
-students FLOAT NOT NULL,
-projekts FLOAT NOT NULL,
-daysUsed FLOAT NOT NULL,
+period INT FOREIGN KEY REFERENCES period(periodid) ON DELETE CASCADE NOT NULL,
+examActivity VARCHAR(50) FOREIGN KEY REFERENCES examActivities(name) ON DELETE CASCADE NOT NULL,
+students INT NOT NULL,
+projekts INT NOT NULL,
+daysUsed INT NOT NULL,
 PRIMARY KEY (period, examActivity) 
 )
 GO
@@ -116,7 +116,6 @@ SET  @estimatedHours = @workdays * (SELECT value FROM meetingVariable WHERE name
 
 INSERT INTO meeting VALUES(@period, @estimatedHours)
 END
-
 GO
 BEGIN TRY
     BEGIN TRANSACTION
@@ -269,4 +268,6 @@ SET @Return = Sum(dbo.getTotalTimeUsed(@id) - dbo.getDaysDifference(@id))
 
 RETURN @Return
 END
+GO
 
+select * from period

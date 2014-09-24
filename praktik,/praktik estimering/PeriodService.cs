@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Windows;
-using System.Windows.Input;
-
 
 namespace praktik_estimering
 {
@@ -101,7 +98,7 @@ namespace praktik_estimering
         public DataTable EstimateactivityList()
         {
             string sql = "SELECT activity 'Activity' FROM estimateActivities";
-                         
+
             DataTable dt = getDataTable(sql);
 
             dt.Columns.Add("Hours", typeof(Double));
@@ -119,10 +116,10 @@ namespace praktik_estimering
 
             foreach (DataRow row in activityTable.Rows)
             {
-                activity =row.ItemArray[0].ToString();
+                activity = row.ItemArray[0].ToString();
                 value = row.ItemArray[1].ToString();
                 sql = "INSERT INTO estimatePeriod VALUES (" + activePeriod + ", '" + activity + "', " + value + ")";
-                		
+
                 sqls.Add(sql);
             }
             return true;
@@ -197,24 +194,53 @@ namespace praktik_estimering
             updatePeriod();
             return true;
         }
+
+        public void canselEverything()
+        {
+            try
+            {
+                string sql = "DELETE FROM period WHERE periodId = " + activePeriod;
+
+                SqlCommand command = new SqlCommand(sql, con);
+                executeQuery(command);
+
+
+                UserService.Instance.SelectedPeriod = activePeriod;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+
+        }
         private void updatePeriod()
         {
             string sql = "UPDATE period " +
                          "SET nettoHours= dbo.getNettoTime(" + activePeriod + ") " +
                          "WHERE periodId=" + activePeriod;
-            SqlCommand com = new SqlCommand(sql,con);
+            SqlCommand com = new SqlCommand(sql, con);
             executeQuery(com);
         }
+
         private void InsertList(List<string> list)
         {
             SqlCommand cmd;
-            foreach (string s in list)
+            try
             {
-                Debug.WriteLine(s);
-                cmd = new SqlCommand(s, con);
-                executeQuery(cmd);
+                foreach (string s in list)
+                {
+                    Debug.WriteLine(s);
+                    cmd = new SqlCommand(s, con);
+                    executeQuery(cmd);
+                }
             }
+            catch (Exception e)
+            {
+
+            }
+
         }
+
         private static void executeQuery(SqlCommand cmd)
         {
             try

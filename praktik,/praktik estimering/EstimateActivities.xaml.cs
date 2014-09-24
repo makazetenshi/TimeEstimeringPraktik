@@ -56,5 +56,9 @@ namespace praktik_estimering
                 Close();
             }
         }
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            PeriodService.Instance.canselEverything();
+        }
     }
 }

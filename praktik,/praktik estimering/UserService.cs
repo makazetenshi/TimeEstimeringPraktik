@@ -119,7 +119,7 @@ namespace praktik_estimering
 
                 con.Open();
                 cmd.ExecuteNonQuery();
-                result = (double)returnParameter.Value;
+                result = Math.Round((double)returnParameter.Value,2);
             }
             if (con.State == ConnectionState.Open)
             {
@@ -142,7 +142,7 @@ namespace praktik_estimering
 
                 con.Open();
                 cmd.ExecuteNonQuery();
-                result = (double)returnParameter.Value;
+                result = Math.Round((double)returnParameter.Value,2);
             }
             if (con.State == ConnectionState.Open)
             {
@@ -165,7 +165,7 @@ namespace praktik_estimering
 
                 con.Open();
                 cmd.ExecuteNonQuery();
-                result = (double)returnParameter.Value;
+                result = Math.Round((double)returnParameter.Value, 2);
             }
             if (con.State == ConnectionState.Open)
             {

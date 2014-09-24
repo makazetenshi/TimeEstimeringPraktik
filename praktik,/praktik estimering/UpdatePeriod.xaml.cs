@@ -20,11 +20,20 @@ namespace praktik_estimering
             comboboxPeriod.DisplayMemberPath = "Show";
             comboboxPeriod.SelectedIndex = 0;
 
-            DatagridDay.ItemsSource = UpdateService.Instance.Day.DefaultView;
+
+           
+
+            DatagridDay.ItemsSource = UpdateService.Instance.allTables.Tables[0].DefaultView;
+            DatagridEstimate.ItemsSource = UpdateService.Instance.allTables.Tables[1].DefaultView;
+            DatagridFormula.ItemsSource = UpdateService.Instance.allTables.Tables[2].DefaultView;
+            DatagridExamn.ItemsSource = UpdateService.Instance.allTables.Tables[3].DefaultView;
+
+            /*DatagridDay.ItemsSource = UpdateService.Instance.Day.DefaultView;
             DatagridEstimate.ItemsSource = UpdateService.Instance.Esti.DefaultView;
             DatagridFormula.ItemsSource = UpdateService.Instance.Form.DefaultView;
-            DatagridExamn.ItemsSource = UpdateService.Instance.Exam.DefaultView;
+            DatagridExamn.ItemsSource = UpdateService.Instance.Exam.DefaultView;*/
 
+    
             DatagridDay.Columns[0].Visibility = Visibility.Hidden;
             DatagridDay.Columns[1].IsReadOnly = true;
         }
@@ -46,6 +55,7 @@ namespace praktik_estimering
         private void comboboxPeriod_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateService.Instance.getDataSet((int)comboboxPeriod.SelectedValue);
+            UpdateService.Instance.selectedPeriod = (int) comboboxPeriod.SelectedValue;
         }
         private void dayGotFocus(object sender, RoutedEventArgs e)
         {

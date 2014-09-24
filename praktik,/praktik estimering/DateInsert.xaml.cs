@@ -33,20 +33,26 @@ namespace praktik_estimering
 
         private void ButtonNextClick(object sender, RoutedEventArgs e)
         {
-            if (PeriodService.Instance.InsertNewPeriod(DatePickerStart.SelectedDate.Value,
-                DatePickerEnd.SelectedDate.Value))
+            if (DatePickerStart.SelectedDate != null && DatePickerEnd.SelectedDate != null)
             {
-                DayActivity da = new DayActivity();
-                da.Show();
-                this.Close();
+                if (PeriodService.Instance.InsertNewPeriod(DatePickerStart.SelectedDate.Value,
+                    DatePickerEnd.SelectedDate.Value))
+                {
+                    DayActivity da = new DayActivity();
+                    da.Show();
+                    Close();
+                }
             }
-
+            else
+            {
+                MessageBox.Show("A date is not selected, both start and end date needs to be set.");
+            }
         }
 
 
 
 
 
-        
+
     }
 }
