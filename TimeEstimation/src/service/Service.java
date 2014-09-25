@@ -121,4 +121,32 @@ public class Service {
 		dao.setMeetings(meetings);
 	}
 	
+	public Exam getDBExams(){
+		return dao.cursorToExam(dao.getDBExams());
+	}
+	
+	public Exam getDBExam(String id){
+		return dao.cursorToExam(dao.getDBExam(id));
+	}
+	
+	public double[] getExamConstants(){
+		return dao.cursorToExamConstant(dao.getExamConstants());
+	}
+	
+	public double[] getExamConstant(String type, String edu){
+		return dao.cursorToExamConstant(dao.getExamConstant(type,edu));
+	}
+	
+	public void createExam(Exam exam){
+		dao.createExam(exam);
+	}
+	
+	public void createEstimation(Estimation estimation){
+		dao.createEstimation(estimation);
+	}
+	
+	public long createPeriod(Period period){
+		return dao.createPeriod(period);
+	}
+	
 }

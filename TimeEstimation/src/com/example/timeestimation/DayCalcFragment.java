@@ -5,6 +5,8 @@ import java.util.Date;
 
 import model.DayActivity;
 import model.Estimation;
+import model.Exam;
+import model.Period;
 import service.Service;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -95,7 +97,8 @@ public class DayCalcFragment extends Fragment{
 		return workDays;
 	}
 	
-	public void estimateFormulaActivities(){
+	public double estimateFormulaActivities(){
+		double estimateTime = 0;
 		
 		for(int i = 0; i < service.getFormulaActivities().size(); i++){
 			double hours = service.getFormulaActivities().get(i).getTime();
@@ -110,25 +113,62 @@ public class DayCalcFragment extends Fragment{
 			
 			Estimation estimation = new Estimation(type, education, 0);
 			estimation.setTime(hours*c*eng);
-			
+			estimateTime += estimation.getTime();
 			service.addEstimation(estimation);
 		}
+		return estimateTime;
 	}
 	
-	public void estimateDayActivities(){
+	public double estimateDayActivities(){
+		double estimatedTime = 0;
 		for(int i = 0; i < service.getDayActivities().size(); i++){
 			
 			Estimation estimation = new Estimation(service.getDayActivities().get(i).getType(),"NONE", service.getDayActivities().get(i).getDays());
-			
+			estimatedTime += estimation.getTime();
 			service.addEstimation(estimation);
 			
 		}
+		return estimatedTime;
 	}
 	
-	public void meetingSet(){
+	public double meetingSet(){
 		double meetings = getDays(service.getCurrentPeriod().getStartDate(), service.getCurrentPeriod().getEndDate())/100*9;
 		service.setMeetings(meetings);
+		return meetings;
 	}
 	
+	public double exams(){
+		double estimatedTime = 0;
+		for(int i = 0; i < service.getExams().size(); i++){
+			Exam exam = service.getExams().get(i);
+			
+			double[] constants = service.getExamConstant(exam.getExam(), exam.getEdu());
+			
+			estimatedTime += exam.getStudents()*(constants[0]+exam.getProjects())*(constants[1]+exam.getDays())*constants[2];
+			
+		}
+		return estimatedTime;
+	}
+	
+	public void setPeriod(){
+		Period period = service.getCurrentPeriod();
+		period.setEstimate(exams() + meetingSet() + estimateDayActivities() + estimateFormulaActivities());
+		period.setNorm(getDays(period.getStartDate(), period.getEndDate()));
+		period.setId(service.createPeriod(period));
+		service.getCurrentPeriod().setId(period.getId());
+		
+	}
+	
+	public void setExams(){
+		for(int i = 0; i < service.getExams().size(); i++){
+			service.createExam(service.getExams().get(i));
+		}
+	}
+	
+	public void setEstimations(){
+		for(int i = 0; i < service.getEstimations().size(); i++){
+			service.createEstimation(service.getEstimations().get(i));
+		}
+	}
 	
 }
