@@ -4,6 +4,7 @@ package dao;
 import java.util.Date;
 
 import model.Estimation;
+import model.Exam;
 import model.Period;
 import service.Service;
 import android.content.Context;
@@ -19,6 +20,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 	public final static int DBVERSION = 4;
 	
 	public final static String TABLE_PERIOD = "period";
+	public final static String TABLE_EXAMS = "exams";
+	public final static String TABLE_EXAM_CONSTANTS = "examconstants";
 	public final static String TABLE_MEETING = "meeting";
 	public final static String TABLE_EXAMPERIOD = "examperiod";
 	public final static String TABLE_EXAM = "exam";
@@ -35,6 +38,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 	public final static String COLUMN_STARTDATE = "startdate";
 	public final static String COLUMN_ENDDATE = "enddate";
 	public final static String COLUMN_INITIALS = "initials";
+	public final static String COLUMN_NORM = "norm";
 	
 	public final static String COLUMN_PERIOD = "period";
 	public final static String COLUMN_ESTACTIVITY = "estactivity";
@@ -66,8 +70,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 	
 	public final static String COLUMN_CONSTANT = "constant";
 	
+	public final static String COLUMN_C1 = "c1";
+	public final static String COLUMN_C2 = "c2";
+	public final static String COLUMN_C3 = "c3";
+	
 	public final static String CREATE_TABLE_PERIOD = "CREATE TABLE IF NOT EXISTS " + TABLE_PERIOD + "(" + COLUMN_PERIODID + " integer primary key autoincrement, "
-			+ COLUMN_STARTDATE + " date, " + COLUMN_ENDDATE + " date, " + COLUMN_INITIALS + " varchar(5));";
+			+ COLUMN_STARTDATE + " date, " + COLUMN_ENDDATE + " date, " + COLUMN_INITIALS + " varchar(5), " + COLUMN_EST + " INTEGER, " + COLUMN_NORM + "INTEGER);";
 	
 	public final static String CREATE_TABLE_MEETING = "CREATE TABLE IF NOT EXISTS " + TABLE_MEETING + "(" + COLUMN_PERIOD + " integer primary key, " + COLUMN_HOURS + 
 			" int, FOREIGN KEY(" + COLUMN_PERIOD + ") REFERENCES " + TABLE_PERIOD + "(" + COLUMN_PERIODID + "));";
@@ -104,6 +112,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 	public final static String CREATE_TABLE_CONSTANT = "CREATE TABLE IF NOT EXISTS " + TABLE_CONSTANTS + "(" + COLUMN_EDU + " varchar(20), " +
 	COLUMN_TYPE + " varchar(20), " + COLUMN_CONSTANT + " decimal, PRIMARY KEY (" + COLUMN_EDU + ", " + COLUMN_TYPE + "));";
 	
+	public final static String CREATE_TABLE_EXAMS = "CREATE TABLE IF NOT EXISTS " + TABLE_EXAMS + "(" + COLUMN_PERIODID + " INTEGER, " +
+	COLUMN_TYPE + " VARCHAR(20), " + COLUMN_EDU + " VARCHAR(20), " + COLUMN_STUDENTS + " INTEGER, " + COLUMN_PROJECTS + " INTEGER, " +
+			COLUMN_DAYS + " INTEGER, " + COLUMN_EST + " DECIMAL, PRIMARY KEY (" + COLUMN_PERIODID + "));";
+	
+	public final static String CREATE_TABLE_EXAMCONSTANTS = "CREATE TABLE IF NOT EXISTS " + TABLE_EXAM_CONSTANTS + "(" + COLUMN_TYPE +
+			" VARCHAR(20), " + COLUMN_EDU + " VARCHAR(20), " + COLUMN_C1 + " DECIMAL, " + COLUMN_C2 + " DECIMAL, " + COLUMN_C3 + " DECIMAL, " +
+			"PRIMARY KEY (" + COLUMN_TYPE + "," + COLUMN_EDU + "));";
+	
 	public MySQLiteHelper(Context context) {
 		super(context, DBNAME, null, DBVERSION);
 		// TODO Auto-generated constructor stub
@@ -114,6 +130,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 		db.execSQL(CREATE_TABLE_PERIOD);
 		db.execSQL(CREATE_TABLE_ESTIMATION);
 		db.execSQL(CREATE_TABLE_CONSTANT);
+		db.execSQL(CREATE_TABLE_EXAMS);
+		db.execSQL(CREATE_TABLE_EXAMCONSTANTS);
 		//db.execSQL(CREATE_TABLE_MEETING);
 		//db.execSQL(CREATE_TABLE_ESTIMATEPERIOD);
 //		db.execSQL(CREATE_TABLE_EXAM);
@@ -139,6 +157,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_PERIOD);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONSTANTS);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_ESTIMATION);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXAMS);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXAM_CONSTANTS);
 		onCreate(db);
 	}
 	
@@ -172,6 +192,28 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 		//Cursor cursor = getReadableDatabase().query(TABLE_CONSTANTS, null, COLUMN_EDU + " = ? AND " + COLUMN_TYPE + " = ?", args, null, null, null);
 		Cursor cursor = getReadableDatabase().rawQuery(sql, args);
 		return cursor;
+	}
+	
+	public ExamCursor queryExams(){
+		Cursor wrapped = getReadableDatabase().query(TABLE_EXAMS, null, null, null, null, null, null);
+		return new ExamCursor(wrapped);
+	}
+	
+	public ExamCursor queryExam(String id){
+		String[] args = {id};
+		Cursor wrapped = getReadableDatabase().query(TABLE_EXAMS, null, COLUMN_PERIODID + " = ?", args, null, null, null);
+		return new ExamCursor(wrapped);
+	}
+	
+	public Cursor queryExamConstants(){
+		Cursor wrapped = getReadableDatabase().query(TABLE_EXAM_CONSTANTS, null, null, null, null, null, null);
+		return new ExamConstantsCursor(wrapped);
+	}
+	
+	public Cursor queryExamConstant(String type, String edu){
+		String[] args = {type, edu};
+		Cursor wrapped = getReadableDatabase().query(TABLE_EXAM_CONSTANTS, null, COLUMN_TYPE + " = ? AND " + COLUMN_EDU + " = ?", args, null, null, null);
+		return new ExamConstantsCursor(wrapped);
 	}
 	
 
@@ -217,5 +259,48 @@ public class MySQLiteHelper extends SQLiteOpenHelper  {
 		}
 		
 	}
+	
+	public static class ExamCursor extends CursorWrapper{
+		
+		public ExamCursor(Cursor cursor){
+			super(cursor);
+		}
+		
+		public Exam getExam(){
+			if(isBeforeFirst()||isAfterLast()){
+				return null;
+			}
+			Exam exam = new Exam();
+			exam.setExam(getString(getColumnIndex(COLUMN_TYPE)));
+			exam.setEdu(getString(getColumnIndex(COLUMN_EDU)));
+			exam.setStudents(getInt(getColumnIndex(COLUMN_STUDENTS)));
+			exam.setProjects(getInt(getColumnIndex(COLUMN_PROJECTS)));
+			exam.setDays(getInt(getColumnIndex(COLUMN_DAYS)));
+			
+			return exam;
+		}
+		
+	}
+	
+	public static class ExamConstantsCursor extends CursorWrapper{
+		
+		public ExamConstantsCursor(Cursor cursor){
+			super(cursor);
+		}
+		
+		public double[] getExamConstants(){
+			if(isBeforeFirst()||isAfterLast()){
+				return null;
+			}
+			double[] constants = new double[3];
+			constants[0] = getDouble(getColumnIndex(COLUMN_C1));
+			constants[1] = getDouble(getColumnIndex(COLUMN_C2));
+			constants[2] = getDouble(getColumnIndex(COLUMN_C3));
+			
+			return constants;
+		}
+	}
+	
+	
 	
 }

@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import dao.MySQLiteHelper.EstimationCursor;
+import dao.MySQLiteHelper.ExamCursor;
 import dao.MySQLiteHelper.PeriodCursor;
 
 public class Dao {
@@ -88,6 +89,51 @@ public class Dao {
 			values.put(MySQLiteHelper.COLUMN_INITIALS, loggedIn.getInitials());
 			database.insert(MySQLiteHelper.TABLE_PERIOD, null, values);
 		}
+		close();
+	}
+	
+	public long createPeriod(Period period){
+		long id = 0;
+		open();
+		ContentValues values = new ContentValues();
+		values.put(MySQLiteHelper.COLUMN_STARTDATE, period.getStartDate().toString());
+		values.put(MySQLiteHelper.COLUMN_ENDDATE, period.getEndDate().toString());
+		values.put(MySQLiteHelper.COLUMN_INITIALS, period.getInitials());
+		values.put(MySQLiteHelper.COLUMN_EST, period.getEstimate());
+		values.put(MySQLiteHelper.COLUMN_NORM, period.getNorm());
+		
+		id = database.insert(MySQLiteHelper.TABLE_PERIOD, null, values);
+		close();
+		
+		return id;
+	}
+	
+	public void createEstimation(Estimation estimation){
+		open();
+		ContentValues values = new ContentValues();
+		values.put(MySQLiteHelper.COLUMN_PERIODID, estimation.getId());
+		values.put(MySQLiteHelper.COLUMN_TYPE, estimation.getType());
+		values.put(MySQLiteHelper.COLUMN_EDU, estimation.getEducation());
+		values.put(MySQLiteHelper.COLUMN_EST, estimation.getTime());
+		
+		database.insert(MySQLiteHelper.TABLE_ESTIMATION, null, values);
+		
+		close();
+	}
+	
+	public void createExam(Exam exam){
+		open();
+		ContentValues values = new ContentValues();
+		values.put(MySQLiteHelper.COLUMN_PERIODID, exam.getId());
+		values.put(MySQLiteHelper.COLUMN_TYPE, exam.getExam());
+		values.put(MySQLiteHelper.COLUMN_EDU, exam.getEdu());
+		values.put(MySQLiteHelper.COLUMN_STUDENTS, exam.getStudents());
+		values.put(MySQLiteHelper.COLUMN_PROJECTS, exam.getProjects());
+		values.put(MySQLiteHelper.COLUMN_DAYS, exam.getDays());
+		values.put(MySQLiteHelper.COLUMN_EST, exam.getEstimation());
+		
+		database.insert(MySQLiteHelper.TABLE_EXAM, null, values);
+		
 		close();
 	}
 
@@ -183,6 +229,22 @@ public class Dao {
 		return dbHelper.queryConstant(type, education);
 	}
 	
+	public ExamCursor getDBExams(){
+		return dbHelper.queryExams();
+	}
+	
+	public ExamCursor getDBExam(String id){
+		return dbHelper.queryExam(id);
+	}
+	
+	public Cursor getExamConstants(){
+		return dbHelper.queryExamConstants();
+	}
+	
+	public Cursor getExamConstant(String type, String edu){
+		return dbHelper.queryExamConstant(type,edu);
+	}
+	
 	public Estimation cursorToEstimation(Cursor cursor){
 		Estimation estimation = new Estimation(null, null, 0);
 		estimation.setType(cursor.getString(1));
@@ -201,10 +263,32 @@ public class Dao {
 		return period;
 	}
 	
+	public Exam cursorToExam(Cursor cursor){
+		Exam exam = new Exam();
+		exam.setExam(cursor.getString(0));
+		exam.setEdu(cursor.getString(1));
+		exam.setStudents(cursor.getInt(2));
+		exam.setProjects(cursor.getInt(3));
+		exam.setDays(cursor.getInt(4));
+		
+		return exam;
+	}
+	
 	public double cursorToConstant(Cursor cursor){
 		double k = 0;
 		k = cursor.getDouble(0);
 		return k;
+	}
+	
+	public double[] cursorToExamConstant(Cursor cursor){
+		
+		double[] constants = new double[3];
+		
+		constants[0] = cursor.getDouble(0);
+		constants[1] = cursor.getDouble(1);
+		constants[2] = cursor.getDouble(2);
+		
+		return constants;
 	}
 	
 	public void setStartTime(Date startDate){
@@ -262,5 +346,5 @@ public class Dao {
 	public void setMeetings(double meetings) {
 		this.meetings = meetings;
 	}
-
+	
 }

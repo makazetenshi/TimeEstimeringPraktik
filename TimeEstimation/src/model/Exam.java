@@ -4,6 +4,8 @@ public class Exam {
 	
 	private String edu, exam;
 	private int students, projects, days;
+	private long id;
+	private double estimation;
 
 	public Exam() {
 		this.edu = null;
@@ -11,6 +13,24 @@ public class Exam {
 		this.students = 0;
 		this.projects = 0;
 		this.days = 0;
+		this.id = 0;
+		this.estimation = 0;
+	}
+		
+	public double getEstimation() {
+		return estimation;
+	}
+
+	public void setEstimation(double estimation) {
+		this.estimation = estimation;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getEdu() {
