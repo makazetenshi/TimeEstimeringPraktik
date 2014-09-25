@@ -8,19 +8,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import model.DayActivity;
+import model.EstimatedActivity;
+import model.Estimation;
+import model.Exam;
+import model.FormulaActivity;
+import model.Period;
+import model.User;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
-import com.example.timeestimation.DayActivity;
-import com.example.timeestimation.EstimatedActivity;
-import com.example.timeestimation.Exam;
-import com.example.timeestimation.FormulaActivity;
-import com.example.timeestimation.Period;
-import com.example.timeestimation.User;
-
+import dao.MySQLiteHelper.EstimationCursor;
 import dao.MySQLiteHelper.PeriodCursor;
 
 public class Dao {
@@ -31,6 +31,7 @@ public class Dao {
 	private ArrayList<FormulaActivity> formulaActivities;
 	private ArrayList<DayActivity> dayActivities;
 	private ArrayList<Exam> exams;
+	private ArrayList<Estimation> estimations;
 	private PreparedStatement preparedStatement = null;
 	private ResultSet resultSet = null;
 	private Connection connect;
@@ -39,6 +40,7 @@ public class Dao {
 	private String[] testData = { MySQLiteHelper.COLUMN_INITIALS };
 	private static Dao instance = null;
 	private Period currentPeriod;
+	private double meetings;
 
 	protected Dao(Context context) {
 		this.loggedIn = null;
@@ -50,6 +52,8 @@ public class Dao {
 		this.exams = new ArrayList<Exam>();
 		this.dayActivities = new ArrayList<DayActivity>();
 		this.estimated = new EstimatedActivity();
+		this.estimations = new ArrayList<Estimation>();
+		this.meetings = 0;
 	}
 
 	public static Dao getInstance(Context context) {
@@ -166,6 +170,27 @@ public class Dao {
 	public PeriodCursor getPeriod() {
 		return dbHelper.queryPeriods();
 	}
+	
+	public EstimationCursor getEstimation(){
+		return dbHelper.queryEstimations();
+	}
+	
+	public EstimationCursor getEst(String id){
+		return dbHelper.queryEstimation(id);
+	}
+	
+	public Cursor getConstant(String type, String education){
+		return dbHelper.queryConstant(type, education);
+	}
+	
+	public Estimation cursorToEstimation(Cursor cursor){
+		Estimation estimation = new Estimation(null, null, 0);
+		estimation.setType(cursor.getString(1));
+		estimation.setEducation(cursor.getString(2));
+		estimation.setTime(cursor.getDouble(3));
+		
+		return estimation;
+	}
 
 	public Period cursorToPeriod(Cursor cursor) {
 		Period period = new Period();
@@ -174,6 +199,12 @@ public class Dao {
 		period.setEndDate(new Date(cursor.getLong(2) * 1000));
 		period.setInitials(cursor.getString(3));
 		return period;
+	}
+	
+	public double cursorToConstant(Cursor cursor){
+		double k = 0;
+		k = cursor.getDouble(0);
+		return k;
 	}
 	
 	public void setStartTime(Date startDate){
@@ -214,6 +245,22 @@ public class Dao {
 	
 	public EstimatedActivity getEstimatedActivity(){
 		return estimated;
+	}
+	
+	public void addEstimation(Estimation estimation){
+		estimations.add(estimation);
+	}
+	
+	public ArrayList<Estimation> getEstimations(){
+		return estimations;
+	}
+
+	public double getMeetings() {
+		return meetings;
+	}
+
+	public void setMeetings(double meetings) {
+		this.meetings = meetings;
 	}
 
 }

@@ -1,5 +1,10 @@
 package com.example.timeestimation;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import model.DayActivity;
+import model.Estimation;
 import service.Service;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -13,6 +18,8 @@ import android.widget.EditText;
 
 public class DayCalcFragment extends Fragment{
 
+	private Service service = Service.getInstance(getActivity());
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -38,7 +45,7 @@ public class DayCalcFragment extends Fragment{
 					service.addDayActivity(new DayActivity("VAC", Double.parseDouble(vacation.getText().toString())));
 				}
 				if(!absence.getText().toString().isEmpty()){					
-					service.addDayActivity(new DayActivity("", Double.parseDouble(absence.getText().toString())));
+					service.addDayActivity(new DayActivity("ABS", Double.parseDouble(absence.getText().toString())));
 				}
 				if(!timeEst.getText().toString().isEmpty()){
 				service.getEstimated().setTime(Double.parseDouble(timeEst.getText().toString()));
@@ -55,5 +62,73 @@ public class DayCalcFragment extends Fragment{
 		
 		return view;
 	}
+	
+	public int getDays(Date startDate, Date endDate){
+		
+		Calendar startCal;
+		Calendar endCal;
+		
+		startCal = Calendar.getInstance();
+		startCal.setTime(startDate);
+		endCal = Calendar.getInstance();
+		endCal.setTime(endDate);
+		
+		int workDays = 0;
+		
+		if(startCal.getTimeInMillis() == endCal.getTimeInMillis()){
+			return 0;
+		}
+
+		if(startCal.getTimeInMillis() > endCal.getTimeInMillis()){
+			startCal.setTime(endDate);
+			endCal.setTime(startDate);
+		}
+		
+		do{
+			startCal.add(Calendar.DAY_OF_MONTH, 1);
+			if(startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY
+			&& startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY){
+				++workDays;
+			}
+		} while (startCal.getTimeInMillis() < endCal.getTimeInMillis());
+		
+		return workDays;
+	}
+	
+	public void estimateFormulaActivities(){
+		
+		for(int i = 0; i < service.getFormulaActivities().size(); i++){
+			double hours = service.getFormulaActivities().get(i).getTime();
+			String type = service.getFormulaActivities().get(i).getType();
+			String education = service.getFormulaActivities().get(i).getEdu();
+			double c = service.getConstant(type, education);
+			double eng = 1;
+			
+			if(service.getFormulaActivities().get(i).isEnglish()){
+				eng = service.getConstant("ENG", education);
+			}
+			
+			Estimation estimation = new Estimation(type, education, 0);
+			estimation.setTime(hours*c*eng);
+			
+			service.addEstimation(estimation);
+		}
+	}
+	
+	public void estimateDayActivities(){
+		for(int i = 0; i < service.getDayActivities().size(); i++){
+			
+			Estimation estimation = new Estimation(service.getDayActivities().get(i).getType(),"NONE", service.getDayActivities().get(i).getDays());
+			
+			service.addEstimation(estimation);
+			
+		}
+	}
+	
+	public void meetingSet(){
+		double meetings = getDays(service.getCurrentPeriod().getStartDate(), service.getCurrentPeriod().getEndDate())/100*9;
+		service.setMeetings(meetings);
+	}
+	
 	
 }

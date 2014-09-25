@@ -2,6 +2,7 @@ package com.example.timeestimation;
 
 import java.sql.SQLException;
 
+import model.User;
 import service.Service;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
