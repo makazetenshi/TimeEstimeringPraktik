@@ -56,22 +56,22 @@ namespace praktik_estimering
             }
         }
 
-        private void getUsers()
+        private void createUserAdapterCommands()
         {
             dataAdapterUsers = new SqlDataAdapter();
-
             string sql = "SELECT * FROM person";
             SqlCommand selectcommand = new SqlCommand(sql, con);
             dataAdapterUsers.SelectCommand = selectcommand;
 
             SqlCommand updatecommand = new SqlCommand(
                     "UPDATE person "+
-                    "SET initials = @init, password =@pass, firstname = @first, lastname = @last " +
+                    "SET initials = @init, password =@pass, firstname = @first, lastname = @last, admin = @admin " +
                     "WHERE initials = @oldinit", con);
             updatecommand.Parameters.Add("@init", SqlDbType.VarChar, 4, "initials");
             updatecommand.Parameters.Add("@pass", SqlDbType.VarChar, 15, "password");
             updatecommand.Parameters.Add("@first", SqlDbType.VarChar, 15, "firstname");
             updatecommand.Parameters.Add("@last", SqlDbType.VarChar, 15, "lastname");
+            updatecommand.Parameters.Add("@admin", SqlDbType.Bit, 4, "admin");
             updatecommand.Parameters.Add("@oldinit", SqlDbType.VarChar, 4, "initials").SourceVersion = DataRowVersion.Original;
             dataAdapterUsers.UpdateCommand = updatecommand;
 
@@ -83,16 +83,17 @@ namespace praktik_estimering
 
             SqlCommand insertcommand = new SqlCommand(
                     "INSERT INTO person " +
-                    "VALUES(@init, @pass, @first, @last)", con);
+                    "VALUES(@init, @pass, @first, @last, @admin)", con);
             insertcommand.Parameters.Add("@init", SqlDbType.VarChar, 4, "initials");
             insertcommand.Parameters.Add("@pass", SqlDbType.VarChar, 15, "password");
             insertcommand.Parameters.Add("@first", SqlDbType.VarChar, 15, "firstname");
             insertcommand.Parameters.Add("@last", SqlDbType.VarChar, 15, "lastname");
+            insertcommand.Parameters.Add("@admin", SqlDbType.Bit, 4, "admin");
             dataAdapterUsers.InsertCommand = insertcommand;
 
-            dataAdapterUsers.Fill(users);
+            
         }
-        private void getDays()
+        private void createDaysAdapterCommands()
         {
             string sql = "SELECT * FROM dayActivities";
             dataAdapterDays = new SqlDataAdapter();
@@ -119,9 +120,9 @@ namespace praktik_estimering
             insertcommand.Parameters.Add("@activity", SqlDbType.VarChar, 50, "activity");
             dataAdapterDays.InsertCommand = insertcommand;
 
-            dataAdapterDays.Fill(day);
+            
         }
-        private void getEstimate()
+        private void createEstimateAdapterCommands()
         {
             string sql = "SELECT * FROM estimateActivities";
             dataAdapterEstimate = new SqlDataAdapter();
@@ -148,9 +149,9 @@ namespace praktik_estimering
             insertcommand.Parameters.Add("@activity", SqlDbType.VarChar, 50, "activity");
             dataAdapterEstimate.InsertCommand = insertcommand;
 
-            dataAdapterEstimate.Fill(estimate);
+            
         }
-        private void getFormula()
+        private void createFormulaAdapterCommands()
         {
             string sql = "SELECT * FROM formulaActivities";
             dataAdapterFormula = new SqlDataAdapter();
@@ -179,9 +180,9 @@ namespace praktik_estimering
             insertcommand.Parameters.Add("@formulamultiplier", SqlDbType.VarChar, 10, "formulamultiplier");
             dataAdapterFormula.InsertCommand = insertcommand;
 
-            dataAdapterFormula.Fill(formula);
+            
         }
-        private void getExam()
+        private void createExamAdapterCommands()
         {
             dataAdapterExam = new SqlDataAdapter();
             string sql = "SELECT * FROM examActivities";
@@ -214,15 +215,16 @@ namespace praktik_estimering
             insertcommand.Parameters.Add("@daysmultiplier", SqlDbType.Float, 10, "daysmultiplier");
             dataAdapterExam.InsertCommand = insertcommand;
 
-            dataAdapterExam.Fill(exam);
+            
         }
-        private void getPeriod()
+        private void createPeriodAdapterCommands()
         {
+            dataAdapterPeriod = new SqlDataAdapter();
             string sql = "SELECT * FROM period";
-            dataAdapterPeriod = new SqlDataAdapter(sql, con);
-            dataAdapterPeriod.Fill(period);
+            SqlCommand selectcommand = new SqlCommand(sql, con);
+            dataAdapterPeriod.SelectCommand = selectcommand;
         }
-        private void getOther()
+        private void createOtherAdapterCommands()
         {
             string sql = "SELECT * FROM meetingVariable";
             dataAdapterOther = new SqlDataAdapter();
@@ -250,79 +252,78 @@ namespace praktik_estimering
             insertcommand.Parameters.Add("@name", SqlDbType.VarChar, 15, "name");
             insertcommand.Parameters.Add("@value", SqlDbType.Float, 10, "value");
             dataAdapterOther.InsertCommand = insertcommand;
-
-            dataAdapterOther.Fill(other);
         }
 
-        public void updateTables()
+        public void updateDatabase()
         {
+            int affectedRows = 0;
             con.Open();
             SqlTransaction tran = con.BeginTransaction(IsolationLevel.Serializable);
             try
             {
-                foreach (DataRow row in users.Rows)
-                {
-                    if (row.RowState == DataRowState.Modified || row.RowState == DataRowState.Added)
-                    {   
-                        dataAdapterUsers.UpdateCommand.Transaction = tran;
-                        dataAdapterUsers.InsertCommand.Transaction = tran;
-                        dataAdapterUsers.DeleteCommand.Transaction = tran;
-                        dataAdapterUsers.Update(users);
+                for (int i = 0; i < users.Rows.Count; i++ )
+                    {
+                        if (users.Rows[i].RowState == DataRowState.Modified || users.Rows[i].RowState == DataRowState.Added || users.Rows[i].RowState == DataRowState.Deleted)
+                        {
+                            dataAdapterUsers.UpdateCommand.Transaction = tran;
+                            dataAdapterUsers.InsertCommand.Transaction = tran;
+                            dataAdapterUsers.DeleteCommand.Transaction = tran;
+                            affectedRows += dataAdapterUsers.Update(users);
+                        }
                     }
-                }
-                foreach (DataRow row in day.Rows)
+                for (int i = 0; i < day.Rows.Count; i++)
                 {
-                    if (row.RowState == DataRowState.Modified || row.RowState == DataRowState.Added || row.RowState == DataRowState.Deleted)
+                    if (day.Rows[i].RowState == DataRowState.Modified || day.Rows[i].RowState == DataRowState.Added || day.Rows[i].RowState == DataRowState.Deleted)
                     {
                         dataAdapterDays.UpdateCommand.Transaction = tran;
                         dataAdapterDays.InsertCommand.Transaction = tran;
                         dataAdapterDays.DeleteCommand.Transaction = tran;
-                        dataAdapterDays.Update(day);
+                        affectedRows += dataAdapterDays.Update(day);
                     }
                 }
-                foreach (DataRow row in estimate.Rows)
+                for (int i = 0; i < estimate.Rows.Count; i++)
                 {
-                    if (row.RowState == DataRowState.Modified || row.RowState == DataRowState.Added || row.RowState == DataRowState.Deleted)
+                    if (estimate.Rows[i].RowState == DataRowState.Modified || estimate.Rows[i].RowState == DataRowState.Added || estimate.Rows[i].RowState == DataRowState.Deleted)
                     {
                         dataAdapterEstimate.UpdateCommand.Transaction = tran;
                         dataAdapterEstimate.InsertCommand.Transaction = tran;
                         dataAdapterEstimate.DeleteCommand.Transaction = tran;
-                        dataAdapterEstimate.Update(estimate);
+                        affectedRows += dataAdapterEstimate.Update(estimate);
                     }
                 }
-                foreach (DataRow row in formula.Rows)
+                for (int i = 0; i < formula.Rows.Count; i++)
                 {
-                    if (row.RowState == DataRowState.Modified || row.RowState == DataRowState.Added || row.RowState == DataRowState.Deleted)
+                    if (formula.Rows[i].RowState == DataRowState.Modified || formula.Rows[i].RowState == DataRowState.Added || formula.Rows[i].RowState == DataRowState.Deleted)
                     {
                         dataAdapterFormula.UpdateCommand.Transaction = tran;
                         dataAdapterFormula.InsertCommand.Transaction = tran;
                         dataAdapterFormula.DeleteCommand.Transaction = tran;
-                        dataAdapterFormula.Update(formula);
+                        affectedRows += dataAdapterFormula.Update(formula);
                     }
                 }
-                foreach (DataRow row in exam.Rows)
+                for (int i = 0; i < exam.Rows.Count; i++)
                 {
-                    if (row.RowState == DataRowState.Modified || row.RowState == DataRowState.Added || row.RowState == DataRowState.Deleted)
+                    if (exam.Rows[i].RowState == DataRowState.Modified || exam.Rows[i].RowState == DataRowState.Added || exam.Rows[i].RowState == DataRowState.Deleted)
                     {
                         dataAdapterExam.UpdateCommand.Transaction = tran;
                         dataAdapterExam.InsertCommand.Transaction = tran;
                         dataAdapterExam.DeleteCommand.Transaction = tran;
-                        dataAdapterExam.Update(exam);
+                        affectedRows += dataAdapterExam.Update(exam);
                     }
                 }
-                foreach (DataRow row in other.Rows )
+                for (int i = 0; i < other.Rows.Count; i++)
                 {
-                    if (row.RowState == DataRowState.Modified || row.RowState == DataRowState.Added || row.RowState == DataRowState.Deleted)
+                    if (other.Rows[i].RowState == DataRowState.Modified || other.Rows[i].RowState == DataRowState.Added || other.Rows[i].RowState == DataRowState.Deleted)
                     {
                         dataAdapterOther.UpdateCommand.Transaction = tran;
                         dataAdapterOther.InsertCommand.Transaction = tran;
                         dataAdapterOther.DeleteCommand.Transaction = tran;
-                        dataAdapterOther.Update(other);
+                        affectedRows += dataAdapterOther.Update(other);
                     }
                 }
 
                 tran.Commit();
-                MessageBox.Show("update done");
+                MessageBox.Show("Affected Rows("+affectedRows+")");
             }
             catch (Exception e)
             {
@@ -335,16 +336,34 @@ namespace praktik_estimering
                 if (con.State == ConnectionState.Open) con.Close();
             }
         }
-
-        public void getAllTables()
+        public void updateTables()
         {
-            getDays();
-            getEstimate();
-            getExam();
-            getFormula();
-            getUsers();
-            getPeriod();
-            getOther();
+            day.Clear();
+            estimate.Clear();
+            formula.Clear();
+            exam.Clear();
+            users.Clear();
+            period.Clear();
+            other.Clear();
+
+            dataAdapterUsers.Fill(users);
+            dataAdapterDays.Fill(day);
+            dataAdapterEstimate.Fill(estimate);
+            dataAdapterFormula.Fill(formula);
+            dataAdapterExam.Fill(exam);
+            dataAdapterPeriod.Fill(period);
+            dataAdapterOther.Fill(other);
+        }
+
+        public void createAllAdapterCommands()
+        {
+            createDaysAdapterCommands();
+            createEstimateAdapterCommands();
+            createExamAdapterCommands();
+            createFormulaAdapterCommands();
+            createUserAdapterCommands();
+            createPeriodAdapterCommands();
+            createOtherAdapterCommands();
         }
     }
 }

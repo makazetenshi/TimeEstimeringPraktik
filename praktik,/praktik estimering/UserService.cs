@@ -78,6 +78,48 @@ namespace praktik_estimering
                 return false;
             }
         }
+        public Boolean loginAdmin(string initials, string password)
+        {
+            try
+            {
+                string sql = "SELECT * FROM person WHERE initials = '" + initials + "'";
+
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                string pass = null;
+                string init = null;
+                bool admin = false;
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    pass = row["password"].ToString();
+                    init = row["initials"].ToString();
+                    admin = (bool)row["admin"];
+                }
+
+                if (initials == init)
+                {
+                    if (password == pass)
+                    {
+                        if (admin)
+                        {
+                            userTabel = dt;
+                            return true;
+                        }
+                        throw new Exception("You are not authorized as admin!");
+                    }
+                    throw new Exception("password does not match initials.");
+                }
+                throw new Exception("initals was not found please try again.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
+        }
         public void logUserOut()
         {
             userTabel.Clear();
@@ -229,7 +271,7 @@ namespace praktik_estimering
 
             string sqlEstimate = "SELECT ep.estimateActivity 'Activity', ep.hoursUsed 'Hours' " +
                                  "FROM estimatePeriod ep " +
-                                 "WHERE ep.period = " + SelectedPeriod;
+                                 "WHERE ep.period = " + SelectedPeriod + " " +"AND ep.hoursUsed != 0";
 
             DataTable estimateTable = getDataTable(sqlEstimate);
             estimateList.Add("Estimate activities: ");
@@ -269,7 +311,7 @@ namespace praktik_estimering
 
             string sqlformula = "SELECT ep.examActivity 'Aktivity', (ep.students*ea.studentsmultiplier + ep.projekts*ea.projectsmultiplier + ep.daysUsed*ea.daysmultiplier) 'Hours' " +
                                 "FROM examperiod ep, examActivities ea " +
-                                "WHERE ep.examActivity = ea.name AND  ep.period = " + SelectedPeriod;
+                                "WHERE ep.examActivity = ea.name AND  ep.period = " + SelectedPeriod + " " + "AND (ep.students*ea.studentsmultiplier + ep.projekts*ea.projectsmultiplier + ep.daysUsed*ea.daysmultiplier) != 0";
 
             DataTable examTable = getDataTable(sqlformula);
 

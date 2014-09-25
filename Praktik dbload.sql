@@ -19,7 +19,8 @@ CREATE TABLE person
 initials VARCHAR(4) PRIMARY KEY ,
 password VARCHAR(15) NOT NULL,
 firstname VARCHAR(15) NOT NULL,
-lastname VARCHAR(15) NOT NULL
+lastname VARCHAR(15) NOT NULL,
+admin bit
 )
 CREATE TABLE period
 (
@@ -122,10 +123,10 @@ BEGIN TRY
 		INSERT INTO meetingVariable VALUES ('percentage',9)
 		INSERT INTO meetingVariable VALUES ('workHours',7.4)
 		
-    	INSERT INTO person VALUES('test', 't', 'Tester', 'McTest')
-		INSERT INTO person VALUES('TK', 'fisk1', 'Torben', 'Krøjmand')
-		INSERT INTO person VALUES('SM', 'fisk2', 'Søren', 'Madsen')
-		INSERT INTO person VALUES('KR', 'fisk3', 'Karsten', 'Rasmussen')
+    	INSERT INTO person VALUES('test', 't', 'Tester', 'McTest', 1)
+		INSERT INTO person VALUES('TK', 'fisk1', 'Torben', 'Krøjmand', 1)
+		INSERT INTO person VALUES('SM', 'fisk2', 'Søren', 'Madsen', 0)
+		INSERT INTO person VALUES('KR', 'fisk3', 'Karsten', 'Rasmussen', 0)
 		
 		INSERT INTO period VALUES('test','20140801','20140901', 355.8)
 		INSERT INTO period VALUES('test','20140901','20141001', null)
