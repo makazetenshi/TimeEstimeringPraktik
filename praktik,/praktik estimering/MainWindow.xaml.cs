@@ -28,13 +28,16 @@ namespace praktik_estimering
 
         private void LoginClick(object sender, RoutedEventArgs e)
         {
-            if (UserService.Instance.login(textboxInitials.Text,passwordbox.Password))
-            {
-                Overview view = new Overview();
-                view.Show();
-                this.Close();
+            Window view = new Admin();
+            view.Show();
+            this.Close();
+            //if (UserService.Instance.login(textboxInitials.Text, passwordbox.Password))
+            //{
+            //    Overview view = new Overview();
+            //    view.Show();
+            //    this.Close();
 
-            }
+            //}
         }
 
         private void Grid_TouchEnter(object sender, TouchEventArgs e)

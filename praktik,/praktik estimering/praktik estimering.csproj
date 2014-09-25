@@ -53,6 +53,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Admin.xaml.cs">
+      <DependentUpon>Admin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AdminService.cs" />
     <Compile Include="DataLink.cs" />
     <Compile Include="EstimateActivities.xaml.cs">
       <DependentUpon>EstimateActivities.xaml</DependentUpon>
@@ -78,6 +82,10 @@
     </Compile>
     <Compile Include="UpdateService.cs" />
     <Compile Include="UserService.cs" />
+    <Page Include="Admin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="EstimateActivities.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

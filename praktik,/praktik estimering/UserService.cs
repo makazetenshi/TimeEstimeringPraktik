@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -207,22 +207,20 @@ namespace praktik_estimering
         private List<String> addDayAktivities()
         {
             List<string> dayList = new List<string>();
-            string sqlDay = "SELECT dp.dayActivity, dp.daysUsed * (SELECT mv.value FROM meetingVariable mv WHERE mv.name = 'workHours') 'Hours' "+
+            string sqlDay = "SELECT dp.dayActivity, dp.daysUsed "+
                             "FROM dayPeriod dp " +
-                            "WHERE dp.period = " + SelectedPeriod;
+                            "WHERE dp.period = " + SelectedPeriod + " " + "AND dp.daysUsed != 0";
 
             DataTable dayTable = getDataTable(sqlDay);
-
-
             dayList.Add("Day activities: ");
-
-            StringBuilder sb = new StringBuilder();
+            string s = "";
             foreach (DataRow row in dayTable.Rows)
             {
-                sb.AppendLine(string.Join("  -  ", row.ItemArray));
-                dayList.Add(sb.ToString());
-                sb.Clear();
+                    s = "\t" + row[0] + "  -  " + row[1];
+                    dayList.Add(s);
             }
+            dayList.Add("");
+
             return dayList;
         }
         private List<string> addEstimateAktivities()
@@ -234,16 +232,14 @@ namespace praktik_estimering
                                  "WHERE ep.period = " + SelectedPeriod;
 
             DataTable estimateTable = getDataTable(sqlEstimate);
-
             estimateList.Add("Estimate activities: ");
-
-            StringBuilder sb = new StringBuilder();
+            string s = "";
             foreach (DataRow row in estimateTable.Rows)
             {
-                sb.AppendLine(string.Join("  -  ", row.ItemArray));
-                estimateList.Add(sb.ToString());
-                sb.Clear();
+                    s = "\t" + row[0] + "  -  " + row[1];
+                    estimateList.Add(s);
             }
+            estimateList.Add("");
             return estimateList;
         }
         private List<string> addFormulaAktivities()
@@ -252,24 +248,24 @@ namespace praktik_estimering
 
             string sqlformula = "SELECT fp.formulaActivity 'Activity', fp.variable*fa.formulamultiplier 'Hours' " +
                                 "FROM formulaActivities fa, formulaPeriod fp  " +
-                                "WHERE fa.activity = fp.formulaActivity AND fp.period = " + SelectedPeriod;
+                                "WHERE fa.activity = fp.formulaActivity AND fp.period = " + SelectedPeriod + " " + "AND fp.variable != 0";
 
             DataTable formulaTable = getDataTable(sqlformula);
 
             formulaList.Add("Form activities: ");
 
-            StringBuilder sb = new StringBuilder();
+            string s = "";
             foreach (DataRow row in formulaTable.Rows)
             {
-                sb.AppendLine(string.Join("  -  ", row.ItemArray));
-                formulaList.Add(sb.ToString());
-                sb.Clear();
+                    s = "\t" + row[0] + "  -  " + row[1];
+                    formulaList.Add(s);
             }
+            formulaList.Add("");
             return formulaList;
         }
         private List<string> addExamAktivities()
         {
-            List<string> formulaList = new List<string>();
+            List<string> examList = new List<string>();
 
             string sqlformula = "SELECT ep.examActivity 'Aktivity', (ep.students*ea.studentsmultiplier + ep.projekts*ea.projectsmultiplier + ep.daysUsed*ea.daysmultiplier) 'Hours' " +
                                 "FROM examperiod ep, examActivities ea " +
@@ -277,16 +273,15 @@ namespace praktik_estimering
 
             DataTable examTable = getDataTable(sqlformula);
 
-            formulaList.Add("Exam activities: ");
+            examList.Add("Exam activities: ");
 
-            StringBuilder sb = new StringBuilder();
+            string s = "";
             foreach (DataRow row in examTable.Rows)
             {
-                sb.AppendLine(string.Join("  -  ", row.ItemArray));
-                formulaList.Add(sb.ToString());
-                sb.Clear();
+                    s = "\t" + row[0] + " - " + row[1];
+                    examList.Add(s);
             }
-            return formulaList;
+            return examList;
         }
     }
 }

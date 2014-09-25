@@ -14,7 +14,7 @@ namespace praktik_estimering
         
         public DataLink()
         {
-            connStr = @"Data Source=BJARKES-PC\SQLEXPRESS;Initial Catalog=praktik_estimate;Integrated Security=True";
+            connStr = @"Data Source=localhost\SQLEXPRESS;Initial Catalog=praktik_estimate;Integrated Security=True";
             con = new SqlConnection(connStr);
         }
 

@@ -1,0 +1,92 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace praktik_estimering
+{
+    /// <summary>
+    /// Interaction logic for Admin.xaml
+    /// </summary>
+    public partial class Admin : Window
+    {
+
+        public Admin()
+        {
+            InitializeComponent();
+            AdminService.Instance.getAllTables();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            dayDataGrid.ItemsSource = AdminService.Instance.day.DefaultView;
+            estimateDataGrid.ItemsSource = AdminService.Instance.estimate.DefaultView;
+            formulaDataGrid.ItemsSource = AdminService.Instance.formula.DefaultView;
+            examDataGrid.ItemsSource = AdminService.Instance.exam.DefaultView;
+            userDataGrid.ItemsSource = AdminService.Instance.users.DefaultView;
+            periodsDataGrid.ItemsSource = AdminService.Instance.period.DefaultView;
+            otherDataGrid.ItemsSource = AdminService.Instance.other.DefaultView;
+        }
+
+        private void btnUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            AdminService.Instance.updateTables();
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnExit_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void User_GotFocus(object sender, RoutedEventArgs e)
+        {
+            userDataGrid.CanUserAddRows = true;
+        }
+
+        private void Day_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Estimate_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Formula_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Exam_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Period_GotFocus(object sender, RoutedEventArgs e)
+        {
+            periodsDataGrid.Columns[0].Visibility = Visibility.Hidden;
+            periodsDataGrid.IsReadOnly = true;
+        }
+
+        private void Other_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+    }
+}
