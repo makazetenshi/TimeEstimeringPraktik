@@ -72,11 +72,5 @@ namespace praktik_estimering
             up.Show();
             Close();
         }
-
-
-
-
-
-
     }
 }

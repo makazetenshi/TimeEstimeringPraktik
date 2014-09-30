@@ -47,7 +47,6 @@ namespace praktik_estimering
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
             DataView dv = (DataView) DataGridDayActivity.ItemsSource;
             DataTable dt = cloneDataTable(dv);
 

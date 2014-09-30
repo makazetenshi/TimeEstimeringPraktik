@@ -267,8 +267,6 @@ namespace praktik_estimering
             }
             catch (SqlException e)
             {
-                // e.Message
-                // "Error while reading database"
                 MessageBox.Show("Error while reading database");
             }
             finally

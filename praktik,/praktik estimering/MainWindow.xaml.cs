@@ -20,7 +20,6 @@ namespace praktik_estimering
     /// </summary>
     public partial class MainWindow : Window
     {
-        //UserService us = UserService.Instance();
         public MainWindow()
         {
             InitializeComponent();

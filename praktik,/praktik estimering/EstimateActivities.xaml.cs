@@ -60,8 +60,6 @@ namespace praktik_estimering
             DataView dv = (DataView)DataGridEstimateActivity.ItemsSource;
             DataTable dt = cloneTable(dv);
 
-            
-
             if (PeriodService.Instance.InsertestimationActivities(dt))
             {
                 FormulaActivities fa = new FormulaActivities();

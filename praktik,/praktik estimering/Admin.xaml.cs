@@ -21,7 +21,6 @@ namespace praktik_estimering
     /// </summary>
     public partial class Admin : Window
     {
-
         public Admin()
         {
             InitializeComponent();
@@ -106,12 +105,12 @@ namespace praktik_estimering
         }
 
         private void Period_GotFocus(object sender, RoutedEventArgs e)
-        {
-            if(periodsDataGrid.Columns.Count > 0)
-            periodsDataGrid.Columns[0].Visibility = Visibility.Hidden;
+        {   
             periodsDataGrid.IsReadOnly = true;
             periodsDataGrid.CanUserResizeColumns = false;
             periodsDataGrid.CanUserResizeRows = false;
+            if (periodsDataGrid.Columns.Count > 0)
+                periodsDataGrid.Columns[0].Visibility = Visibility.Hidden;
         }
 
         private void Other_GotFocus(object sender, RoutedEventArgs e)
@@ -128,14 +127,12 @@ namespace praktik_estimering
             MessageBoxResult result = MessageBox.Show("Do you want to restore local changes made?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                //updateTables();
                 AdminService.Instance.day.RejectChanges();
                 AdminService.Instance.estimate.RejectChanges();
                 AdminService.Instance.exam.RejectChanges();
                 AdminService.Instance.formula.RejectChanges();
                 AdminService.Instance.users.RejectChanges();
                 AdminService.Instance.other.RejectChanges();
-
             }
         }
     }

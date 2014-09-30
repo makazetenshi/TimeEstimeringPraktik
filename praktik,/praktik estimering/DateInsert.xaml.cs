@@ -48,11 +48,5 @@ namespace praktik_estimering
                 MessageBox.Show("A date is not selected, both start and end date needs to be set.");
             }
         }
-
-
-
-
-
-
     }
 }

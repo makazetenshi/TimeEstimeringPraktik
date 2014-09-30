@@ -34,11 +34,9 @@ namespace praktik_estimering
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-           
-                Overview view = new Overview();
-                view.Show();
-                this.Close();
-           
+            Overview view = new Overview();
+            view.Show();
+            this.Close();
         }
     }
 }

@@ -329,7 +329,6 @@ namespace praktik_estimering
             {
                 tran.Rollback();
                 MessageBox.Show(e.Message);
-                // MessageBox.Show("something went wrong with the new data, please check your data and try again");
             }
             finally
             {
