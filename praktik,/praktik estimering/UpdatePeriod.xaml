@@ -1,7 +1,7 @@
 ﻿<Window x:Class="praktik_estimering.UpdatePeriod"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Time Estimation - Update Period" Height="350" Width="400" Loaded="Window_Loaded">
+        Title="Time Estimation - Update Period" Height="350" Width="400" Loaded="Window_Loaded" ResizeMode="NoResize">
     <Grid>
         <ComboBox x:Name="comboboxPeriod" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="162" SelectionChanged="comboboxPeriod_SelectionChanged">
         </ComboBox>
