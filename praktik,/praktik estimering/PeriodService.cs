@@ -58,6 +58,7 @@ namespace praktik_estimering
                 {
                     activePeriod = Convert.ToInt32(row[0].ToString());
                 }
+                Debug.WriteLine("ACTIVE PERIOD IS: " + activePeriod);
                 UserService.Instance.SelectedPeriod = activePeriod;
                 result = true;
             }
@@ -195,7 +196,7 @@ namespace praktik_estimering
             return true;
         }
 
-        public void canselEverything()
+        public void cancelEverything()
         {
             try
             {
@@ -204,7 +205,7 @@ namespace praktik_estimering
                 SqlCommand command = new SqlCommand(sql, con);
                 executeQuery(command);
 
-
+                clearList();
                 UserService.Instance.SelectedPeriod = activePeriod;
             }
             catch (Exception e)
@@ -233,6 +234,7 @@ namespace praktik_estimering
                     cmd = new SqlCommand(s, con);
                     executeQuery(cmd);
                 }
+                clearList();
             }
             catch (Exception e)
             {
@@ -274,6 +276,10 @@ namespace praktik_estimering
                 if (con.State == ConnectionState.Open) con.Close();
             }
             return dt;
+        }
+        private void clearList()
+        {
+            sqls.Clear();
         }
     }
 }

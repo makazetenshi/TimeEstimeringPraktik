@@ -64,7 +64,7 @@ CREATE TABLE dayPeriod
 (
 period INT FOREIGN KEY REFERENCES period(periodid)  ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
 dayActivity VARCHAR(50) FOREIGN KEY REFERENCES dayActivities(activity)  ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
-daysUsed INT  NOT NULL,
+daysUsed INT  NOT NULL, 
 PRIMARY KEY (period, dayActivity) 
 )
 CREATE TABLE estimatePeriod
@@ -123,9 +123,10 @@ BEGIN TRY
 		INSERT INTO meetingVariable VALUES ('percentage',9)
 		INSERT INTO meetingVariable VALUES ('workHours',7.4)
 		INSERT INTO person VALUES('admi', 'admin', 'Administrator', '', 1)
+		INSERT INTO person VALUES('TK', 'fisk', 'Torben', 'Krøjmand', 0)
 		
 --		INSERT INTO period VALUES('test','20140801','20140901', 355.8)
---		INSERT INTO period VALUES('test','20140901','20141001', null)
+--		INSERT INTO period VALUES('admi','20140901','20141001', null)
 --		INSERT INTO period VALUES('TK','20140101','20140731', null)
 --		INSERT INTO period VALUES('SM','20140101','20140731', null)
 --		INSERT INTO period VALUES('SM','20140801','20141231', null)
@@ -153,27 +154,27 @@ BEGIN TRY
 		INSERT INTO examActivities VALUES('2. Semester Datamatiker', 0.66, 4,1.33)
 		INSERT INTO examActivities VALUES('3. Semester Datamatiker', 0.66, 0,2.5)		
 		
---		INSERT INTO dayPeriod VALUES(1,'Illness',3)
---		INSERT INTO dayPeriod VALUES(1,'Vacation',3)
---		INSERT INTO dayPeriod VALUES(1,'Holiday',3)
+		--INSERT INTO dayPeriod VALUES(1,'Illness',3)
+		--INSERT INTO dayPeriod VALUES(1,'Vacation',3)
+		--INSERT INTO dayPeriod VALUES(1,'Holiday',3)
 --		INSERT INTO dayPeriod VALUES(2,'Illness',0)
 --		INSERT INTO dayPeriod VALUES(2,'Vacation',0)
 --		INSERT INTO dayPeriod VALUES(2,'Holiday',0)
 --		
---		INSERT INTO estimatePeriod VALUES(1,'Booklisting',3)
---		INSERT INTO estimatePeriod VALUES(1,'Office',5)
+		--INSERT INTO estimatePeriod VALUES(1,'Booklisting',3)
+		--INSERT INTO estimatePeriod VALUES(1,'Office',5)
 --		INSERT INTO estimatePeriod VALUES(2,'Booklisting',8)
 --		INSERT INTO estimatePeriod VALUES(2,'Office',16)
 --		
---		INSERT INTO formulaPeriod VALUES(1,'Classes, Datamatiker',25)
---		INSERT INTO formulaPeriod VALUES(1,'Classes, Datamatiker, English',4)
---		INSERT INTO formulaPeriod VALUES(1,'Olc',0)
+		--INSERT INTO formulaPeriod VALUES(1,'Classes, Datamatiker',25)
+		--INSERT INTO formulaPeriod VALUES(1,'Classes, Datamatiker, English',4)
+		--INSERT INTO formulaPeriod VALUES(1,'Olc',0)
 --		INSERT INTO formulaPeriod VALUES(2,'Classes, Datamatiker',25)
 --		INSERT INTO formulaPeriod VALUES(2,'Classes, Datamatiker, English',4)
 --		INSERT INTO formulaPeriod VALUES(2,'Olc',3)
 --		
---		INSERT INTO examperiod VALUES(1,'2. Semester Datamatiker',25,6,3)
---		INSERT INTO examperiod VALUES(1,'3. Semester Datamatiker',16,4,0)
+	--	INSERT INTO examperiod VALUES(1,'2. Semester Datamatiker',25,6,3)
+	--	INSERT INTO examperiod VALUES(1,'3. Semester Datamatiker',16,4,0)
 --		INSERT INTO examperiod VALUES(2,'2. Semester Datamatiker',0,0,0)
 --		INSERT INTO examperiod VALUES(2,'3. Semester Datamatiker',0,0,0)
     COMMIT
@@ -266,3 +267,5 @@ SET @Return = Sum(dbo.getTotalTimeUsed(@id) - dbo.getDaysDifference(@id))
 RETURN @Return
 END
 GO
+
+select * from meeting

@@ -126,6 +126,9 @@ namespace praktik_estimering
                         command.ExecuteNonQuery();
                     }
                 }
+                command = updateNettoTime();
+                command.Transaction = tran;
+                command.ExecuteNonQuery();
 
                 tran.Commit();
                 MessageBox.Show("update done");
@@ -206,6 +209,15 @@ namespace praktik_estimering
                 if (con.State == ConnectionState.Open) con.Close();
             }
             return dt;
+        }
+        private SqlCommand updateNettoTime()
+        {
+            string sql =
+                "UPDATE period SET nettoHours = dbo.getNettoTime(" + selectedPeriod +
+                ")  WHERE periodID = " + selectedPeriod;
+
+            SqlCommand cmd = new SqlCommand(sql, con);
+            return cmd;
         }
     }
 }

@@ -139,6 +139,7 @@ namespace praktik_estimering
             summary.AddRange(addEstimateAktivities());
             summary.AddRange(addFormulaAktivities());
             summary.AddRange(addExamAktivities());
+            summary.AddRange(addOtherAktivities());
 
             foreach (string s in summary)
             {
@@ -263,6 +264,24 @@ namespace praktik_estimering
 
             return dayList;
         }
+        private List<string> addOtherAktivities()
+        {
+            List<string> otherList = new List<string>();
+
+            string sqlOther = "SELECT m.estimatedHours 'Hours' " +
+                                 "FROM meeting m " +
+                                 "WHERE m.period = " + SelectedPeriod + " " + "AND m.estimatedHours != 0";
+
+            DataTable otherTable = getDataTable(sqlOther);
+            otherList.Add("Other activities: ");
+            string s = "";
+            foreach (DataRow row in otherTable.Rows)
+            {
+                s = "\t" + "Meetings: " + Math.Round((double)row[0],2);
+                otherList.Add(s);
+            }
+            return otherList;
+        }
         private List<string> addEstimateAktivities()
         {
             List<string> estimateList = new List<string>();
@@ -321,6 +340,7 @@ namespace praktik_estimering
                     s = "\t" + row[0] + " - " + row[1];
                     examList.Add(s);
             }
+            examList.Add("");
             return examList;
         }
     }

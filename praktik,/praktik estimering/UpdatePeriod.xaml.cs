@@ -50,23 +50,34 @@ namespace praktik_estimering
         }
         private void dayGotFocus(object sender, RoutedEventArgs e)
         {
-            DatagridDay.Columns[0].Visibility = Visibility.Hidden;
-            DatagridDay.Columns[1].IsReadOnly = true;
+            if (DatagridDay.Columns.Count > 0)
+            {
+                DatagridDay.Columns[0].Visibility = Visibility.Hidden;
+                DatagridDay.Columns[1].IsReadOnly = true;
+            }
         }
         private void estimateGotFocus(object sender, RoutedEventArgs e)
         {
-            DatagridEstimate.Columns[0].Visibility = Visibility.Hidden;
-            DatagridEstimate.Columns[1].IsReadOnly = true;
+            if (DatagridEstimate.Columns.Count > 0)
+            {
+                DatagridEstimate.Columns[0].Visibility = Visibility.Hidden;
+                DatagridEstimate.Columns[1].IsReadOnly = true;
+            }
         }
         private void PrakticalGotFocus(object sender, RoutedEventArgs e)
         {
-            DatagridFormula.Columns[0].Visibility = Visibility.Hidden;
-            DatagridFormula.Columns[1].IsReadOnly = true;
+            if (DatagridFormula.Columns.Count > 0)
+            {
+                DatagridFormula.Columns[0].Visibility = Visibility.Hidden;
+                DatagridFormula.Columns[1].IsReadOnly = true;
+            }
         }
         private void examGotFocus(object sender, RoutedEventArgs e)
         {
-            DatagridExamn.Columns[0].Visibility = Visibility.Hidden;
-            DatagridExamn.Columns[1].IsReadOnly = true;
+            if (DatagridExamn.Columns.Count > 0) { 
+                DatagridExamn.Columns[0].Visibility = Visibility.Hidden;
+                DatagridExamn.Columns[1].IsReadOnly = true;
+            }
         }
     }
 }

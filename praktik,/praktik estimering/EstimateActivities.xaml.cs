@@ -73,7 +73,7 @@ namespace praktik_estimering
             MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Are you sure you want to cancel?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
             if (messageBoxResult == MessageBoxResult.Yes)
             {
-                PeriodService.Instance.canselEverything();
+                PeriodService.Instance.cancelEverything();
                 Window ov = new Overview();
                 ov.Show();
                 Close();

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Time Estimation - Estimate Activities" Height="300" Width="300" Loaded="Window_Loaded" ResizeMode="NoResize">
     <Grid>
-        <DataGrid x:Name="DataGridEstimateActivity" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="250" Width="192"/>
+        <DataGrid x:Name="DataGridEstimateActivity" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="250" Width="192" CanUserAddRows="False" CanUserDeleteRows="False"/>
         <Button x:Name="buttonNext" Content="Continue" HorizontalAlignment="Left" Margin="209,211,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
         <Button x:Name="buttonCancel" Content="Cancel" HorizontalAlignment="Left" Margin="209,238,0,0" VerticalAlignment="Top" Width="75" Click="buttonCancel_Click"/>
 

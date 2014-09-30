@@ -65,6 +65,14 @@ namespace praktik_estimering
                     dataGridTextColumn.Binding.StringFormat = "{0:d}";
                 }
             }
+            if (e.PropertyType == typeof(Double))
+            {
+                DataGridTextColumn datagridTextColumn = e.Column as DataGridTextColumn;
+                if(datagridTextColumn != null)
+                {
+                    datagridTextColumn.Binding.StringFormat = "{0:F2}";
+                }
+            }
         }
         private void buttonChangesClicked(object sender, RoutedEventArgs e)
         {

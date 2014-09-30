@@ -38,7 +38,7 @@ namespace praktik_estimering
             periodsDataGrid.ItemsSource = AdminService.Instance.period.DefaultView;
             otherDataGrid.ItemsSource = AdminService.Instance.other.DefaultView;
 
-            userDataGrid.Columns[1].Visibility = Visibility.Hidden;
+            //userDataGrid.Columns[1].Visibility = Visibility.Hidden;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -72,8 +72,8 @@ namespace praktik_estimering
             userDataGrid.CanUserResizeColumns = false;
             userDataGrid.CanUserResizeRows = false;
             userDataGrid.CanUserDeleteRows = true;
-            if (userDataGrid.Columns.Count > 0)
-                userDataGrid.Columns[1].Visibility = Visibility.Hidden;
+            //if (userDataGrid.Columns.Count > 0)
+            //    userDataGrid.Columns[1].Visibility = Visibility.Hidden;
         }
 
         private void Day_GotFocus(object sender, RoutedEventArgs e)
