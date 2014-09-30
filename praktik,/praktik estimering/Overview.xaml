@@ -1,7 +1,7 @@
 ﻿<Window x:Class="praktik_estimering.Overview"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Overview" Height="299" Width="332" Loaded="overviewLoaded">
+        Title="Time Estimation - Overview" Height="299" Width="332" Loaded="overviewLoaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="227*"/>
@@ -11,11 +11,11 @@
             <RowDefinition Height="19*"/>
             <RowDefinition Height="116*"/>
         </Grid.RowDefinitions>
-        <Label Content="Old periods" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="28" Width="79"/>
+        <Label Content="Periods" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="28" Width="79"/>
         <DataGrid x:Name="datagridOldPeriods" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Height="212" Width="201" AutoGeneratingColumn="datagridOldPeriods_AutoGeneratingColumn" IsReadOnly="True"/>
-        <Button x:Name="buttonNewPeriod" Content="New period" Grid.Column="1" HorizontalAlignment="Left" Margin="10,9,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Height="22" Click="ClickNewPeriod"/>
-        <Button x:Name="buttonViewOld" Content="view old" Grid.Column="1" HorizontalAlignment="Left" Margin="9,36,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Height="22" Click="clickViewOld"/>
-        <Button x:Name="buttonChanges" Content="changes" Grid.Column="1" HorizontalAlignment="Left" Margin="9,63,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="buttonChangesClicked" Height="22"/>
-        <Button x:Name="buttonLogout" Content="Logout" Grid.Column="1" HorizontalAlignment="Left" Margin="10,200,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="clickLogout" Height="22"/>
+        <Button x:Name="buttonNewPeriod" Content="New period" Grid.Column="1" HorizontalAlignment="Left" Margin="12.4,9.6,0,0" Grid.Row="1" VerticalAlignment="Top" Width="84" Height="22" Click="ClickNewPeriod"/>
+        <Button x:Name="buttonViewOld" Content="View Info" Grid.Column="1" HorizontalAlignment="Left" Margin="9.4,54.6,0,0" Grid.Row="1" VerticalAlignment="Top" Width="85" Height="22" Click="clickViewOld"/>
+        <Button x:Name="buttonChanges" Content="Update Period" Grid.Column="1" HorizontalAlignment="Left" Margin="11.4,81.6,0,0" Grid.Row="1" VerticalAlignment="Top" Width="85" Click="buttonChangesClicked" Height="22"/>
+        <Button x:Name="buttonLogout" Content="Logout" Grid.Column="1" HorizontalAlignment="Left" Margin="10.4,199.6,0,0" Grid.Row="1" VerticalAlignment="Top" Width="84" Click="clickLogout" Height="22"/>
     </Grid>
 </Window>

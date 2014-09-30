@@ -30,9 +30,7 @@ namespace praktik_estimering
 
         private void updateTables()
         {
-
             AdminService.Instance.updateTables();
-
             dayDataGrid.ItemsSource = AdminService.Instance.day.DefaultView;
             estimateDataGrid.ItemsSource = AdminService.Instance.estimate.DefaultView;
             formulaDataGrid.ItemsSource = AdminService.Instance.formula.DefaultView;
@@ -40,6 +38,8 @@ namespace praktik_estimering
             userDataGrid.ItemsSource = AdminService.Instance.users.DefaultView;
             periodsDataGrid.ItemsSource = AdminService.Instance.period.DefaultView;
             otherDataGrid.ItemsSource = AdminService.Instance.other.DefaultView;
+
+            userDataGrid.Columns[1].Visibility = Visibility.Hidden;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -53,13 +53,12 @@ namespace praktik_estimering
             if (result == MessageBoxResult.Yes)
             {
                 AdminService.Instance.updateDatabase();
-                updateTables();
             }
         }
 
         private void btnExit_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("No changes you have made will be saved. Do you want to exit and return to login?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show("No unsaved changes you have made will be saved. Do you want to exit and return to login?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
                 UserService.Instance.logUserOut();
@@ -74,6 +73,8 @@ namespace praktik_estimering
             userDataGrid.CanUserResizeColumns = false;
             userDataGrid.CanUserResizeRows = false;
             userDataGrid.CanUserDeleteRows = true;
+            if (userDataGrid.Columns.Count > 0)
+                userDataGrid.Columns[1].Visibility = Visibility.Hidden;
         }
 
         private void Day_GotFocus(object sender, RoutedEventArgs e)
@@ -118,6 +119,8 @@ namespace praktik_estimering
             otherDataGrid.CanUserResizeColumns = false;
             otherDataGrid.CanUserResizeRows = false;
             otherDataGrid.CanUserDeleteRows = true;
+            if (otherDataGrid.Columns.Count > 0)
+                otherDataGrid.Columns[0].IsReadOnly = true;
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -125,7 +128,14 @@ namespace praktik_estimering
             MessageBoxResult result = MessageBox.Show("Do you want to restore local changes made?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                updateTables();
+                //updateTables();
+                AdminService.Instance.day.RejectChanges();
+                AdminService.Instance.estimate.RejectChanges();
+                AdminService.Instance.exam.RejectChanges();
+                AdminService.Instance.formula.RejectChanges();
+                AdminService.Instance.users.RejectChanges();
+                AdminService.Instance.other.RejectChanges();
+
             }
         }
     }
